@@ -48,9 +48,22 @@ These rules apply to ALL code I write or modify. They override generic conventio
 - **Explicit over clever**: Readable code > shorter code. No ternary chains, no comma operators, no void expressions
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, stop and check whether passing a slot is cleaner and more future-proof than adding another prop. For example, if a component needs custom labels or content regions, a slot may be a better API than more props.
 
+## Simplification
+
+- **Inline single-use helpers**: If a function is called exactly once and its body is short enough to read in place, inline it. A named function only earns its keep when it is reused or when the name genuinely clarifies intent beyond what the code already says
+- **Flatten nested conditionals**: When `if` blocks nest more than two levels, invert conditions and return early. Convert `if (a) { if (b) { if (c) { ... } } }` into sequential guard clauses
+- **Simplify boolean expressions**: `return condition` not `if (condition) return true; else return false;`. No double negation (`!!value`) when the consumer already expects a truthy check
+- **Remove unnecessary abstractions**: If a "pattern" (factory, strategy, builder) has only one concrete implementation and no realistic second use case, flatten it into plain code
+
 ## Testing Style
 
 - **Use `describe` blocks for each `when ...` case**: Group test cases by scenario with a clear `describe('when ...')` wrapper rather than mixing unrelated assertions at the top level
 - **Keep tests intention-revealing**: Each test should prove one behavior that matters, not restate implementation details
 - **Review the test file after writing it**: Remove redundant, useless, or duplicate tests once the main coverage is in place
 - **Prefer fewer high-signal tests over many overlapping ones**: If two tests prove the same behavior, keep the clearer one
+- **Delete tests that prove nothing**: Tests that only assert the mock was called with the mock's own return value, or that snapshot an entire component without checking behavior, add maintenance cost without catching bugs
+- **Kill flaky tests on sight**: If a test fails intermittently, fix the root cause (timing, shared state, network) or delete it. A flaky test that is skipped or retried is worse than no test — it erodes trust in the suite
+- **Simplify setup**: If `beforeEach` is longer than the test itself, the setup is too heavy. Extract a factory function with sensible defaults and let each test override only what it cares about
+- **Cover the critical path first**: Happy path + the most likely error path > exhaustive edge cases. Add edge case tests only when a bug proves the gap matters
+- **One assertion focus per test**: A test can have multiple `expect` calls, but they should all verify the same behavior from different angles — not test unrelated side effects in the same block
+- **No test-only production code**: Do not add methods, flags, or exports to production code solely to make it testable. Rethink the boundary instead
