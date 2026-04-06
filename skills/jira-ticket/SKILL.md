@@ -24,14 +24,13 @@ Be direct. Challenge vague or incomplete tickets. Prefer actionable rewrites ove
 
 ## Ticket Structure (small/medium tickets)
 
-**Context → Acceptance Criteria → Design (inline link) → Dev Note**
+**Context → Acceptance Criteria → Links (e.g. Figma, Confluence, Jira, PR etc.) (inline link) → Dev Note**
 
 This is the default. Do not add extra sections unless they materially improve execution.
 
 - No separate "Goal" section — Context + ACs already cover it
 - No separate "Requirements" or "What to build" sections — fold into AC
-- No separate "Links" section — put design link inline: `**Design**: [label](url)`
-- No "Solution design" or "Used by" links — keep it minimal, only Figma
+- Keep links inline (e.g. `**Design**: [label](url)`) — no separate "Links" or "Used by" section
 - Don't add "Depends on" lists — use Jira's issue links feature instead
 - Don't repeat the solution design doc in the ticket
 
@@ -52,6 +51,7 @@ This is the default. Do not add extra sections unless they materially improve ex
 - short, actionable engineering hints
 - where the component lives, key prop/API hints
 - reference sibling tickets as links
+- related PRs or tickets linked inline, e.g. "ShoeGrid is built in [DSC-2036](jira-link)"
 ```
 
 **Large/cross-team tickets** may add: Goal, Scope, Non-Goals, Dependencies/Risks. But don't force these on small tickets.
@@ -69,16 +69,19 @@ This is the default. Do not add extra sections unless they materially improve ex
 - Implementation details → Dev Note
 
 **Good:**
+
 - When the user selects a size with low stock, a warning message appears
 - When group = control, the low-stock message is not shown
 - Matching products are highlighted when the user answers a question
 
 **Leaks implementation (move to Dev Note):**
+
 - Products are filtered based on criteria passed via props
 - Component uses `useSizeFilterContentfulConfigStore` to fetch sizes
 - State is managed via the provider composable
 
 **Weak (not testable):**
+
 - Feature works correctly
 - UX is improved
 
@@ -87,6 +90,7 @@ This is the default. Do not add extra sections unless they materially improve ex
 ## Dev Note Guidance
 
 Short, actionable engineering hints only:
+
 - Where the component lives, which sibling ticket provides a dependency
 - Key prop/API hints, technical constraints
 - Reference sibling tickets as links (e.g., "ShoeGrid is built in DSC-2036")
@@ -139,6 +143,7 @@ Be explicit: "This is too vague", "This needs scope boundaries", "This acceptanc
 ## When to Suggest Splitting
 
 Suggest splitting when:
+
 - the ticket mixes multiple unrelated surfaces
 - it contains both discovery and implementation
 - it spans too many teams or dependencies

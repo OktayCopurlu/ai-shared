@@ -17,7 +17,7 @@ Proceed to implementation after all linked context has been reviewed.
 If the ticket is a code workflow:
 
 1. enter the configured workspace
-2. verify the repository matches the routing decision
+2. verify the repository matches the target determined in step 3
 3. reuse an existing ticket branch for `in-progress` work when possible
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
@@ -125,7 +125,7 @@ Do not pause only because the correct implementation touches multiple files or s
 
 ## Guardrails
 
-- do not start implementation before the route is decided
+- do not start implementation before the target repository is confirmed
 - do not create a branch in the wrong repository
 - do not replace missing required fields with guesses
 - do not ask the user a live clarifying question during automated execution

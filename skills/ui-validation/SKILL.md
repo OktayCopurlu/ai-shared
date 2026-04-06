@@ -1,6 +1,6 @@
 ---
 name: ui-validation
-description: 'Frontend UI validation methodology after implementation. USE FOR: verifying visual correctness, runtime health, design comparison, regression checks, and deciding pass/fail after code changes. ALWAYS use when a ticket has UI impact and needs browser-level validation before PR.'
+description: "Frontend UI validation methodology after implementation. USE FOR: verifying visual correctness, runtime health, design comparison, regression checks, and deciding pass/fail after code changes. ALWAYS use when a ticket has UI impact and needs browser-level validation before PR."
 ---
 
 # UI Validation
@@ -11,7 +11,7 @@ This skill does not explain how to use browser tools — load `playwright-mcp` o
 
 ## When To Use
 
-- The ticket has `Needs UI validation: yes` or the change visibly affects rendered UI.
+- The change visibly affects rendered UI (component changes, layout, styling, new elements).
 - After implementation is complete and quality gates (lint, types, tests) have passed.
 - Before committing the final state or creating a PR.
 
@@ -29,7 +29,6 @@ Run these checks in order. Stop early if a critical failure is found.
 ### 2. Visual Correctness
 
 - Test at both desktop (≥1280px) and mobile (375px) viewports. Both are mandatory unless the change is explicitly scoped to a single layout.
-- Use `browser_resize` to switch between viewports during validation.
 - The changed UI renders as expected at each viewport.
 - Text content, images, and layout match what the ticket describes.
 - Interactive states work: hover, focus, active, disabled, loading, empty, error.
@@ -93,9 +92,11 @@ After running the checklist, state one of:
 ### Verdict: Pass | Pass with notes | Fail
 
 ### Findings
+
 - [check name] result — evidence or note
 
 ### Not Verified
+
 - what was skipped and why
 ```
 
