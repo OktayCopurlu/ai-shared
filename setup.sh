@@ -9,7 +9,7 @@ AI="$HOME/.ai-shared"
 echo "Setting up ai-shared symlinks..."
 
 # Create target directories
-mkdir -p ~/.github ~/.copilot ~/.copilot/research ~/.codex/skills ~/.config/opencode
+mkdir -p ~/.github ~/.copilot ~/.copilot/research ~/.codex/skills ~/.config/opencode/commands
 
 # Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
@@ -28,21 +28,27 @@ link() {
 # Global instructions
 link "$AI/instructions.md" ~/.github/copilot-instructions.md
 link "$AI/instructions.md" ~/.codex/instructions.md
-link "$AI/instructions.md" ~/.config/opencode/instructions.md
+link "$AI/instructions.md" ~/.config/opencode/AGENTS.md
 
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
 link "$AI/agents"           ~/.copilot/agents
-link "$AI/prompts"          ~/.copilot/prompts
+link "$AI/prompts"          "$HOME/Library/Application Support/Code/User/prompts"
 link "$AI/prompts"          ~/.codex/prompts
 link "$AI/research/skills"  ~/.copilot/research/skills
 link "$AI/skills"           ~/.config/opencode/skills
-link "$AI/agents"           ~/.config/opencode/agents
+# agents/ not symlinked for OpenCode — incompatible frontmatter format
 
 # Codex per-skill symlinks (codex needs individual skill links)
 for skill in "$AI"/skills/*/; do
   name=$(basename "$skill")
   link "$AI/skills/$name" "$HOME/.codex/skills/$name"
+done
+
+# OpenCode per-command symlinks (rename *.prompt.md → *.md so command names are clean)
+for prompt in "$AI"/prompts/*.prompt.md; do
+  name=$(basename "$prompt" .prompt.md)
+  link "$prompt" "$HOME/.config/opencode/commands/${name}.md"
 done
 
 echo ""

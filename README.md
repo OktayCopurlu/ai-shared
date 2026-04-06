@@ -30,14 +30,16 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 | ------------------ | ---------------------------------------- | --------------- | --------------------------------------------------------------- |
 | `instructions.md`  | `~/.github/copilot-instructions.md`      | VS Code Copilot | Auto-loaded every conversation                                  |
 | `instructions.md`  | `~/.codex/instructions.md`               | Codex           | Auto-loaded every conversation                                  |
-| `instructions.md`  | `~/.config/opencode/instructions.md`     | OpenCode        | Auto-loaded every conversation                                  |
+| `instructions.md`  | `~/.config/opencode/AGENTS.md`           | OpenCode        | Global rules file; OpenCode reads `AGENTS.md` not `instructions.md` |
 | `skills/`          | `~/.copilot/skills/`                     | VS Code Copilot | Directory symlink; skills loaded on demand via `<skills>` block |
 | `skills/*`         | `~/.codex/skills/*` (per-skill symlinks) | Codex           | Requires per-skill symlinks; no directory symlink support       |
 | `skills/`          | `~/.config/opencode/skills/`             | OpenCode        | Directory symlink; on-demand loading                            |
 | `agents/`          | `~/.copilot/agents/`                     | VS Code Copilot | Copilot + OpenCode; Codex does not support custom agents        |
-| `agents/`          | `~/.config/opencode/agents/`             | OpenCode        | Directory symlink                                               |
-| `prompts/`         | `~/.copilot/prompts/`                    | VS Code Copilot | Slash-command prompts; Copilot + Codex only                     |
+| `agents/`          | _(not symlinked)_                        | OpenCode        | **Not compatible** — OpenCode agents require different frontmatter (`mode`, `model`, `permission` object) and `.md` extension |
+| `prompts/`         | `~/Library/Application Support/Code/User/prompts/` | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder |
 | `prompts/`         | `~/.codex/prompts/`                      | Codex           | Slash-command prompts                                           |
+| `prompts/`         | `~/.codex/prompts/`                      | Codex           | Slash-command prompts                                           |
+| `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file) | OpenCode | Renamed symlinks; `implementation.prompt.md` → `/implementation` |
 | `research/skills/` | `~/.copilot/research/skills/`            | VS Code Copilot | Copilot only — research agent skills                            |
 
 ## Rules for agents

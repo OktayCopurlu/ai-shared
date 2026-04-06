@@ -22,14 +22,13 @@ echo "\n── Symlink health ──"
 symlink_targets=(
   "$HOME/.github/copilot-instructions.md"
   "$HOME/.codex/instructions.md"
-  "$HOME/.config/opencode/instructions.md"
+  "$HOME/.config/opencode/AGENTS.md"
   "$HOME/.copilot/skills"
   "$HOME/.copilot/agents"
-  "$HOME/.copilot/prompts"
+  "$HOME/Library/Application Support/Code/User/prompts"
   "$HOME/.copilot/research/skills"
   "$HOME/.codex/prompts"
   "$HOME/.config/opencode/skills"
-  "$HOME/.config/opencode/agents"
 )
 
 for target in "${symlink_targets[@]}"; do
@@ -48,6 +47,18 @@ for skill_dir in "$AI"/skills/*/; do
     fail "Missing Codex per-skill symlink: $codex_link"
   elif [[ ! -e "$codex_link" ]]; then
     fail "Broken Codex per-skill symlink: $codex_link -> $(readlink "$codex_link")"
+  fi
+done
+
+# OpenCode per-command symlinks
+for prompt in "$AI"/prompts/*.prompt.md; do
+  [[ -f "$prompt" ]] || continue
+  name=$(basename "$prompt" .prompt.md)
+  oc_link="$HOME/.config/opencode/commands/${name}.md"
+  if [[ ! -L "$oc_link" ]]; then
+    fail "Missing OpenCode command symlink: $oc_link"
+  elif [[ ! -e "$oc_link" ]]; then
+    fail "Broken OpenCode command symlink: $oc_link -> $(readlink "$oc_link")"
   fi
 done
 
