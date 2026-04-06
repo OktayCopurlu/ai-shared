@@ -1,5 +1,5 @@
 ---
-description: "Implement a Jira ticket: code changes, quality gates, UI validation, and OpenCode CLI handoff. Use with a ticket key or link."
+description: "Implement a Jira ticket: code changes, quality gates, and UI validation. Use with a ticket key or link."
 ---
 
 # Implementation
@@ -17,7 +17,7 @@ If the ticket is a code workflow:
 3. reuse an existing ticket branch for `in-progress` work when possible
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
-6. resolve linked context such as Figma, Contentful, or wiki pages when relevant
+6. open and read every link in the Jira ticket — Figma, Contentful, wiki pages, linked tickets, and any other referenced URLs — before writing any code
 7. read the minimum code context needed and begin implementation
 
 ### Workspace Convention
@@ -67,12 +67,11 @@ Recommended order:
 1. lint
 2. type checks
 3. unit tests
+4. coding-style review — load the `coding-style` skill and review all changed files against it. Fix violations before continuing.
 
 If shared packages were changed, widen the scope enough to cover the real impact.
 
-Quality gates should also include a coding-style review against repository conventions and the active coding-style skill.
-
-Quality gates are complete when all mandatory checks pass and no known validation failure remains unresolved.
+Quality gates are complete when all mandatory checks pass, coding-style violations are resolved, and no known validation failure remains.
 
 ### Failure Policy
 
@@ -82,11 +81,21 @@ If a gate fails for a likely unrelated or flaky reason: record it, continue by d
 
 Pause only when it is unsafe to continue or the failure cannot be attributed.
 
+## Cross-Check
+
+After quality gates pass, compare the implementation against the ticket's acceptance criteria.
+
+For each AC item, confirm it is covered by the code changes. If an AC item is not addressed, go back and implement it before continuing.
+
+Cross-check is complete when every AC item is accounted for.
+
 ## UI Validation
 
-If `needs UI validation = yes`, run browser validation after quality gates.
+If `needs UI validation = yes`, run browser validation after cross-check.
 
 Load the `ui-validation` skill and follow its checklist and verdict format.
+
+If the ticket contains a Figma link, use it as the design reference and validate the implementation against it.
 
 If `needs UI validation = no`, skip this step.
 
@@ -95,39 +104,6 @@ If `needs UI validation = no`, skip this step.
 If browser validation fails because of the implementation: fix it, rerun.
 
 If browser validation causes code changes: rerun quality gates before continuing.
-
-## OpenCode CLI Handoff
-
-After UI validation is complete (or skipped if not needed), trigger OpenCode CLI and exit.
-
-Once handoff is triggered successfully, do not perform any further local edits in this workflow. The OpenCode CLI session owns the working tree from this point.
-
-If UI validation was required (`needs UI validation = yes`) but was not run, go back and run it first.
-
-### Launch Method
-
-Open OpenCode CLI in a **separate Terminal window** so the user can watch its progress:
-
-```
-osascript -e 'tell application "Terminal" to do script "cd <repo-path> && opencode -p \"<handoff-prompt>\""'
-```
-
-Replace `<repo-path>` with the target repository workspace path and `<handoff-prompt>` with the assembled prompt.
-
-Do not run OpenCode inline in the current process. The user must be able to observe the handoff agent independently.
-
-### Handoff Prompt
-
-Pass the handoff as a prompt argument to `opencode`. No intermediate files are written.
-
-The prompt must include:
-
-- Jira ticket key
-- target repository
-- ticket branch name
-- short summary of what was implemented
-- whether UI validation was done
-- any known caveats or unresolved notes
 
 ## Blocker Handling
 

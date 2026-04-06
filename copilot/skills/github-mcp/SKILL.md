@@ -1,11 +1,25 @@
 ---
 name: github-mcp
-description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/creating/updating pull requests, issues, branches, commits, reviews, code search, repository operations. ALWAYS use when user references a PR number, issue, or asks to perform GitHub operations. Prefer over gh CLI.'
+description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/creating/updating pull requests, issues, branches, commits, reviews, code search, repository operations. ALWAYS use when user references a PR number, issue, or asks to perform GitHub operations.'
 ---
 
 # GitHub MCP Server Usage
 
-When interacting with GitHub (pull requests, issues, repositories, branches, etc.), **always prefer using the GitHub MCP server tools** over other methods (e.g., `gh` CLI, fetching web pages).
+## When to Use What
+
+Use **`git` CLI** for local operations:
+- branch, checkout, commit, push, pull, diff, log, stash, rebase, merge
+- These are faster, work offline, and don't need API calls
+
+Use **GitHub MCP** for remote GitHub operations:
+- creating/reading/updating pull requests
+- reading/writing review comments
+- requesting reviewers (including Copilot review)
+- searching code, issues, or PRs across repositories
+- reading remote file contents
+- checking PR status and CI checks
+
+Use **`gh` CLI** as fallback only when GitHub MCP is unavailable or for operations MCP doesn't cover.
 
 ## Pull Requests
 

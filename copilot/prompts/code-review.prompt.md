@@ -4,25 +4,15 @@ description: "Triage Copilot review comments on a PR: address valid ones, dismis
 
 # Review Triage
 
-This prompt runs after Copilot review arrives on a PR.
+Triage Copilot review comments on a PR.
 
 The goal is to answer:
 
 `Which review comments make sense, and what should be done about them?`
 
-## Trigger
-
-This prompt is triggered by the background script:
-
-```
-pnpm --prefix ~/Desktop/fe-workflow-automation wait-for-review <repo> <pr-number> --workspace <path>
-```
-
-The script waits for Copilot review, then launches the agent with the triage prompt. The agent does not need to manage timing or polling — it runs only after the script confirms a review exists.
-
 ## Inputs
 
-The agent receives:
+The user provides:
 
 - PR URL or PR number
 - repository name

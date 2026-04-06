@@ -1,10 +1,10 @@
 ---
-description: "Run the full FE delivery workflow: Jira intake, routing, implementation, quality gates, UI validation, and OpenCode CLI handoff."
+description: "Run the full FE delivery workflow: Jira intake, routing, implementation, quality gates, and UI validation."
 ---
 
 # FE Delivery Workflow
 
-Run the full delivery flow from ticket selection to OpenCode CLI handoff.
+Run the full delivery flow from ticket selection to implementation completion.
 
 Steps 1-3 (intake and routing) run inside this prompt.
 After routing, continue into the implementation prompt automatically.
