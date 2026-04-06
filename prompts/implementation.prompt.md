@@ -4,9 +4,13 @@ description: "Implement a Jira ticket: code changes, quality gates, and UI valid
 
 # Implementation
 
-When called from `start-working`, use the passed step-2 analysis and route as context. Do not re-read Jira.
+When the user provides the ticket key or link:
 
-When called standalone, the user provides the ticket key or link. Read the full Jira detail via Atlassian MCP and determine the target repository and whether UI validation is needed before proceeding.
+1. read the full Jira detail via Atlassian MCP
+2. open and read every link in the ticket — Figma, Contentful, wiki pages, linked tickets, and any other referenced URLs
+3. determine the target repository
+
+Proceed to implementation after all linked context has been reviewed.
 
 ## Code Changes
 
@@ -17,7 +21,7 @@ If the ticket is a code workflow:
 3. reuse an existing ticket branch for `in-progress` work when possible
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
-6. open and read every link in the Jira ticket — Figma, Contentful, wiki pages, linked tickets, and any other referenced URLs — before writing any code
+6. load the `coding-style` skill — apply it to all code written from this point forward
 7. read the minimum code context needed and begin implementation
 
 ### Workspace Convention
@@ -67,7 +71,7 @@ Recommended order:
 1. lint
 2. type checks
 3. unit tests
-4. coding-style review — load the `coding-style` skill and review all changed files against it. Fix violations before continuing.
+4. coding-style review — review all changed files against the `coding-style` skill (already loaded during implementation). Fix violations before continuing.
 
 If shared packages were changed, widen the scope enough to cover the real impact.
 
@@ -91,13 +95,11 @@ Cross-check is complete when every AC item is accounted for.
 
 ## UI Validation
 
-If `needs UI validation = yes`, run browser validation after cross-check.
+After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
-Load the `ui-validation` skill and follow its checklist and verdict format.
+If yes: load the `ui-validation` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
 
-If the ticket contains a Figma link, use it as the design reference and validate the implementation against it.
-
-If `needs UI validation = no`, skip this step.
+If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
 
 ### Failure Policy
 

@@ -27,9 +27,11 @@ link "$AI/instructions.md" ~/.config/opencode/instructions.md
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
 link "$AI/agents"           ~/.copilot/agents
+link "$AI/prompts"          ~/.copilot/prompts
 link "$AI/prompts"          ~/.codex/prompts
 link "$AI/research/skills"  ~/.copilot/research/skills
 link "$AI/skills"           ~/.config/opencode/skills
+link "$AI/agents"           ~/.config/opencode/agents
 
 # Codex per-skill symlinks (codex needs individual skill links)
 for skill in "$AI"/skills/*/; do
