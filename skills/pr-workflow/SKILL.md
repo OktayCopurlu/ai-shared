@@ -20,6 +20,7 @@ Automates the full flow from local changes to a reviewed pull request.
 
 ### 2. Pre-commit Checks
 - Read the `coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
+- Read the `code-review` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
 - Run lint on the relevant package before committing (e.g., `yarn nx run on-shop:lint` for on-shop changes)
 - If `yarn lint` fails on unrelated packages due to pre-existing config issues, verify our files are lint-clean by checking the output for the changed files
 - Run type checks: `yarn on-shop check-types` (or the relevant package's type check)

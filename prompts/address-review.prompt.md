@@ -26,10 +26,11 @@ If the ticket branch name is needed, derive it from the PR's head branch using `
 3. Evaluate whether the comment makes sense in context.
 4. Address comments that make sense.
 5. Dismiss or note comments that do not make sense.
-6. Run quality gates if any code was changed.
-7. Push the updates.
-8. Assign human reviewers.
-9. Update the PR to a review-ready state.
+6. Run the `code-review` skill (all 4 layers) on the full PR diff as an additional pass — report any findings not already covered by Copilot comments.
+7. Run quality gates if any code was changed.
+8. Push the updates.
+9. Assign human reviewers.
+10. Update the PR to a review-ready state.
 
 ## Comment Evaluation
 
