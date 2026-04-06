@@ -11,10 +11,16 @@ echo "Setting up ai-shared symlinks..."
 # Create target directories
 mkdir -p ~/.github ~/.copilot ~/.copilot/research ~/.codex/skills ~/.config/opencode
 
-# Helper: create symlink (remove existing first)
+# Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
   local src="$1" dest="$2"
-  [[ -L "$dest" || -e "$dest" ]] && rm -rf "$dest"
+  if [[ -L "$dest" ]]; then
+    rm "$dest"
+  elif [[ -e "$dest" ]]; then
+    local backup="${dest}.bak.$(date +%s)"
+    echo "  ⚠ $dest is not a symlink — backing up to $backup"
+    mv "$dest" "$backup"
+  fi
   ln -s "$src" "$dest"
   echo "  $dest -> $src"
 }

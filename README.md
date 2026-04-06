@@ -34,7 +34,8 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 | `skills/`          | `~/.copilot/skills/`                     | VS Code Copilot | Directory symlink; skills loaded on demand via `<skills>` block |
 | `skills/*`         | `~/.codex/skills/*` (per-skill symlinks) | Codex           | Requires per-skill symlinks; no directory symlink support       |
 | `skills/`          | `~/.config/opencode/skills/`             | OpenCode        | Directory symlink; on-demand loading                            |
-| `agents/`          | `~/.copilot/agents/`                     | VS Code Copilot | Copilot only — Codex and OpenCode do not support custom agents  |
+| `agents/`          | `~/.copilot/agents/`                     | VS Code Copilot | Copilot + OpenCode; Codex does not support custom agents        |
+| `agents/`          | `~/.config/opencode/agents/`             | OpenCode        | Directory symlink                                               |
 | `prompts/`         | `~/.copilot/prompts/`                    | VS Code Copilot | Slash-command prompts; Copilot + Codex only                     |
 | `prompts/`         | `~/.codex/prompts/`                      | Codex           | Slash-command prompts                                           |
 | `research/skills/` | `~/.copilot/research/skills/`            | VS Code Copilot | Copilot only — research agent skills                            |
