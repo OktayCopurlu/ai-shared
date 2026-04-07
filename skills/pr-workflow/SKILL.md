@@ -1,6 +1,6 @@
 ---
 name: pr-workflow
-description: 'End-to-end PR workflow: prepare branch, commit relevant changes, push, create a reviewer-friendly PR, request review, and help process feedback. USE FOR: when user asks to create a PR, submit changes, or push code for review. Automates the full git-to-PR pipeline.'
+description: "End-to-end PR workflow: prepare branch, commit relevant changes, push, create a reviewer-friendly PR, request review, and help process feedback. USE FOR: when user asks to create a PR, submit changes, or push code for review. Automates the full git-to-PR pipeline."
 ---
 
 # Pull Request Workflow
@@ -10,6 +10,7 @@ Automates the full flow from local changes to a reviewed pull request.
 ## Procedure
 
 ### 1. Create Branch
+
 - Branch name format: `<TICKET>-<description>` (e.g., `DSC-1986-fix-rails-sticky`)
 - The ticket ID must correspond to the Jira ticket
 - Ensure main is up to date before branching:
@@ -19,6 +20,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - If branching from a different base, verify the correct base branch first
 
 ### 2. Pre-commit Checks
+
 - Read the `coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
 - Read the `code-review` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
 - Run lint on the relevant package before committing (e.g., `yarn nx run on-shop:lint` for on-shop changes)
@@ -29,6 +31,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Only proceed to commit after lint, types, and tests all pass for our changes
 
 ### 3. Commit Changes
+
 - Stage only files relevant to the ticket — verify staged files are in scope before committing
 - Do not include unrelated formatting churn or generated noise unless intentional
 - Write brief, imperative commit messages — NO ticket numbers in commit messages
@@ -37,9 +40,11 @@ Automates the full flow from local changes to a reviewed pull request.
 - Use `--no-verify` only as a last resort, and only when the user explicitly accepts bypassing validation
 
 ### 4. Push Branch
+
 - Push with upstream tracking: `git push -u origin <branch-name>`
 
 ### 5. Create PR
+
 - Use available GitHub MCP tools to create the pull request
 - Title format: `Brief description` (e.g., `Add product franchise chips to PDP purchase pod`) — the ticket ID is prepended automatically from the branch name
 - Assign the PR to `OktayCopurlu` using the appropriate GitHub MCP issue or pull request management tool
@@ -53,15 +58,18 @@ Automates the full flow from local changes to a reviewed pull request.
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
 
 ### 6. Preview URLs
+
 - The PR workflow automatically adds the preview link to the description — do not duplicate it at the top
 - For `on-shop` test instructions, link to the specific page: `https://on-shop-<PR_NUMBER>.on-running.com/<path>`
 - For `on-ui` changes: add required labels to trigger the on-ui build pipeline, then include the Storybook URL in test instructions: `https://on-ui-<PR_NUMBER>.on.com/?path=/story/<story-path>`
 - Reviewers do NOT need to run Storybook locally — they can use the preview URL
 
 ### 7. Request Review
+
 - Use available GitHub MCP tools to request Copilot review and fetch review comments
 
 ### 8. Address Feedback
+
 - Fetch all review comments
 - Evaluate each comment: distinguish actionable bugs from style suggestions — do not blindly apply all comments
 - Make fixes for valid issues, commit, and push
@@ -89,7 +97,7 @@ One or two sentences: what changed and why.
 ### Test Instructions
 
 - Navigate to [the page](https://on-shop-<PR_NUMBER>.on-running.com/<path>)
-- Verify the change matches [mobile design](<figma-link>) and [desktop design](<figma-link>)
+- Verify the change matches [mobile design](figma-link) and [desktop design](figma-link)
 - Any additional verification steps
 
 ### Note

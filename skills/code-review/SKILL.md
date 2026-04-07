@@ -16,6 +16,7 @@ Review code changes using four layers, from mechanical to architectural. Each la
 ## Input
 
 Review operates on a diff — either:
+
 - the staged/unstaged changes in the working tree
 - the diff of a pull request
 - a set of changed files the user points to
@@ -25,6 +26,7 @@ Review operates on a diff — either:
 Scan every changed file for mechanical issues that don't require domain knowledge.
 
 **Check for:**
+
 - Missing or incorrect imports (unused imports, missing dependencies)
 - Unused variables, parameters, or type declarations
 - Incorrect or missing prop types / interface mismatches
@@ -41,6 +43,7 @@ Scan every changed file for mechanical issues that don't require domain knowledg
 For every changed component, function, or module, check the corresponding test file (if one exists).
 
 **Check for:**
+
 - No test for error states (API failure, thrown exceptions, rejected promises)
 - No coverage for loading/pending branches
 - Missing edge case for empty arrays, null inputs, or boundary values
@@ -55,6 +58,7 @@ For every changed component, function, or module, check the corresponding test f
 Look across the changed files for patterns that could be simplified **within the scope of this PR**.
 
 **Check for:**
+
 - Duplicated logic across 2+ changed files (same condition, same mapping, same formatting)
 - A custom hook or utility that could replace repeated inline logic
 - Trivial wrapper functions that add no value (single-line pass-through)
@@ -68,6 +72,7 @@ Look across the changed files for patterns that could be simplified **within the
 Flag patterns that **may** indicate an architectural concern. This layer produces **questions, not answers**. The goal is to direct senior reviewer attention to the right places.
 
 **Flag when:**
+
 - Global state is added but only one component consumes it → _"Global state added with a single consumer — is this intentional?"_
 - A new abstraction (hook, utility, component) is used in only one place → _"New abstraction with single usage — is this premature?"_
 - A cross-domain import is introduced (e.g. checkout module importing from account module) → _"Cross-domain dependency added — is this coupling acceptable?"_
