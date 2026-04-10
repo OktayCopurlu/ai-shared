@@ -30,3 +30,14 @@ AI configuration (skills, prompts, agents, instructions) lives in `~/.ai-shared/
 - Prioritize correctness and maintainability over speed.
 - After completing work, do a quick second pass and mention a better approach if one becomes apparent.
 - You may introduce new files, functions, env vars, routes, configs, or helpers when needed.
+
+## Skill Awareness
+
+Skills live in `~/.ai-shared/skills/` and activate automatically based on task context. Key skills to know:
+
+- **Implementation workflow**: `incremental-implementation` for multi-file changes, `coding-style` for all code, `debugging` when something breaks
+- **Quality gates**: `code-review` (4-layer heuristic) before PRs, `security-hardening` for input handling / auth / dependencies
+- **Delivery**: `git-workflow` for the full PR pipeline, `jira-ticket` for ticket writing and review
+- **Context**: `context-engineering` when output quality degrades or sessions start fresh
+- **Browser**: `ui-validation` + `a11y-audit` after UI changes, `chrome-devtools-mcp` for runtime debugging
+- **References**: Shared checklists in `~/.ai-shared/references/` (security, performance, testing, accessibility) — load on demand, not upfront

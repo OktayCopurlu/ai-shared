@@ -107,3 +107,42 @@ After running the checklist, state one of:
 - Do not claim design match without actually comparing to Figma.
 - Do not mix accessibility findings into this validation — use `a11y-audit` for that.
 - If the page cannot be loaded locally, say so and list what was not verified.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+|---|---|
+| "It looks fine on desktop, mobile is probably fine too" | Most layout bugs are viewport-specific. Both viewports are mandatory unless explicitly scoped. |
+| "I compared it to the design mentally" | Comparing from memory is unreliable. Open Figma and the browser side by side. |
+| "The tests pass, so the UI is correct" | Tests verify logic, not pixels. Visual regressions, layout shifts, and styling issues don't show up in unit tests. |
+| "Console warnings are not errors" | Hydration warnings, deprecation notices, and React/Vue warnings often indicate real bugs. Investigate each one. |
+| "I'll check regression later" | Adjacent UI sharing the same container or data source can break silently. Check it now. |
+| "The change is too small to need browser validation" | Even a one-line CSS change can cause layout shifts across viewports. Small changes are quick to validate. |
+
+## Red Flags
+
+- Verdict says "Pass" but only one viewport was tested
+- Design comparison claimed without a Figma link in the ticket
+- Console errors dismissed as "pre-existing" without verification
+- No regression check on adjacent UI
+- Validation done before quality gates passed
+- Tracking verification skipped when the ticket mentions analytics
+
+## Verification
+
+After completing UI validation:
+
+- [ ] Page loads without errors or blank screen
+- [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
+- [ ] Design comparison done against Figma (if reference exists)
+- [ ] No new console errors or warnings
+- [ ] Regression check on adjacent UI completed
+- [ ] Tracking verified (if applicable)
+- [ ] Verdict stated with evidence
+
+## See Also
+
+- `a11y-audit` — accessibility validation (separate from UI validation)
+- `playwright-mcp` — browser automation for navigation and interaction
+- `chrome-devtools-mcp` — console, network, DOM inspection
+- `references/performance-checklist.md` — Core Web Vitals and frontend performance checks

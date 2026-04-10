@@ -80,3 +80,60 @@ Examples:
 - Do not guess refs or reuse stale refs after navigation, tab switches, modal opens, or large DOM updates
 - Prefer refs with clear roles and labels over brittle visual guesses
 - If the page changes significantly, take a new snapshot before the next action
+
+## Common Patterns
+
+### Form filling
+
+```
+1. browser_navigate → target page
+2. browser_snapshot → find form field refs
+3. browser_fill_form → fill each field using refs
+4. browser_snapshot → verify values are set
+5. browser_click → submit button ref
+6. browser_snapshot → verify success state
+```
+
+### Multi-step wizard / checkout
+
+```
+1. Navigate to step 1
+2. For each step:
+   a. browser_snapshot → identify current step, find input refs
+   b. Fill / click as needed
+   c. browser_snapshot → confirm step advanced
+3. Verify final confirmation page
+```
+
+### Cookie consent / modal dismissal
+
+```
+1. browser_snapshot → look for dialog/modal refs
+2. browser_click → accept/dismiss button
+3. browser_snapshot → confirm modal is gone
+4. Continue with the actual task
+```
+
+### Authentication (staging/preview)
+
+Embed credentials in URL for HTTP basic auth:
+```
+browser_navigate → https://on:trend@on-shop-<PR>.on-running.com/...
+```
+
+### Debugging failed interactions
+
+When a click or fill doesn't work:
+1. `browser_console_messages` — check for JS errors blocking interaction
+2. `browser_network_requests` — check if an API call failed
+3. `browser_snapshot` — check if the element is still in the DOM
+4. Try `browser_wait_for` — the element may not be ready yet
+5. Try `browser_evaluate` — interact via JS as a fallback
+
+## Rules
+
+- Always snapshot before interacting — never guess refs
+- After navigation or DOM changes, take a fresh snapshot
+- Use `browser_wait_for` instead of arbitrary delays
+- If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
+- For staging URLs, always include basic auth credentials in the URL

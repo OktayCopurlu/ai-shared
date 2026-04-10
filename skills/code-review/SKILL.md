@@ -9,7 +9,7 @@ Review code changes using four layers, from mechanical to architectural. Each la
 
 ## When to Use
 
-- Self-review before creating a PR (called from `pr-workflow`)
+- Self-review before creating a PR (called from `git-workflow`)
 - Standalone review of a PR or set of changed files
 - Supplement to `address-review` when triaging review comments
 
@@ -115,5 +115,43 @@ Flag patterns that **may** indicate an architectural concern. This layer produce
 - Do not suggest changes to files outside the PR diff.
 - Do not repeat findings already covered by lint or type-check errors.
 - Load `coding-style` before running Layer 1 — naming and comment rules come from there.
-- When called from `pr-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
+- When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
 - When called from `address-review`, run after triaging Copilot comments as an additional pass.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+|---|---|
+| "The tests pass, so it's fine" | Tests are necessary but not sufficient. They don't catch naming issues, dead code, architecture drift, or security holes. |
+| "It's a small change, no review needed" | Small changes can introduce subtle bugs. Every diff benefits from a structured pass. |
+| "I wrote it, I know it's correct" | Authors are blind to their own assumptions. The 4-layer heuristic catches what familiarity hides. |
+| "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling and complexity accumulate silently. |
+| "I'll check test coverage later" | Later never comes. Layer 2 takes minutes and prevents shipping untested branches. |
+| "Refactor suggestions slow things down" | Layer 3 is scoped to the PR. Small consolidations now prevent large refactors later. |
+
+## Red Flags
+
+- Review that only checks if tests pass (ignoring Layers 1, 3, 4)
+- "LGTM" without evidence of actual review
+- Layer 4 signals consistently ignored across multiple PRs
+- No test coverage gaps ever flagged (suggests Layer 2 is being skipped)
+- Review findings not categorized by layer — makes it unclear what's actionable vs. informational
+- Reviewing only the files you're familiar with and skipping the rest
+
+## Verification
+
+After completing the review:
+
+- [ ] All 4 layers were executed — none skipped
+- [ ] Layer 1 issues are either fixed or flagged with file and line
+- [ ] Layer 2 gaps are listed with specific missing scenarios
+- [ ] Layer 3 suggestions are scoped to the PR diff
+- [ ] Layer 4 signals are framed as questions, not directives
+- [ ] Output follows the standard format with layer headings
+
+## See Also
+
+- `coding-style` — naming and comment rules used in Layer 1
+- `debugging` — when a review uncovers a bug that needs triage
+- `references/security-checklist.md` — for security-focused review passes
+- `references/testing-patterns.md` — for evaluating test quality in Layer 2

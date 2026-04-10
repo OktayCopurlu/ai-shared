@@ -9,7 +9,7 @@ AI="$HOME/.ai-shared"
 echo "Setting up ai-shared symlinks..."
 
 # Create target directories
-mkdir -p ~/.github ~/.copilot ~/.copilot/research ~/.codex/skills ~/.config/opencode/commands
+mkdir -p ~/.github ~/.copilot ~/.copilot/research ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references
 
 # Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
@@ -35,17 +35,42 @@ link "$AI/skills"           ~/.copilot/skills
 link "$AI/agents"           ~/.copilot/agents
 link "$AI/prompts"          "$HOME/Library/Application Support/Code/User/prompts"
 link "$AI/prompts"          ~/.codex/prompts
+link "$AI/references"       ~/.copilot/references
 link "$AI/research/skills"  ~/.copilot/research/skills
 link "$AI/skills"           ~/.config/opencode/skills
+link "$AI/references"       ~/.config/opencode/references
 # agents/ not symlinked for OpenCode — incompatible frontmatter format
 
 # Codex per-skill symlinks (codex needs individual skill links)
+# Clean up stale Codex skill symlinks first
+for existing in "$HOME"/.codex/skills/*; do
+  [[ -L "$existing" ]] || continue
+  name=$(basename "$existing")
+  if [[ ! -d "$AI/skills/$name" ]]; then
+    echo "  🧹 Removing stale Codex symlink: ~/.codex/skills/$name"
+    rm "$existing"
+  fi
+done
+
 for skill in "$AI"/skills/*/; do
   name=$(basename "$skill")
   link "$AI/skills/$name" "$HOME/.codex/skills/$name"
 done
 
+# Codex references symlink
+link "$AI/references" "$HOME/.codex/references"
+
 # OpenCode per-command symlinks (rename *.prompt.md → *.md so command names are clean)
+# Clean up stale OpenCode command symlinks first
+for existing in "$HOME"/.config/opencode/commands/*; do
+  [[ -L "$existing" ]] || continue
+  name=$(basename "$existing" .md)
+  if [[ ! -f "$AI/prompts/${name}.prompt.md" ]]; then
+    echo "  🧹 Removing stale OpenCode command symlink: ~/.config/opencode/commands/$(basename "$existing")"
+    rm "$existing"
+  fi
+done
+
 for prompt in "$AI"/prompts/*.prompt.md; do
   name=$(basename "$prompt" .prompt.md)
   link "$prompt" "$HOME/.config/opencode/commands/${name}.md"

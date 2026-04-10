@@ -27,8 +27,11 @@ symlink_targets=(
   "$HOME/.copilot/agents"
   "$HOME/Library/Application Support/Code/User/prompts"
   "$HOME/.copilot/research/skills"
+  "$HOME/.copilot/references"
   "$HOME/.codex/prompts"
+  "$HOME/.codex/references"
   "$HOME/.config/opencode/skills"
+  "$HOME/.config/opencode/references"
 )
 
 for target in "${symlink_targets[@]}"; do
@@ -125,6 +128,59 @@ done
 
 green "Frontmatter check done"
 
+# ─── 3b. Frontmatter name must match directory name ───────────────────
+
+echo "\n── Name == directory ──"
+
+for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  dir_name=$(basename "$(dirname "$f")")
+  fm_name=$(sed -n '/^---$/,/^---$/{ /^name:/{ s/^name: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
+  if [[ -z "$fm_name" ]]; then
+    continue  # already caught by frontmatter check
+  fi
+  if [[ "$fm_name" != "$dir_name" ]]; then
+    fail "$rel: frontmatter name '$fm_name' does not match directory '$dir_name'"
+  fi
+done
+
+for f in "$AI"/agents/*.agent.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  file_name=$(basename "$f" .agent.md)
+  fm_name=$(sed -n '/^---$/,/^---$/{ /^name:/{ s/^name: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
+  if [[ -z "$fm_name" ]]; then
+    continue
+  fi
+  if [[ "$fm_name" != "$file_name" ]]; then
+    fail "$rel: frontmatter name '$fm_name' does not match file stem '$file_name'"
+  fi
+done
+
+green "Name == directory check done"
+
+# ─── 3c. Minimum skill structure ──────────────────────────────────────
+
+echo "\n── Minimum skill structure ──"
+
+for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+
+  # Every skill must have an H1 title
+  if ! grep -q '^# ' "$f"; then
+    fail "$rel: missing H1 heading (skill title)"
+  fi
+
+  # Every skill must have at least one substantive H2 section.
+  if ! grep -q '^## ' "$f"; then
+    fail "$rel: missing H2 sections (expected at least one section such as 'When to Use', 'Procedure', or 'Rules')"
+  fi
+done
+
+green "Minimum skill structure check done"
+
 # ─── 4. Duplicate agent names ─────────────────────────────────────────
 
 echo "\n── Duplicate names ──"
@@ -198,6 +254,63 @@ for f in "$AI"/prompts/*.prompt.md; do
 done
 
 green "Prompt file check done"
+
+# ─── 7. Reference files: must not be empty ─────────────────────────────
+
+echo "\n── Reference files ──"
+
+for f in "$AI"/references/*.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  if [[ ! -s "$f" ]]; then
+    fail "$rel: empty reference file"
+  fi
+done
+
+green "Reference file check done"
+
+# ─── 8. Cross-references in See Also sections ─────────────────────────
+
+echo "\n── Cross-references ──"
+
+for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+
+  # Check references/ mentions
+  grep -oE 'references/[a-zA-Z0-9_-]+\.md' "$f" 2>/dev/null | sort -u | while read -r ref; do
+    if [[ ! -f "$AI/$ref" ]]; then
+      fail "$rel: broken reference '$ref'"
+    fi
+  done
+
+  # Check skill cross-references (backtick-wrapped names in See Also)
+  in_see_also=false
+  while IFS= read -r line; do
+    if [[ "$line" == "## See Also" ]]; then
+      in_see_also=true
+      continue
+    elif [[ "$line" == \#\#\ * ]]; then
+      in_see_also=false
+      continue
+    fi
+    if $in_see_also; then
+      # Skip lines that reference prompts (e.g. "`spec` prompt")
+      [[ "$line" == *" prompt"* ]] && continue
+      # Extract backtick-wrapped skill names (e.g. `debugging`, `coding-style`)
+      echo "$line" | grep -oE '`[a-zA-Z0-9_-]+`' | tr -d '`' | while read -r skill_ref; do
+        # Skip if it looks like a code keyword, not a skill name
+        [[ "$skill_ref" == references* ]] && continue
+        # Check if it's a known skill
+        if [[ ! -d "$AI/skills/$skill_ref" ]] && [[ ! -d "$AI/research/skills/$skill_ref" ]]; then
+          warn "$rel: See Also references unknown skill '$skill_ref'"
+        fi
+      done
+    fi
+  done < "$f"
+done
+
+green "Cross-reference check done"
 
 # ─── Summary ──────────────────────────────────────────────────────────
 

@@ -2,7 +2,7 @@
 description: "Commit, push, and create a PR with description and test instructions."
 ---
 
-Use the pr-workflow skill to:
+Use the git-workflow skill to:
 
 1. Commit all staged changes with a clear commit message
 2. Push the branch

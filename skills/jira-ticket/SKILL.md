@@ -173,3 +173,9 @@ Suggest splitting when:
 - Concise — aim for the ticket to fit in one screen without scrolling
 - No filler, no invented decisions
 - Prefer concrete rewrites over generic advice
+
+## See Also
+
+- `spec` prompt — for defining scope when a ticket doesn't exist yet
+- `refine-ticket` prompt — for pre-refinement review of an existing ticket
+- `solution-design` prompt — for deeper technical design after the spec is clear

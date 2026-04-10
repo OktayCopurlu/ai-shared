@@ -27,3 +27,59 @@ When debugging runtime issues in the browser, **always prefer using the Chrome D
    - Inspect DOM elements for rendering issues
    - Evaluate JavaScript expressions to check reactive state
 5. Cross-reference findings with the source code to identify the root cause
+
+## Tool Selection
+
+| What to check | Tool / Approach | Tips |
+|---|---|---|
+| Console errors & warnings | `getConsoleMessages` | Filter by `error` level first; warnings often reveal hydration or deprecation issues |
+| Network requests | `getNetworkRequests` | Filter by status (4xx/5xx), check request/response payloads, look for CORS errors |
+| DOM structure | `inspectElement`, `querySelectorAll` | Use CSS selectors to target specific elements; check computed styles |
+| Reactive state | `evaluateExpression` | Access Vue devtools: `__vue_app__`, component data, Pinia stores |
+| Performance | `startProfiling` / `stopProfiling` | Profile specific interactions, not full page loads; look for long tasks > 50ms |
+| Storage | `evaluateExpression` | `localStorage.getItem('key')`, `document.cookie`, `sessionStorage` |
+| Layout issues | `getComputedStyle`, `getBoundingClientRect` | Compare expected vs actual dimensions; check for overflow |
+
+## Debugging Patterns
+
+### Console triage
+
+1. Filter errors first — ignore warnings until errors are resolved
+2. Read the full stack trace before jumping to code
+3. Check if the error is from your code or a dependency
+4. Hydration mismatches: compare server-rendered HTML with client-side DOM
+
+### Network debugging
+
+1. Check status code first (4xx = client error, 5xx = server error)
+2. Inspect request headers — missing auth tokens, wrong Content-Type
+3. Compare request payload against API contract/types
+4. Check response body for error messages
+5. Look for CORS errors in console alongside failed network requests
+
+### Vue/Nuxt state inspection
+
+```javascript
+// Access the Vue app instance
+document.querySelector('#__nuxt').__vue_app__
+
+// Access Pinia store (from browser console)
+document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$pinia
+
+// Check component props and data
+// Use Vue DevTools extension or evaluate in console
+```
+
+### Performance profiling
+
+1. Profile a specific user action (click, navigation), not the whole session
+2. Look for: long tasks (>50ms), layout thrashing, excessive re-renders
+3. Check the Network tab for slow or blocking requests
+4. Compare against Core Web Vitals targets in `references/performance-checklist.md`
+
+## Rules
+
+- Always start with the console — most issues leave a trace there
+- Do not guess at state — evaluate expressions to see actual values
+- If the page shows a blank screen, check console errors first, then network failures
+- Take a methodical approach: console → network → DOM → state → performance
