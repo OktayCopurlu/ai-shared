@@ -36,7 +36,6 @@ This folder is the single source of truth for all AI agent configuration — ski
 │   ├── solution-design.prompt.md   # Plan — technical design
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── start-working.prompt.md     # Build — full delivery workflow
-│   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
