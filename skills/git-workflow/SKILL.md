@@ -39,11 +39,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Prefer fixing the allowed prefix config over bypassing validation
 - Use `--no-verify` only as a last resort, and only when the user explicitly accepts bypassing validation
 
-### 4. Push Branch
-
-- Push with upstream tracking: `git push -u origin <branch-name>`
-
-### 5. Create PR
+### 4. Create PR
 
 - Use available GitHub MCP tools to create the pull request
 - Title format: `Brief description` (e.g., `Add product franchise chips to PDP purchase pod`) — the ticket ID is prepended automatically from the branch name
@@ -57,14 +53,14 @@ Automates the full flow from local changes to a reviewed pull request.
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
 
-### 6. Preview URLs
+### 5. Preview URLs
 
 - The PR workflow automatically adds the preview link to the description — do not duplicate it at the top
 - Link to the preview deployment for the specific page (e.g., `https://<app>-<PR_NUMBER>.<domain>/<path>`)
 - For component library changes, include the Storybook preview URL in test instructions
 - Reviewers do NOT need to run Storybook locally — they can use the preview URL
 
-### 7. Request Review
+### 6. Request Review
 
 - Use available GitHub MCP tools to request Copilot review and fetch review comments
 - To address review feedback, use the `/address-review` prompt
@@ -81,60 +77,6 @@ Automates the full flow from local changes to a reviewed pull request.
 - Always run lint before committing — never skip this step
 - Do not force-push without checking if anyone else has the branch
 - Do not blindly accept one side of a merge conflict without reading both
-
-## Rebasing
-
-### Interactive rebase to clean up before PR
-
-```bash
-git rebase -i origin/main
-```
-
-Use:
-- `squash` to combine WIP commits into meaningful units
-- `reword` to fix commit messages
-- `drop` to remove debug/temp commits
-- `fixup` to squash without keeping the message
-
-### Rebase onto updated main
-
-```bash
-git fetch origin
-git rebase origin/main
-```
-
-If conflicts arise, resolve per file, then:
-```bash
-git add <resolved-files>
-git rebase --continue
-```
-
-### When NOT to rebase
-
-- Published branches shared with others — use merge instead
-- If unsure — `git stash` first, then rebase
-
-## Conflict Resolution
-
-1. Read the conflict markers fully — understand both sides before choosing
-2. Check the original intent of both changes (git log, ticket context)
-3. Resolve by integrating both changes when possible, not picking one side
-4. After resolving, run tests to confirm nothing broke
-5. Never blindly accept "ours" or "theirs" on a file you haven't read
-
-## Stash
-
-```bash
-git stash push -m "description of what's stashed"   # save with context
-git stash list                                        # see all stashes
-git stash pop                                         # apply and remove latest
-git stash apply stash@{n}                            # apply without removing
-```
-
-Rules:
-- Always add a message — unnamed stashes are hard to identify later
-- Pop stashes promptly — long-lived stashes become confusing
-- Do not stash as a substitute for committing WIP on a branch
 
 ## Common Rationalizations
 
