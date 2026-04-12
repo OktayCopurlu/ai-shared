@@ -13,13 +13,49 @@ Finish the mechanical scan before opining on architecture.
 
 Review operates on a diff — staged/unstaged changes, a PR diff, or changed files the user points to.
 
+## Review Mode
+
+Choose the mode before running the 4 layers.
+
+### `review-only`
+
+Use this when the input is a PR URL, PR number, or GitHub review context.
+
+Behavior:
+
+- do not edit code
+- do not write tests
+- report findings only
+- prefer PR comment format when replying on GitHub
+- for Codex replies, list findings first by severity with file/line references
+
+### `self-review`
+
+Use this when the input is local staged/unstaged changes, changed files in the working tree, or the user's own branch before PR creation.
+
+Behavior:
+
+- findings still come first
+- Layer 1 issues may be fixed inline when they are obvious and low-risk
+- Layer 2 may hand off to `test` or `tdd`, or be fixed in the same pass when appropriate
+- keep fixes scoped to the current change only
+
+## Mode Selection Rules
+
+Determine mode in this order:
+
+1. if the user explicitly says `review-only` or `self-review`, use that
+2. if a PR URL or PR number is provided, use `review-only`
+3. if the input is a local diff or changed local files, use `self-review`
+4. if the context is ambiguous, default to `review-only` to avoid unexpected edits
+
 ## Layer 1 — Surface Correctness
 
 Scan every changed file for mechanical issues. Load `coding-style` first — naming and comment rules come from there.
 
 **Check for:** unused imports/vars, incorrect prop types, `coding-style` naming violations, redundant conditions, dead code branches, hardcoded values that should be config, leftover console logs/debugger statements.
 
-**Output:** File, line, one-line fix. Apply directly when confident. Flag when ambiguous.
+**Output:** File, line, one-line fix. In `self-review`, apply directly when confident. In `review-only`, report the fix without editing. Flag when ambiguous.
 
 ## Layer 2 — Test Coverage Gaps
 
@@ -27,7 +63,9 @@ For every changed function/component, check the test file.
 
 **Check for:** missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on.
 
-**Output:** `[file] missing test for: <scenario>`. Describe what's missing — do not write the tests.
+**Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `tdd` when in scope.
+
+**When Layer 2 is N/A:** docs-only changes, formatting-only changes, generated files, config/types changes with no behavior impact, or explicitly temporary experiment code that should not drive new permanent coverage. State `N/A — no persistent behavior change to cover.`
 
 ## Layer 3 — Bounded Refactor Signals
 
@@ -78,6 +116,13 @@ Use the **structured format** for self-review and standalone reviews:
   OR
 - ❓ [file:line] question for senior reviewer
 ```
+
+When replying directly to the user:
+
+- start with findings ordered by severity, each with file/line references
+- keep summaries brief and place them after the findings
+- include the layer grouping only when it adds clarity for the user or the workflow
+- if there are no findings, say so explicitly and mention any residual risk or testing gap
 
 ## PR Comment Format
 
@@ -132,7 +177,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - Do not repeat findings already covered by lint or type-check errors.
 - Load `coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
-- When called from `address-review`, run after triaging Copilot comments as an additional pass.
+- When called from the `/address-review` prompt, run after triaging Copilot comments as an additional pass.
 
 ## Common Rationalizations
 
@@ -160,7 +205,7 @@ After completing the review:
 
 - [ ] All 4 layers were executed — none skipped
 - [ ] Layer 1 issues are either fixed or flagged with file and line
-- [ ] Layer 2 gaps are listed with specific missing scenarios
+- [ ] Layer 2 gaps are listed with specific missing scenarios, or marked `N/A` with a reason
 - [ ] Layer 3 suggestions are scoped to the PR diff
 - [ ] Layer 4 signals are framed as questions, not directives
 - [ ] Output follows the standard format with layer headings

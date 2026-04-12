@@ -7,10 +7,10 @@ description: "Implement a Jira ticket: code changes, quality gates, and UI valid
 When the user provides the ticket key or link:
 
 1. read the full Jira detail via Atlassian MCP
-2. open and read every link in the ticket — Figma, Contentful, wiki pages, linked tickets, and any other referenced URLs
+2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs
 3. determine the target repository
 
-Proceed to implementation after all linked context has been reviewed.
+Proceed to implementation after all required linked context has been reviewed.
 
 ## Code Changes
 
@@ -22,23 +22,28 @@ If the ticket is a code workflow:
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
 6. load the `coding-style` skill — apply it to all code written from this point forward
-7. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `references/search-first.md`):
+7. when behavior changes, read the existing test file first and decide test coverage intentionally:
+   - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
+   - if the change is experiment-specific and likely temporary: test updates may be skipped to avoid wasting effort on short-lived code
+   - do not remove or weaken existing meaningful coverage only because a change is experimental
+8. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `references/search-first.md`):
    - search shared/design-system components for anything that matches the UI elements in the ticket or Figma
    - search the codebase for similar patterns already implemented elsewhere (e.g. same layout, same interaction, same data shape)
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new
    - if a similar pattern exists elsewhere, reuse the same approach rather than inventing a parallel one
-8. read the minimum code context needed and begin implementation
+9. if the UI work touches forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load the `a11y-audit` skill during implementation and apply it while building
+10. read the minimum code context needed and begin implementation
 
 ### Workspace Convention
 
-All repositories live under `~/Desktop/`.
+Use the configured workspace root. Default to `~/Desktop/` when no other workspace root is explicitly configured.
 
 To find a repository workspace:
 
-1. look for a matching directory under `~/Desktop/`
-2. if not found, clone from the `onrunning` GitHub org into `~/Desktop/`
+1. look for a matching directory under the configured workspace root
+2. if not found, clone from the `onrunning` GitHub org into the configured workspace root
 
-Do not work in a repository outside `~/Desktop/` unless explicitly configured otherwise.
+Do not work in a repository outside the configured workspace root unless explicitly configured otherwise.
 
 ### Branch Rules
 
