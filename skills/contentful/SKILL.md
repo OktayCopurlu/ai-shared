@@ -5,17 +5,13 @@ description: 'Read content from Contentful CMS via MCP server or CLI. USE FOR: r
 
 # Contentful — Read Content from CMS
 
-Read-only access to Contentful CMS. Prefer MCP when available, fall back to CLI + curl.
-
-## CRITICAL: Read-Only Access
-
-**NEVER create, update, or delete any Contentful data.** Write operations must be done manually through the Contentful web UI.
+**NEVER create, update, or delete any Contentful data.** Read-only access only.
 
 ## Tool Selection
 
 1. Try loading MCP tools via `tool_search_tool_regex` with pattern `contentful`
-2. If MCP tools are found → use MCP (do NOT call any write/publish/delete tools)
-3. If no MCP tools → use CLI + curl as described below
+2. If MCP tools found → use MCP (do NOT call any write/publish/delete tools)
+3. If no MCP tools → use CLI + curl below
 
 ## CLI + curl
 

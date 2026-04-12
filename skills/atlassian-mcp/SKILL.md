@@ -3,9 +3,9 @@ name: atlassian-mcp
 description: 'Interact with Jira tickets and Confluence wiki pages via the Atlassian MCP server. USE FOR: reading/creating/updating Jira issues, searching Jira with JQL, reading/creating/updating Confluence pages, adding comments. ALWAYS use when user references a Jira ticket (e.g. DSC-1986, B2C-12345) or Confluence page.'
 ---
 
-# Atlassian MCP Server Usage
+# Atlassian MCP
 
-When interacting with Jira tickets or Confluence wiki pages, **always prefer using the Atlassian MCP server tools** over other methods (e.g., fetching web pages, asking the user to paste content).
+Always prefer Atlassian MCP tools over fetching web pages or asking the user to paste content.
 
 ## Jira Operations
 

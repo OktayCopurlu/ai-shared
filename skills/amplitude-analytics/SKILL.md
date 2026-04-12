@@ -3,17 +3,9 @@ name: amplitude-analytics
 description: 'Query analytics data from Amplitude via the Amplitude MCP server. USE FOR: debugging tracking events, verifying analytics implementation, checking event payloads, reviewing user funnels. ALWAYS use when user asks about tracking, analytics, or Amplitude events.'
 ---
 
-# Amplitude Analytics MCP Server Usage
+# Amplitude Analytics
 
-When working with analytics and tracking, **always prefer using the Amplitude MCP server tools** to query and verify data.
-
-## Use Cases
-
-- **Verify tracking implementation**: Check if events are firing correctly after implementing tracking code
-- **Debug tracking issues**: Investigate missing or incorrect event payloads
-- **Review event schemas**: Look up event properties and expected values
-- **Analyze user funnels**: Query funnel data to understand user behavior
-- **Check event volumes**: Verify event counts after deployments
+Always prefer the Amplitude MCP server tools to query and verify tracking data.
 
 ## Procedure
 

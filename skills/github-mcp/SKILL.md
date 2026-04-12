@@ -3,23 +3,13 @@ name: github-mcp
 description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/creating/updating pull requests, issues, branches, commits, reviews, code search, repository operations. ALWAYS use when user references a PR number, issue, or asks to perform GitHub operations.'
 ---
 
-# GitHub MCP Server Usage
+# GitHub MCP
 
-## When to Use What
+## Routing
 
-Use **`git` CLI** for local operations:
-- branch, checkout, commit, push, pull, diff, log, stash, rebase, merge
-- These are faster, work offline, and don't need API calls
-
-Use **GitHub MCP** for remote GitHub operations:
-- creating/reading/updating pull requests
-- reading/writing review comments
-- requesting reviewers (including Copilot review)
-- searching code, issues, or PRs across repositories
-- reading remote file contents
-- checking PR status and CI checks
-
-Use **`gh` CLI** as fallback only when GitHub MCP is unavailable or for operations MCP doesn't cover.
+- **`git` CLI** for local operations (branch, commit, push, pull, diff, rebase)
+- **GitHub MCP** for remote operations (PRs, reviews, issues, code search)
+- **`gh` CLI** as fallback only when MCP is unavailable
 
 ## Pull Requests
 
@@ -29,7 +19,6 @@ Use **`gh` CLI** as fallback only when GitHub MCP is unavailable or for operatio
 - **Reviews**: Use `pull_request_review_write` to submit reviews
 - **Copilot review**: Use `request_copilot_review` to request automated review
 - **Searching PRs**: Use `search_pull_requests` or `list_pull_requests` to find PRs
-- **Status checks**: Use `pullRequestStatusChecks` to check CI status
 - **Merging**: Use `merge_pull_request` to merge PRs
 
 ## Issues
