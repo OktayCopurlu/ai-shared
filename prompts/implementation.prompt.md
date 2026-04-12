@@ -22,7 +22,7 @@ If the ticket is a code workflow:
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
 6. load the `coding-style` skill — apply it to all code written from this point forward
-7. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code:
+7. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `references/search-first.md`):
    - search shared/design-system components for anything that matches the UI elements in the ticket or Figma
    - search the codebase for similar patterns already implemented elsewhere (e.g. same layout, same interaction, same data shape)
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new

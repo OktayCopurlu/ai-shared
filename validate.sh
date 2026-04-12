@@ -12,8 +12,8 @@ red()    { printf "\033[31m✗ %s\033[0m\n" "$1"; }
 yellow() { printf "\033[33m⚠ %s\033[0m\n" "$1"; }
 green()  { printf "\033[32m✓ %s\033[0m\n" "$1"; }
 
-fail() { red "$1"; ((errors++)); }
-warn() { yellow "$1"; ((warnings++)); }
+fail() { red "$1"; errors=$((errors + 1)); }
+warn() { yellow "$1"; warnings=$((warnings + 1)); }
 
 # ─── 1. Broken symlinks ───────────────────────────────────────────────
 
@@ -311,6 +311,81 @@ for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
 done
 
 green "Cross-reference check done"
+
+# ─── 9. Skill smoke tests ─────────────────────────────────────────────
+
+echo "\n── Skill smoke tests ──"
+
+# 9a. Internal file references: check that paths mentioned in skills resolve
+for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+
+  # Extract references/ paths (e.g. references/security-checklist.md)
+  grep -oE 'references/[a-zA-Z0-9_/-]+\.md' "$f" 2>/dev/null | sort -u | while read -r ref; do
+    if [[ ! -f "$AI/$ref" ]]; then
+      fail "$rel: references non-existent file '$ref'"
+    fi
+  done
+
+  # Extract docs/ paths (e.g. docs/skill-anatomy.md)
+  grep -oE 'docs/[a-zA-Z0-9_/-]+\.md' "$f" 2>/dev/null | sort -u | while read -r ref; do
+    if [[ ! -f "$AI/$ref" ]]; then
+      fail "$rel: references non-existent file '$ref'"
+    fi
+  done
+done
+
+# 9b. Description quality: must contain "USE FOR:" or "Use for" trigger
+for f in "$AI"/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  desc=$(sed -n '/^---$/,/^---$/{ /^description:/{ s/^description: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
+  if [[ -n "$desc" ]] && ! echo "$desc" | grep -qi 'use for'; then
+    warn "$rel: description missing 'USE FOR:' trigger guidance"
+  fi
+done
+
+# 9c. Skill size: warn if over 500 lines (per skill-anatomy.md guideline)
+for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  line_count=$(wc -l < "$f" | tr -d ' ')
+  if (( line_count > 500 )); then
+    warn "$rel: $line_count lines (guideline is under 500)"
+  fi
+done
+
+# 9d. instructions.md alignment: every skill dir should appear in Skill Awareness
+instructions_file="$AI/instructions.md"
+if [[ -f "$instructions_file" ]]; then
+  for skill_dir in "$AI"/skills/*/; do
+    [[ -d "$skill_dir" ]] || continue
+    name=$(basename "$skill_dir")
+    if ! grep -q "$name" "$instructions_file"; then
+      warn "Skill '$name' not referenced in instructions.md Skill Awareness section"
+    fi
+  done
+fi
+
+# 9e. Supporting files: check that non-SKILL.md files in skill dirs are referenced
+for skill_dir in "$AI"/skills/*/ "$AI"/research/skills/*/; do
+  [[ -d "$skill_dir" ]] || continue
+  name=$(basename "$skill_dir")
+  skill_file="$skill_dir/SKILL.md"
+  [[ -f "$skill_file" ]] || continue
+
+  for support_file in "$skill_dir"*.md; do
+    [[ -f "$support_file" ]] || continue
+    support_name=$(basename "$support_file")
+    [[ "$support_name" == "SKILL.md" ]] && continue
+    if ! grep -q "$support_name" "$skill_file"; then
+      warn "skills/$name/$support_name: supporting file not referenced in SKILL.md"
+    fi
+  done
+done
+
+green "Skill smoke test done"
 
 # ─── Summary ──────────────────────────────────────────────────────────
 

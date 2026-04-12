@@ -7,6 +7,10 @@ description: 'Proactive code review using a 4-layer heuristic: surface correctne
 
 Review code changes using four layers, from mechanical to architectural. Each layer has a clear boundary: layers 1–3 produce **fixes or suggestions**; layer 4 produces **questions only**.
 
+## Philosophy
+
+A good review catches what the author can't see — not style nitpicks, but behavioral gaps and hidden coupling. Layers enforce discipline: finish the mechanical scan before opining on architecture. Layer 4 exists because architectural judgment is context-dependent — surface the signal, let humans decide.
+
 ## When to Use
 
 - Self-review before creating a PR (called from `git-workflow`)

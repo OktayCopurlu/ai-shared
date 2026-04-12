@@ -7,6 +7,10 @@ description: "Structured debugging workflow: reproduce, localize, reduce, fix, g
 
 Systematic approach to finding and fixing bugs. Resist the urge to guess — follow the steps.
 
+## Philosophy
+
+Bugs are information gaps — the code does something you didn't expect. Debugging closes that gap by narrowing the search space systematically. Guessing skips the narrowing and often fixes the wrong thing. The cost of reproducing and localizing always pays for itself.
+
 ## When to Use
 
 - A test fails during quality gates
@@ -45,6 +49,7 @@ Narrow down where the failure originates. Do not read the entire codebase — bi
 - **Git bisect:** `git bisect start`, `git bisect bad`, `git bisect good <commit>` — find the commit that introduced the bug
 - **Console/log isolation:** Add targeted log statements at function boundaries, not everywhere
 - **Diff comparison:** If it worked before, diff the current state against the last known good state
+- **Explore subagent:** For unfamiliar code areas, use the `Explore` subagent to map the relevant module boundaries and call chains before diving in
 
 **Exit criteria:** You know which file, function, and roughly which lines cause the failure.
 

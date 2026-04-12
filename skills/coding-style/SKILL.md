@@ -48,6 +48,12 @@ These rules apply to ALL code I write or modify. They override generic conventio
 - **Explicit over clever**: Readable code > shorter code. No ternary chains, no comma operators, no void expressions
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, stop and check whether passing a slot is cleaner and more future-proof than adding another prop. For example, if a component needs custom labels or content regions, a slot may be a better API than more props.
 
+## Change Discipline
+
+- **Scope**: Touch only what the task requires. Don't "clean up" adjacent code, refactor imports in unrelated files, or add features not in the spec. Note improvements for later — don't fix them mid-task.
+- **Test between changes**: Don't write 100+ lines without running tests. Make a change, verify it works (tests pass, build succeeds), then move on. Bugs compound when changes pile up untested.
+- **Keep it compilable**: After every meaningful change, the project must build and existing tests must pass. Never leave the codebase in a broken state between edits.
+
 ## Simplification
 
 - **Inline single-use helpers**: If a function is called exactly once and its body is short enough to read in place, inline it. A named function only earns its keep when it is reused or when the name genuinely clarifies intent beyond what the code already says

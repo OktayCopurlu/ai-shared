@@ -80,4 +80,5 @@ Items that were checked but excluded. One-line reason each.
 
 ## Resources
 - Shared policy (source registry, rubric, dedupe): [shared/policy.md](../shared/policy.md)
+- Source registry: [sources.md](./sources.md)
 - Output template: [templates/weekly-digest.md](./templates/weekly-digest.md)

@@ -7,6 +7,10 @@ description: "Test-driven development: write failing test, make it pass, refacto
 
 Write the test first. Make it pass. Clean up. Repeat.
 
+## Philosophy
+
+Tests verify **behavior through public interfaces**, not implementation details. A good test reads like a specification — it describes what the system does, not how. If you refactor internals and a test breaks but behavior hasn't changed, that test was wrong.
+
 ## When to Use
 
 - Implementing a new function, utility, or composable
@@ -110,6 +114,29 @@ When fixing a bug, always start with a failing test:
 
 This guarantees the bug stays fixed.
 
+## Anti-Pattern: Horizontal Slices
+
+**DO NOT write all tests first, then all implementation.** This is horizontal slicing — treating Red as "write all tests" and Green as "write all code."
+
+```
+WRONG (horizontal):
+  RED:   test1, test2, test3, test4, test5
+  GREEN: impl1, impl2, impl3, impl4, impl5
+
+RIGHT (vertical):
+  RED→GREEN: test1→impl1
+  RED→GREEN: test2→impl2
+  RED→GREEN: test3→impl3
+```
+
+Why this fails:
+- Tests written in bulk test *imagined* behavior, not *actual* behavior
+- You test the shape of things (signatures, structures) rather than user-facing behavior
+- Tests become insensitive to real changes — pass when behavior breaks, fail when behavior is fine
+- You commit to test structure before understanding the implementation
+
+Each cycle should respond to what you learned from the previous one.
+
 ## Common Rationalizations
 
 | Rationalization | Reality |
@@ -144,5 +171,4 @@ After a TDD cycle:
 
 - `references/testing-patterns.md` — test structure, anti-patterns, Vue component testing
 - `debugging` — bug fix TDD overlaps with Step 5 (Guard)
-- `incremental-implementation` — TDD fits naturally into the increment cycle
-- `coding-style` — naming and formatting for test files
+- `coding-style` — naming, formatting, and change discipline for test files

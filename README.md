@@ -15,13 +15,11 @@ This folder is the single source of truth for all AI agent configuration — ski
 │   ├── code-review/            # 4-layer heuristic code review
 │   ├── coding-style/           # Personal code writing standards
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
-│   ├── context-engineering/    # Optimize agent context setup
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
 │   ├── git-workflow/           # Full git & PR pipeline
 │   ├── github-mcp/             # GitHub operations via MCP
 │   ├── google-drive/           # Fetch Google Sheets/Docs
-│   ├── incremental-implementation/ # Thin vertical slices
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
