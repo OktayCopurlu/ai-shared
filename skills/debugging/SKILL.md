@@ -5,89 +5,36 @@ description: "Structured debugging workflow: reproduce, localize, reduce, fix, g
 
 # Debugging — 5-Step Triage
 
-Systematic approach to finding and fixing bugs. Resist the urge to guess — follow the steps.
-
-## Philosophy
-
-Bugs are information gaps — the code does something you didn't expect. Debugging closes that gap by narrowing the search space systematically. Guessing skips the narrowing and often fixes the wrong thing. The cost of reproducing and localizing always pays for itself.
-
-## When to Use
-
-- A test fails during quality gates
-- A build breaks unexpectedly
-- Runtime behavior doesn't match expectations
-- A bug report needs investigation
-- Something "just stopped working"
-
-**When NOT to use:** Known issues with a documented fix. Cosmetic issues where the fix is obvious.
+Resist the urge to guess — follow the steps in order.
 
 ## The 5 Steps
 
 ### Step 1 — Reproduce
-
-Before debugging anything, reproduce the failure reliably.
-
-- Get the exact error message, stack trace, or unexpected output
-- Determine the minimal steps to trigger the issue
-- Note the environment: browser, Node version, OS, branch, dependencies
-- If the failure is intermittent, identify conditions that make it more likely (timing, data, concurrency)
-
-**Exit criteria:** You can trigger the failure on demand with specific steps.
-
-If you cannot reproduce:
-- Check if it's environment-specific (CI vs. local, Node version, OS)
-- Check if it depends on state from a previous test or operation
-- Check if it's timing-dependent (race conditions, async operations)
+Reproduce the failure reliably before doing anything else.
+- **Exit:** You can trigger the failure on demand with specific steps.
+- If you cannot reproduce, check environment differences (CI vs. local), state from previous operations, or timing dependencies.
 
 ### Step 2 — Localize
-
-Narrow down where the failure originates. Do not read the entire codebase — bisect.
-
-**Strategies:**
-- **Stack trace:** Follow the error trace to the originating file and line
-- **Binary search:** Comment out half the code path, see if the failure persists, repeat
-- **Git bisect:** `git bisect start`, `git bisect bad`, `git bisect good <commit>` — find the commit that introduced the bug
-- **Console/log isolation:** Add targeted log statements at function boundaries, not everywhere
-- **Diff comparison:** If it worked before, diff the current state against the last known good state
-- **Explore subagent:** For unfamiliar code areas, use the `Explore` subagent to map the relevant module boundaries and call chains before diving in
-
-**Exit criteria:** You know which file, function, and roughly which lines cause the failure.
+Narrow where the failure originates. Bisect — do not read the entire codebase.
+- Use targeted log statements at function boundaries, not everywhere.
+- For unfamiliar code, use the `Explore` subagent to map module boundaries before diving in.
+- **Exit:** You know which file, function, and roughly which lines cause the failure.
 
 ### Step 3 — Reduce
-
-Create the simplest possible reproduction of the bug.
-
-- Strip away unrelated code, dependencies, and setup
-- If it's a component issue, reproduce in isolation (unit test, minimal component)
-- If it's an API issue, reproduce with a minimal request
-- The reduced case should fail for exactly the same reason
-
-**Why this matters:** Reduced cases reveal the root cause. Complex reproductions hide it.
-
-**Exit criteria:** You have a minimal test case or code snippet that demonstrates the bug clearly.
+Create the simplest possible reproduction. Skip if the reproduction is already trivial.
+- **Exit:** A minimal test case or snippet that demonstrates the bug clearly.
 
 ### Step 4 — Fix
-
 Fix the root cause, not the symptom.
-
-- Fix at the source — not by adding workarounds downstream
-- If the fix requires changing shared code, check the impact on other consumers
-- Make the smallest correct change — do not bundle refactors with bug fixes
-- Run the reproduction test to confirm the fix resolves the issue
-- Run the full test suite to confirm no regressions
-
-**Exit criteria:** The reproduction case passes. All existing tests pass. The fix addresses the root cause.
+- Fix at the source — no workarounds downstream.
+- Smallest correct change — do not bundle refactors with bug fixes.
+- **Exit:** Reproduction passes. Full test suite passes. Root cause addressed.
 
 ### Step 5 — Guard
-
-Prevent the bug from recurring.
-
-- Write a regression test that would have caught this bug (if one doesn't exist)
-- The test should fail without the fix and pass with it
-- If the bug was caused by missing validation, add the validation
-- If the bug was caused by an assumption, document the assumption (or remove it)
-
-**Exit criteria:** A test exists that fails without the fix. The fix and guard are committed together.
+Prevent recurrence.
+- Write a regression test that fails without the fix and passes with it.
+- Commit the fix and guard together.
+- **Exit:** A test guards against recurrence.
 
 ## Common Rationalizations
 

@@ -5,86 +5,51 @@ description: 'Proactive code review using a 4-layer heuristic: surface correctne
 
 # Code Review — 4-Layer Heuristic
 
-Review code changes using four layers, from mechanical to architectural. Each layer has a clear boundary: layers 1–3 produce **fixes or suggestions**; layer 4 produces **questions only**.
+Review code changes using four layers, from mechanical to architectural. Layers 1–3 produce **fixes or suggestions**; layer 4 produces **questions only**.
 
-## Philosophy
-
-A good review catches what the author can't see — not style nitpicks, but behavioral gaps and hidden coupling. Layers enforce discipline: finish the mechanical scan before opining on architecture. Layer 4 exists because architectural judgment is context-dependent — surface the signal, let humans decide.
-
-## When to Use
-
-- Self-review before creating a PR (called from `git-workflow`)
-- Standalone review of a PR or set of changed files
-- Supplement to `address-review` when triaging review comments
+Finish the mechanical scan before opining on architecture.
 
 ## Input
 
-Review operates on a diff — either:
-
-- the staged/unstaged changes in the working tree
-- the diff of a pull request
-- a set of changed files the user points to
+Review operates on a diff — staged/unstaged changes, a PR diff, or changed files the user points to.
 
 ## Layer 1 — Surface Correctness
 
-Scan every changed file for mechanical issues that don't require domain knowledge.
+Scan every changed file for mechanical issues. Load `coding-style` first — naming and comment rules come from there.
 
-**Check for:**
+**Check for:** unused imports/vars, incorrect prop types, `coding-style` naming violations, redundant conditions, dead code branches, hardcoded values that should be config, leftover console logs/debugger statements.
 
-- Missing or incorrect imports (unused imports, missing dependencies)
-- Unused variables, parameters, or type declarations
-- Incorrect or missing prop types / interface mismatches
-- Inconsistent naming that violates `coding-style` conventions
-- Redundant conditions (`if (x) return true; else return false;`)
-- Dead code branches (unreachable code after early returns, impossible conditions)
-- Hardcoded values that should be constants or config
-- Console logs, debugger statements, or temporary code left in
-
-**Output:** List each issue with file, line, and a one-line fix. Apply fixes directly when confidence is high. Flag for confirmation when ambiguous.
+**Output:** File, line, one-line fix. Apply directly when confident. Flag when ambiguous.
 
 ## Layer 2 — Test Coverage Gaps
 
-For every changed component, function, or module, check the corresponding test file (if one exists).
+For every changed function/component, check the test file.
 
-**Check for:**
+**Check for:** missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on.
 
-- No test for error states (API failure, thrown exceptions, rejected promises)
-- No coverage for loading/pending branches
-- Missing edge case for empty arrays, null inputs, or boundary values
-- Snapshot tests without behavioural assertions (snapshots alone don't verify behaviour)
-- New branches or conditions in the code that have no corresponding test case
-- Mocked dependencies that are never asserted on (mock exists but no `expect` on it)
-
-**Output:** List each gap as: `[file] missing test for: <scenario>`. Do not write the tests — describe what's missing so the developer can decide.
+**Output:** `[file] missing test for: <scenario>`. Describe what's missing — do not write the tests.
 
 ## Layer 3 — Bounded Refactor Signals
 
-Look across the changed files for patterns that could be simplified **within the scope of this PR**.
+Patterns that could be simplified **within the scope of this PR** only.
 
-**Check for:**
+**Check for:** duplicated logic across 2+ changed files, repeated inline logic that should be a hook/utility, trivial pass-through wrappers, copy-pasted test setup.
 
-- Duplicated logic across 2+ changed files (same condition, same mapping, same formatting)
-- A custom hook or utility that could replace repeated inline logic
-- Trivial wrapper functions that add no value (single-line pass-through)
-- Repeated ternary patterns that could be a shared helper
-- Copy-pasted test setup that should be a test fixture or factory
-
-**Output:** Suggest the extraction or consolidation with a brief rationale. Keep suggestions scoped to what the PR already touches — do not suggest refactors in untouched code.
+**Output:** Suggest extraction with brief rationale. Scoped to PR diff only — never suggest refactors in untouched code.
 
 ## Layer 4 — Architecture Attention Signals
 
-Flag patterns that **may** indicate an architectural concern. This layer produces **questions, not answers**. The goal is to direct senior reviewer attention to the right places.
+Questions only — never directives. Direct senior reviewer attention.
 
 **Flag when:**
+- Global state with a single consumer
+- New abstraction used in only one place
+- Cross-domain import (checkout ← account)
+- 5+ files with the same pattern change
+- Client-side computation of server-derivable data
+- Component prop interface beyond 8 props
 
-- Global state is added but only one component consumes it → _"Global state added with a single consumer — is this intentional?"_
-- A new abstraction (hook, utility, component) is used in only one place → _"New abstraction with single usage — is this premature?"_
-- A cross-domain import is introduced (e.g. checkout module importing from account module) → _"Cross-domain dependency added — is this coupling acceptable?"_
-- A PR touches 5+ files with the same pattern change → _"Same pattern changed in N files — should this be centralized?"_
-- Data that could be server-derived is being computed client-side → _"This is derived client-side — should it come from the API?"_
-- A component's prop interface grows beyond 8 props → _"Prop count is high — would slots or composition simplify this?"_
-
-**Output:** Frame each signal as a question. Include the specific file/line that triggered it. Never state an architectural decision — only surface the signal.
+**Output:** Question per signal with file/line. Never state an architectural decision.
 
 ## Output Format
 

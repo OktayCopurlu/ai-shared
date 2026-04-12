@@ -5,63 +5,26 @@ description: "Security review and hardening for frontend applications. OWASP Top
 
 # Security Hardening
 
-Prevent security vulnerabilities during implementation and review. Focused on frontend and full-stack patterns relevant to Vue/Nuxt/TypeScript applications.
+Prevent security vulnerabilities in Vue/Nuxt/TypeScript applications.
 
-## When to Use
+## Boundary Rules
 
-- Implementing forms, auth flows, or payment integration
-- Handling user input that feeds into rendering, APIs, or storage
-- Adding or updating dependencies
-- Working with environment variables, tokens, or secrets
-- Connecting to external APIs or services
-- Reviewing code that touches any of the above
-
-**When NOT to use:** Pure styling changes, static content updates, or internal tooling with no user-facing data handling.
-
-## Three-Tier Boundary System
-
-Security enforcement depends on where you are in the stack:
-
-### Tier 1 — Client Boundary (Browser)
-
-User input enters the system here. Trust nothing.
-
-- Validate all form inputs before submission (type, length, format)
+### Client (Browser)
 - Sanitize any content rendered with `v-html` — or avoid `v-html` entirely
 - Never store auth tokens in `localStorage` — use HttpOnly cookies
 - Never embed secrets in client-side code or bundles
 - Use CSP headers to restrict script sources
 
-### Tier 2 — API Boundary (Server / BFF)
-
-Data crosses the network. Validate at both sides.
-
-- Re-validate all input server-side — client validation is a UX convenience, not a security control
+### API (Server / BFF)
+- Re-validate all input server-side — client validation is UX, not security
 - Use parameterized queries — no string interpolation in SQL/GraphQL
-- Authenticate and authorize every request — not just the first one
 - Rate-limit sensitive endpoints (login, registration, password reset)
 - Return minimal error details — no stack traces, no internal paths
 
-### Tier 3 — Data Boundary (Storage / External Services)
-
-Data leaves your control. Encrypt and minimize.
-
+### Data (Storage / External)
 - Encrypt sensitive data at rest
 - Never log PII, tokens, or credentials
 - Minimize data stored — collect only what's needed
-- Audit third-party services for data handling practices
-
-## OWASP Top 10 — Frontend Focus
-
-| Risk | Prevention |
-|------|-----------|
-| **Injection (SQL, XSS, SSRF)** | Parameterized queries, output encoding, v-html only with sanitized trusted content |
-| **Broken Authentication** | Secure session management, HttpOnly cookies, proper password handling |
-| **Sensitive Data Exposure** | HTTPS everywhere, no secrets in code/logs/URLs, encrypt at rest |
-| **Broken Access Control** | Server-side auth on every route, role checks not client-only |
-| **Security Misconfiguration** | CSP headers, CORS allowlists, disable verbose errors in production |
-| **Vulnerable Components** | Regular `npm audit`, lock files committed, dependency review before adding |
-| **Insecure Deserialization** | Validate and sanitize all external data before use |
 
 ## Dependency Audit Workflow
 

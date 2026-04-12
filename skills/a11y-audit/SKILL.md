@@ -5,56 +5,7 @@ description: 'Build and review frontend UI with accessibility in mind. USE FOR: 
 
 # Accessibility Build And Audit
 
-Use this skill both when writing code and when reviewing UI.
-
 Prefer preventing accessibility problems during implementation over finding them later in audit.
-
-## Use This Skill For
-
-- building new UI
-- refactoring interactive components
-- reviewing PRs for accessibility risk
-- auditing pages or flows in the browser
-- debugging keyboard, focus, label, or screen-reader issues
-
-## Core Checks
-
-Always think through these first:
-
-- use semantic HTML before ARIA
-- ensure every interactive element has a clear accessible name
-- make all core actions reachable by keyboard
-- keep focus visible, logical, and intentionally managed
-- make forms understandable, including labels and errors
-- make dynamic UI communicate state changes
-- respect reduced-motion preferences
-
-## Build Guidance
-
-When implementing UI, prefer these defaults:
-
-- use `button`, `a`, `input`, `select`, `textarea`, `dialog`, and headings correctly
-- avoid clickable `div` or `span` unless full semantics and keyboard behavior are intentionally recreated
-- give icon-only controls an accessible name
-- ensure custom controls support expected keyboard interaction
-- move focus into modals and return focus when they close
-- connect field errors and helper text to the relevant input
-- do not remove focus outlines without an accessible replacement
-- do not rely on hover-only behavior for important actions
-- do not rely only on color or animation to convey meaning
-
-## Review Guidance
-
-When reviewing existing UI or code, check:
-
-- semantics and heading structure
-- accessible names and labels
-- keyboard reachability and tab order
-- focus entry, trapping, return, and visibility
-- dialog, menu, drawer, popover, and accordion behavior
-- form validation, instructions, and error messaging
-- loading, success, and error states
-- reduced-motion handling for non-essential animation
 
 ## Tooling
 
