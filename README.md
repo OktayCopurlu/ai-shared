@@ -103,6 +103,28 @@ Tool skills may use a leaner format when that is clearer. For those, `Tool Selec
 
 See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the full format spec with examples.
 
+## Secrets
+
+This repo is **public**. Never commit credentials, tokens, or passwords directly in skill/agent/prompt files.
+
+Secrets are stored in a local `.secrets` file at the repo root, which is gitignored. Skills reference it by path (`/.secrets`), and any AI agent can read it at runtime.
+
+**After cloning, create your own `.secrets` file:**
+
+```bash
+cp .secrets.example .secrets
+# Edit .secrets with your actual values
+```
+
+Format (`KEY=VALUE`, one per line):
+
+```
+STAGING_USER=...
+STAGING_PASS=...
+```
+
+When writing or updating skills that need credentials, reference `/.secrets` with variable names — never hardcode values.
+
 ## Validation
 
 Run `./validate.sh` after making changes to catch broken symlinks, missing frontmatter, minimum skill structure issues, empty files, and duplicate names.

@@ -14,12 +14,12 @@ Use this skill with the Playwright MCP server that exposes `browser_*` tools suc
 
 - **Local dev**: `http://localhost:5050`
 - **Production**: `https://www.on.com`
-- **Staging / Preview**: Require HTTP basic auth — embed credentials in the URL: `https://on:trend@on-shop-<PR_NUMBER>.on-running.com/...`
+- **Staging / Preview**: Require HTTP basic auth — read `STAGING_USER` and `STAGING_PASS` from `/.secrets` in the repo root and embed in the URL: `https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR_NUMBER>.on-running.com/...`
 
 Examples:
 - `https://www.on.com/en-ch/shop/mens/low` → `http://localhost:5050/en-ch/shop/mens/low`
 - `https://www.on.com/en-ch/products/cloudflow-5-m-3mf1011/mens/juniper-ice-shoes-3MF10114851` → `http://localhost:5050/en-ch/products/cloudflow-5-m-3mf1011/mens/juniper-ice-shoes-3MF10114851`
-- Preview: `https://on:trend@on-shop-8895.on-running.com/en-ch/products/...`
+- Preview: `https://<STAGING_USER>:<STAGING_PASS>@on-shop-8895.on-running.com/en-ch/products/...`
 
 ## Core Workflow
 
@@ -116,9 +116,9 @@ Examples:
 
 ### Authentication (staging/preview)
 
-Embed credentials in URL for HTTP basic auth:
+Read `STAGING_USER` and `STAGING_PASS` from `/.secrets` in the repo root, then embed in URL:
 ```
-browser_navigate → https://on:trend@on-shop-<PR>.on-running.com/...
+browser_navigate → https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR>.on-running.com/...
 ```
 
 ### Debugging failed interactions
