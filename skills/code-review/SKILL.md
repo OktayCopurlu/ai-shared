@@ -216,3 +216,5 @@ After completing the review:
 - `debugging` — when a review uncovers a bug that needs triage
 - `references/security-checklist.md` — for security-focused review passes
 - `references/testing-patterns.md` — for evaluating test quality in Layer 2
+- `references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
+- `references/performance-checklist.md` — for performance checks in Layer 4

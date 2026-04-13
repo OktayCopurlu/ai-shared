@@ -2,6 +2,114 @@
 
 This folder is the single source of truth for all AI agent configuration — skills, prompts, agents, and global instructions. Other tools (Copilot, Codex, OpenCode) consume this via symlinks.
 
+## Dependency Graph
+
+How components connect — prompts trigger skills, skills reference each other, references serve as shared checklists.
+
+```mermaid
+graph LR
+  %% ── Styles ──────────────────────────────────────────
+  classDef prompt fill:#6366f1,stroke:#4f46e5,color:#fff
+  classDef skill fill:#10b981,stroke:#059669,color:#fff
+  classDef agent fill:#f59e0b,stroke:#d97706,color:#fff
+  classDef ref fill:#94a3b8,stroke:#64748b,color:#fff
+  classDef core fill:#ef4444,stroke:#dc2626,color:#fff
+
+  %% ── Core ────────────────────────────────────────────
+  INST[instructions.md]:::core
+
+  %% ── Prompts (development lifecycle) ─────────────────
+  P_SPEC[/spec/]:::prompt
+  P_REFINE[/refine-ticket/]:::prompt
+  P_SOLUTION[/solution-design/]:::prompt
+  P_IMPL[/implementation/]:::prompt
+  P_START[/start-working/]:::prompt
+  P_TEST[/test/]:::prompt
+  P_PR[/pr/]:::prompt
+  P_REVIEW[/address-review/]:::prompt
+  P_UPDATE[/update-project-page/]:::prompt
+
+  %% ── Skills ──────────────────────────────────────────
+  S_STYLE([coding-style]):::skill
+  S_REVIEW([code-review]):::skill
+  S_GIT([git-workflow]):::skill
+  S_DEBUG([debugging]):::skill
+  S_TDD([tdd]):::skill
+  S_A11Y([a11y-audit]):::skill
+  S_UIVAL([ui-validation]):::skill
+  S_SEC([security-hardening]):::skill
+  S_DOC([documentation]):::skill
+  S_JIRA([jira-ticket]):::skill
+  S_EVOLVE([skill-evolution]):::skill
+  S_PW([playwright-mcp]):::skill
+  S_CHROME([chrome-devtools-mcp]):::skill
+  S_AMP([amplitude-analytics]):::skill
+  S_ATLAS([atlassian-mcp]):::skill
+  S_GH([github-mcp]):::skill
+  S_CTF([contentful]):::skill
+  S_GDRIVE([google-drive]):::skill
+
+  %% ── Agents ──────────────────────────────────────────
+  A_DEVIL{{devils-advocate}}:::agent
+  A_GOAL{{goal-setter}}:::agent
+  A_PROFILE{{profile-writer}}:::agent
+  A_PROJDOC{{project-doc-expert}}:::agent
+  A_RESEARCH{{research}}:::agent
+
+  %% ── References ──────────────────────────────────────
+  R_TEST[\testing-patterns\]:::ref
+  R_A11Y[\accessibility-checklist\]:::ref
+  R_PERF[\performance-checklist\]:::ref
+  R_SEC[\security-checklist\]:::ref
+  R_SEARCH[\search-first\]:::ref
+
+  %% ── Prompt → Skill / Agent / Reference ─────────────
+  P_SPEC -. See Also .-> P_SOLUTION
+  P_SPEC -. See Also .-> P_REFINE
+  P_SPEC -. See Also .-> S_JIRA
+  P_REFINE --> S_JIRA
+  P_SOLUTION --> A_PROJDOC
+  P_START --> P_IMPL
+  P_IMPL --> S_STYLE
+  P_IMPL --> S_A11Y
+  P_IMPL --> S_UIVAL
+  P_IMPL --> R_SEARCH
+  P_TEST --> S_TDD
+  P_TEST --> S_STYLE
+  P_TEST --> R_TEST
+  P_PR --> S_GIT
+  P_REVIEW --> S_REVIEW
+
+  %% ── Skill → Skill ──────────────────────────────────
+  S_REVIEW --> S_STYLE
+  S_GIT --> S_REVIEW
+  S_GIT --> S_STYLE
+  S_GIT -. See Also .-> S_DEBUG
+  S_DEBUG -. See Also .-> S_REVIEW
+  S_DEBUG -. See Also .-> R_TEST
+  S_TDD -. See Also .-> S_DEBUG
+  S_TDD -. See Also .-> S_STYLE
+  S_TDD -. See Also .-> R_TEST
+  S_UIVAL -. See Also .-> S_A11Y
+  S_UIVAL -. See Also .-> S_PW
+  S_UIVAL -. See Also .-> S_CHROME
+  S_UIVAL -. See Also .-> S_AMP
+  S_UIVAL -. See Also .-> R_PERF
+  S_A11Y -. See Also .-> S_REVIEW
+  S_A11Y -. See Also .-> S_UIVAL
+  S_A11Y -. See Also .-> R_A11Y
+  S_REVIEW -. See Also .-> R_A11Y
+  S_REVIEW -. See Also .-> R_PERF
+  S_STYLE -. See Also .-> R_TEST
+  S_SEC -. See Also .-> S_REVIEW
+  S_SEC -. See Also .-> R_SEC
+  S_DOC -. See Also .-> S_STYLE
+  S_DOC -. See Also .-> S_JIRA
+  S_DOC -. See Also .-> S_GIT
+```
+
+**Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
+
 ## Structure
 
 ```

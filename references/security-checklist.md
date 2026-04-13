@@ -1,6 +1,6 @@
 # Security Checklist
 
-Quick-reference for security review passes. Referenced by `code-review`, `security-hardening`, and `git-workflow`.
+Quick-reference for security review passes. Referenced by `code-review` and `security-hardening`.
 
 ## Input Validation
 

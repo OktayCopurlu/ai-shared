@@ -111,3 +111,7 @@ After applying coding-style to a file or PR:
 - [ ] No nesting deeper than 2 levels (guard clauses used)
 - [ ] Tests grouped by `describe('when ...')`
 - [ ] No dead code, unused imports, or unused variables
+
+## See Also
+
+- `references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section
