@@ -16,8 +16,18 @@ Reproduce the failure reliably before doing anything else.
 
 ### Step 2 — Localize
 Narrow where the failure originates. Bisect — do not read the entire codebase.
-- Use targeted log statements at function boundaries, not everywhere.
-- For unfamiliar code, use the `Explore` subagent to map module boundaries before diving in.
+
+Pick the isolation technique that fits the situation:
+
+| Technique | How | When to use |
+|---|---|---|
+| Binary search | Comment out or bypass half the code path, check if failure persists, repeat | Large codebase, unclear location |
+| Input reduction | Simplify the input until the bug disappears, then add back the trigger | Complex inputs, data-dependent bugs |
+| Dependency elimination | Mock or remove external deps one at a time | Could be in a dependency or integration |
+| Version bisect | `git bisect` to find the commit that introduced the regression | Known-good prior state exists |
+| Targeted logging | Add log statements at function entry/exit boundaries (not everywhere) | Need to trace runtime execution flow |
+
+For unfamiliar code, use the `Explore` subagent to map module boundaries before diving in.
 - **Exit:** You know which file, function, and roughly which lines cause the failure.
 
 ### Step 3 — Reduce
