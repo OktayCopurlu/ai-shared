@@ -11,34 +11,18 @@ description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/c
 - **GitHub MCP** for remote operations (PRs, reviews, issues, code search)
 - **`gh` CLI** as fallback only when MCP is unavailable
 
-## Pull Requests
+## Gotchas
 
-- **Reading PRs**: Use `pull_request_read` to get PR details, diffs, and review comments
-- **Creating PRs**: Use `create_pull_request` to create new pull requests
-- **Updating PRs**: Use `update_pull_request` to modify title, body, or status
-- **Reviews**: Use `pull_request_review_write` to submit reviews
-- **Copilot review**: Use `request_copilot_review` to request automated review
-- **Searching PRs**: Use `search_pull_requests` or `list_pull_requests` to find PRs
-- **Merging**: Use `merge_pull_request` to merge PRs
-
-## Issues
-
-- **Reading issues**: Use `issue_read` to fetch issue details
-- **Creating/updating issues**: Use `issue_write` to create or update issues
-- **Searching issues**: Use `search_issues` or `list_issues` to find relevant issues
-- **Comments**: Use `add_issue_comment` to add comments
-
-## Repository Operations
-
-- **File contents**: Use `get_file_contents` to read files from remote branches
-- **Branches**: Use `create_branch`, `list_branches` for branch management
-- **Commits**: Use `list_commits`, `get_commit` for commit history
-- **Code search**: Use `search_code` for searching across repositories
-- **Push files**: Use `push_files` or `create_or_update_file` for direct file changes on remote
+- **Granular toolsets**: The server v1.0.0+ organizes tools into toolsets (`repos`, `issues`, `pull_requests`, `actions`, `code_security`, etc.). If you're missing expected tools, the server config may restrict to specific toolsets.
+- **Scope filtering**: With classic PATs (`ghp_`), tools are auto-hidden when the token lacks required scopes. Fine-grained PATs show all tools but enforce permissions at API level. If a tool is missing, check token scopes.
+- **Resolve review threads**: Use `resolve_review_thread` / `unresolve_review_thread` to manage PR review thread state — available since v0.33.0.
+- **Set issue fields**: Use `set_issue_fields` (v1.0.0+) to set/update/delete organization-level custom field values on issues.
+- **`list_commits` filtering**: Supports `path`, `since`, and `until` parameters (v0.33.0+) — use these to narrow commit history instead of fetching everything.
+- **Read-only mode**: Append `/readonly` to the remote server URL or set `X-MCP-Readonly` header to restrict to read-only operations. Useful for review-only workflows.
 
 ## Procedure
 
-1. Load GitHub MCP tools via `tool_search_tool_regex` with pattern `mcp_io_github`
-2. Use `owner: "onrunning"` and `repo: "on-frontend"` for this repository
-3. Call the appropriate tool for the operation
-4. Prefer MCP tools over `gh` CLI — they don't require separate CLI authentication
+1. Prefer MCP tools over `gh` CLI — they integrate with OAuth and don't require separate CLI authentication.
+2. For this repository, use `owner: "onrunning"` and `repo: "on-frontend"`.
+3. When reviewing PRs, use `resolve_review_thread` after addressing feedback to keep thread state clean.
+4. For code search across repos, prefer MCP `search_code` over `gh search code` — it returns richer context.
