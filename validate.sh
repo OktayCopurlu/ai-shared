@@ -1,10 +1,10 @@
 #!/bin/zsh
 # Validate ai-shared repo: symlinks, frontmatter, structure, duplicates
-# Run: ./validate.sh
+# Run: zsh validate.sh  (requires zsh — uses zsh-specific syntax)
 
-set -euo pipefail
+set -eo pipefail
 
-AI="${0:a:h}"  # resolve to script's own directory
+AI="${0:a:h}"  # resolve to script's own directory (zsh-only)
 errors=0
 warnings=0
 
