@@ -205,6 +205,23 @@ Do NOT add:
 - Basic "what this tool does" descriptions (agents infer from tool names/descriptions)
 - Setup or installation instructions (already configured)
 
+### No Content Overlap
+
+Before adding anything to a skill, **read the entire existing skill file** and check whether your addition overlaps with content already there — even if worded differently.
+
+- If the skill already has a structured system (e.g., numbered layers, a step-by-step flow), do NOT add a parallel checklist that covers the same ground.
+- If your addition is a subset of what an existing section already covers, skip it.
+- Ask: "Does this add a new dimension, or just rephrase what's already there?"
+
+### No Generic Programming Knowledge
+
+Do NOT add tables, checklists, or taxonomies of general software engineering knowledge that any competent agent already has (e.g., "types of bugs", "categories of errors", "HTTP status codes", "SOLID principles").
+
+Only add knowledge that is:
+- **Specific to our workflow** or tooling (e.g., "use `--stat` with gh pr diff")
+- **A decision rule** the agent wouldn't derive on its own (e.g., threshold tables, when-to-use guidance)
+- **Non-obvious** — something that requires experience to know
+
 ## F. What You Can Change
 
 | Type | Where | Example |
@@ -270,7 +287,9 @@ Before creating any PR, verify:
 8. The branch name starts with `research/`.
 9. **Run validation**: Execute `zsh validate.sh`. Fix any errors you can (bad frontmatter, empty sections, etc.). Symlink-related errors are expected because you cannot run `setup.sh` — ignore those and note them in the PR body. Validation failures do NOT block PR creation.
 10. **No redundant content**: Review your changes and remove any tool name listings, parameter descriptions, or information agents already get from tool schemas. Keep only decision rules, gotchas, workflow sequences, and cheat sheets.
-11. **README.md**: If you created a new file (new skill, agent, reference, or prompt), update `README.md` to include it in the appropriate section. Do NOT update README for modifications to existing files.
+11. **No content overlap**: Re-read the full existing file you modified. If your addition covers the same ground as an existing section (even in different words), remove it.
+12. **No generic knowledge**: If your addition is a taxonomy or checklist of general programming concepts (error types, bug categories, design principles), remove it. Only keep things specific to our workflow.
+13. **README.md**: If you created a new file (new skill, agent, reference, or prompt), update `README.md` to include it in the appropriate section. Do NOT update README for modifications to existing files.
 
 ## J. Execution Order — Follow This Exactly
 
