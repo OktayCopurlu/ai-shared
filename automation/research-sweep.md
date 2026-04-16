@@ -230,6 +230,7 @@ Do NOT add:
 - **Never create** placeholder or stub files without real content.
 - **Never modify** `setup.sh` or `validate.sh`.
 - **Never run** `setup.sh` — it creates symlinks that spread unreviewed content. Only the repo owner runs setup after merging.
+- **Never use MCP tools** — no Contentful, Atlassian, Amplitude, GitHub MCP, Playwright MCP, or any other MCP server tools. Your only tools are: file read/write, `gh` CLI, `git`, WebFetch, and shell commands.
 
 ## H. Git and GitHub Operations
 

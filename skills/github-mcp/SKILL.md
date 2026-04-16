@@ -23,6 +23,5 @@ description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/c
 ## Procedure
 
 1. Prefer MCP tools over `gh` CLI — they integrate with OAuth and don't require separate CLI authentication.
-2. For this repository, use `owner: "onrunning"` and `repo: "on-frontend"`.
-3. When reviewing PRs, use `resolve_review_thread` after addressing feedback to keep thread state clean.
-4. For code search across repos, prefer MCP `search_code` over `gh search code` — it returns richer context.
+2. When reviewing PRs, use `resolve_review_thread` after addressing feedback to keep thread state clean.
+3. For code search across repos, prefer MCP `search_code` over `gh search code` — it returns richer context.
