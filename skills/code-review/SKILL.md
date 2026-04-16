@@ -13,6 +13,19 @@ Finish the mechanical scan before opining on architecture.
 
 Review operates on a diff — staged/unstaged changes, a PR diff, or changed files the user points to.
 
+## Auto-Scale Review Depth
+
+Scale review effort based on diff size. Do not apply full-depth review to a 10-line typo fix, and do not single-pass a 300-line feature branch.
+
+| Diff Size | Depth | What to do |
+|---|---|---|
+| < 50 lines | Single pass | Run all 4 layers once. |
+| 50–199 lines | Standard | Run all 4 layers. |
+| 200–499 lines | Deep | Run all 4 layers file-by-file instead of scanning the whole diff at once. |
+| 500+ lines | Flag for split | Warn the author the PR is too large for effective review. Still review, but note that confidence is lower. |
+
+Determine diff size early (e.g., `git diff --stat` or `gh pr diff <N> --stat | tail -1`) and state the chosen depth before starting.
+
 ## Review Mode
 
 Choose the mode before running the 4 layers.
@@ -203,6 +216,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 After completing the review:
 
+- [ ] Diff size was checked and review depth was stated
 - [ ] All 4 layers were executed — none skipped
 - [ ] Layer 1 issues are either fixed or flagged with file and line
 - [ ] Layer 2 gaps are listed with specific missing scenarios, or marked `N/A` with a reason
