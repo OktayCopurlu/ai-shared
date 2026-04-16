@@ -249,7 +249,7 @@ Before creating any PR, verify:
 6. The evidence sources were all successfully fetched (no 404s).
 7. You checked `run-log.jsonl` and this isn't a duplicate.
 8. The branch name starts with `research/`.
-9. **Run validation**: Execute `zsh validate.sh` and fix any errors before pushing. Warnings are acceptable, errors are not. If a validation error is caused by a new file needing symlinks (setup.sh), that's expected — note it in the PR body.
+9. **Run validation**: Execute `zsh validate.sh`. Fix any errors you can (bad frontmatter, empty sections, etc.). Symlink-related errors are expected because you cannot run `setup.sh` — ignore those and note them in the PR body. Validation failures do NOT block PR creation.
 10. **No redundant content**: Review your changes and remove any tool name listings, parameter descriptions, or information agents already get from tool schemas. Keep only decision rules, gotchas, workflow sequences, and cheat sheets.
 11. **README.md**: If you created a new file (new skill, agent, reference, or prompt), update `README.md` to include it in the appropriate section. Do NOT update README for modifications to existing files.
 
