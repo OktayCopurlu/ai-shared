@@ -51,28 +51,28 @@ Examples:
 
 ## Available Tools In This Setup
 
-- `browser_click`
+- `browser_click` — supports `selector` param as alternative to `ref`
 - `browser_close`
-- `browser_console_messages`
+- `browser_console_messages` — filter by level: `error`, `warning`, `info`, `debug`
 - `browser_drag`
-- `browser_evaluate`
+- `browser_evaluate` — run JS on page or a specific element via `ref`
 - `browser_file_upload`
-- `browser_fill_form`
+- `browser_fill_form` — fill multiple fields at once (textbox, checkbox, radio, combobox, slider)
 - `browser_handle_dialog`
 - `browser_hover`
 - `browser_install`
 - `browser_navigate`
 - `browser_navigate_back`
-- `browser_network_requests`
+- `browser_network_requests` — supports `filter` (URL regexp), `requestBody`, `requestHeaders`, `static` params
 - `browser_press_key`
 - `browser_resize`
-- `browser_run_code`
+- `browser_run_code` — execute arbitrary Playwright code snippets
 - `browser_select_option`
-- `browser_snapshot`
-- `browser_tabs`
-- `browser_take_screenshot`
+- `browser_snapshot` — supports `depth` param to limit tree depth
+- `browser_tabs` — list, new, close, select
+- `browser_take_screenshot` — supports element screenshots via `ref`, `fullPage`, `jpeg`/`png` format
 - `browser_type`
-- `browser_wait_for`
+- `browser_wait_for` — wait for text appear/disappear or fixed time
 
 ## Snapshot Rules
 
@@ -137,3 +137,10 @@ When a click or fill doesn't work:
 - Use `browser_wait_for` instead of arbitrary delays
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
 - For staging URLs, always include basic auth credentials in the URL
+- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)
+- Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
+- Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
+
+## Alternatives
+
+- **Playwright CLI** (`@playwright/cli`, [github.com/microsoft/playwright-cli](https://github.com/microsoft/playwright-cli)) — a CLI-based alternative to Playwright MCP, designed to be more token-efficient for coding agents. Uses text commands instead of MCP tool calls. Consider for batch automation or when MCP overhead is high.
