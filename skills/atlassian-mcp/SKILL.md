@@ -7,28 +7,25 @@ description: 'Interact with Jira tickets and Confluence wiki pages via the Atlas
 
 Always prefer Atlassian MCP tools over fetching web pages or asking the user to paste content.
 
-## Jira Operations
+## Content Formats
 
-- **Reading issues**: Use `getJiraIssue` to fetch ticket details (summary, description, acceptance criteria, comments, status, etc.)
-- **Searching issues**: Use `searchJiraIssuesUsingJql` to find relevant tickets
-- **Creating issues**: Use `createJiraIssue` for new tickets
-- **Updating issues**: Use `editJiraIssue` to modify existing tickets
-- **Comments**: Use `addCommentToJiraIssue` to add comments
-- **Work logs**: Use `addWorklogToJiraIssue` to log time
-- **Issue links**: Use `createIssueLink` and `getIssueLinkTypes` for linking issues
+Tools accept a `contentFormat` parameter:
+- **`adf`** (default): Atlassian Document Format — full fidelity with mentions, panels, Smart Links
+- **`markdown`**: Simplified text — easier to read/write but loses some formatting
 
-## Confluence Operations
-
-- **Reading pages**: Use `getConfluencePage` to fetch wiki content
-- **Listing pages**: Use `getPagesInConfluenceSpace` to browse a space
-- **Creating pages**: Use `createConfluencePage` for new pages
-- **Updating pages**: Use `updateConfluencePage` to modify existing pages
-- **Footer comments**: Use `getConfluencePageFooterComments`, `createConfluenceFooterComment`
-- **Inline comments**: Use `getConfluencePageInlineComments`, `createConfluenceInlineComment`
+Use `responseContentFormat` on read operations to control output format. Prefer `markdown` for readability when full fidelity isn't needed.
 
 ## Procedure
 
-1. Load Atlassian MCP tools via `tool_search_tool_regex` with pattern `mcp_atlassian`
-2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID
-3. Call the appropriate tool for the operation
-4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser
+1. When a link is provided (e.g. `https://site.atlassian.net/*`), try passing the site hostname as cloudId first. Otherwise use `getAccessibleAtlassianResources`.
+2. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser.
+3. For cross-product search (finding content across Jira and Confluence), prefer Rovo `search` over separate JQL/CQL queries.
+4. When creating or updating content, use `markdown` contentFormat unless ADF features (panels, mentions, Smart Links) are needed.
+5. Use `getJiraIssueTypeMetaWithFields` before creating issues to discover required and custom fields.
+6. When linking issues, use `getIssueLinkTypes` first to discover available link type names.
+
+## Tips
+
+- **JQL**: `assignee = currentUser() AND status != Done ORDER BY updated DESC`
+- **CQL**: `type = page AND space = "TEAM" AND title ~ "onboarding"`
+- For bulk operations, prefer JQL/CQL search to find matching items, then operate on results.
