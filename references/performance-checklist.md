@@ -1,6 +1,6 @@
 # Performance Checklist
 
-Quick-reference for performance review passes. Referenced by `code-review` and performance-sensitive implementations.
+Quick-reference for performance review passes. Referenced by `reviewing-code` and performance-sensitive implementations.
 
 ## Core Web Vitals Targets
 

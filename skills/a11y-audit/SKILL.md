@@ -1,6 +1,6 @@
 ---
 name: a11y-audit
-description: 'Build and review frontend UI with accessibility in mind. USE FOR: implementing components, forms, dialogs, menus, and flows that need good semantics, labels, keyboard support, focus management, error handling, and reduced-motion behavior. ALSO use for accessibility reviews, a11y audits, keyboard/focus checks, and prioritizing accessibility issues.'
+description: 'Build and review frontend UI with accessibility in mind. USE FOR: implementing components, forms, dialogs, menus, and flows that need good semantics, labels, keyboard support, focus management, error handling, and reduced-motion behavior. Use when implementing UI, running an a11y audit, checking keyboard/focus, or prioritizing accessibility issues.'
 ---
 
 # Accessibility Build And Audit
@@ -110,5 +110,5 @@ After accessibility work:
 ## See Also
 
 - `references/accessibility-checklist.md` — full checklist for keyboard, focus, semantics, labels, and visual design
-- `code-review` — a11y issues may surface during Layer 1 or Layer 4 review
-- `ui-validation` — browser-level validation that may include accessibility checks
+- `reviewing-code` — a11y issues may surface during Layer 1 or Layer 4 review
+- `validating-ui` — browser-level validation that may include accessibility checks

@@ -21,8 +21,9 @@ If the ticket is a code workflow:
 3. reuse an existing ticket branch for `in-progress` work when possible
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
-6. load the `coding-style` skill — apply it to all code written from this point forward
+6. load the `applying-coding-style` skill — apply it to all code written from this point forward
 7. when behavior changes, read the existing test file first and decide test coverage intentionally:
+   - identify the **domain invariants / business rules** the change must preserve (what must always be true — e.g. totals, pricing/rounding, auth boundaries, state transitions) and ensure at least one test would fail if a rule were violated, not just if the happy path breaks
    - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
    - if the change is experiment-specific and likely temporary: test updates may be skipped to avoid wasting effort on short-lived code
    - do not remove or weaken existing meaningful coverage only because a change is experimental
@@ -81,11 +82,11 @@ Recommended order:
 1. lint
 2. type checks
 3. unit tests
-4. coding-style review — review all changed files against the `coding-style` skill (already loaded during implementation). Fix violations before continuing.
+4. coding style review — review all changed files against the `applying-coding-style` skill (already loaded during implementation). Fix violations before continuing.
 
 If shared packages were changed, widen the scope enough to cover the real impact.
 
-Quality gates are complete when all mandatory checks pass, coding-style violations are resolved, and no known validation failure remains.
+Quality gates are complete when all mandatory checks pass, `applying-coding-style` violations are resolved, and no known validation failure remains.
 
 ### Failure Policy
 
@@ -97,17 +98,20 @@ Pause only when it is unsafe to continue or the failure cannot be attributed.
 
 ## Cross-Check
 
-After quality gates pass, compare the implementation against the ticket's acceptance criteria.
+After quality gates pass, compare the implementation against the ticket's full contract — not just the AC list.
 
-For each AC item, confirm it is covered by the code changes. If an AC item is not addressed, go back and implement it before continuing.
+1. for each AC item, confirm it is covered by the code changes
+2. also check behaviors the spec defines beyond AC bullets — failure states, duplicate/repeat behavior, edge cases, and business invariants identified in step 7
+3. if an AC item or contract behavior is not addressed, go back and implement it before continuing
+4. if the implementation had to invent behavior because the spec did not settle it, flag that as a **spec gap** (not a code bug) and surface it in the PR description so the ticket or spec can be tightened
 
-Cross-check is complete when every AC item is accounted for.
+Cross-check is complete when every AC item and spec-defined behavior is accounted for, and any spec gaps are explicitly recorded.
 
 ## UI Validation
 
 After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
-If yes: load the `ui-validation` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
+If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
 
 If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
 

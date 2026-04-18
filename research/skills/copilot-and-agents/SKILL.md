@@ -76,19 +76,19 @@ Use this skill when the user asks about:
 
 # Copilot & Agents Digest
 
-Date: <YYYY-MM-DD>
-Time window: <N days>
+Date: {YYYY-MM-DD}
+Time window: {N days}
 
 ## Top findings
 
-### 1. <title>
-- Source: <canonical URL>
-- Vendor: <vendor>
-- Published: <date if available>
+### 1. {title}
+- Source: {canonical URL}
+- Vendor: {vendor}
+- Published: {date if available}
 - Status: Released | Preview | Beta | Announced | Deprecated
-- Summary: <2-3 sentences>
-- Why it matters: <engineering impact>
-- Affects: <skills / instructions / MCP / toolsets / workflow / permissions>
+- Summary: {2-3 sentences}
+- Why it matters: {engineering impact}
+- Affects: {skills / instructions / MCP / toolsets / workflow / permissions}
 - Recommendation: Try this week | Add to watchlist | Ignore for now | Create spike ticket
 - Priority: P0 | P1 | P2
 - Confidence: High | Medium | Low
@@ -102,9 +102,9 @@ Items in Preview or Beta worth revisiting. Include a re-evaluate date.
 Items checked but excluded — one-line reason each.
 
 ## Recommended next steps
-- Try now: <1 item>
-- Investigate: <1 item>
-- Ignore: <1 item>
+- Try now: {1 item}
+- Investigate: {1 item}
+- Ignore: {1 item}
 
 ---
 

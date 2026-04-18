@@ -297,7 +297,7 @@ for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
     if $in_see_also; then
       # Skip lines that reference prompts (e.g. "`spec` prompt")
       [[ "$line" == *" prompt"* ]] && continue
-      # Extract backtick-wrapped skill names (e.g. `debugging`, `coding-style`)
+      # Extract backtick-wrapped skill names (e.g. `debugging`, `applying-coding-style`)
       echo "$line" | grep -oE '`[a-zA-Z0-9_-]+`' | tr -d '`' | while read -r skill_ref; do
         # Skip if it looks like a code keyword, not a skill name
         [[ "$skill_ref" == references* ]] && continue
@@ -336,13 +336,13 @@ for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
   done
 done
 
-# 9b. Description quality: must contain "USE FOR:" or "Use for" trigger
+# 9b. Description quality: must contain a trigger phrase ("USE FOR:", "Use for", or "Use when")
 for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   desc=$(sed -n '/^---$/,/^---$/{ /^description:/{ s/^description: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
-  if [[ -n "$desc" ]] && ! echo "$desc" | grep -qi 'use for'; then
-    warn "$rel: description missing 'USE FOR:' trigger guidance"
+  if [[ -n "$desc" ]] && ! echo "$desc" | grep -qiE 'use for|use when'; then
+    warn "$rel: description missing trigger phrase (one of: 'USE FOR:', 'Use for', 'Use when')"
   fi
 done
 

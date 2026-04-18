@@ -31,13 +31,13 @@ graph LR
   P_UPDATE[/update-project-page/]:::prompt
 
   %% ── Skills ──────────────────────────────────────────
-  S_STYLE([coding-style]):::skill
-  S_REVIEW([code-review]):::skill
+  S_STYLE([applying-coding-style]):::skill
+  S_REVIEW([reviewing-code]):::skill
   S_GIT([git-workflow]):::skill
   S_DEBUG([debugging]):::skill
-  S_TDD([tdd]):::skill
+  S_TDD([test-driven-development]):::skill
   S_A11Y([a11y-audit]):::skill
-  S_UIVAL([ui-validation]):::skill
+  S_UIVAL([validating-ui]):::skill
   S_SEC([security-hardening]):::skill
   S_DOC([documentation]):::skill
   S_JIRA([jira-ticket]):::skill
@@ -120,9 +120,8 @@ graph LR
 │   ├── a11y-audit/             # Build & review UI for accessibility
 │   ├── amplitude-analytics/    # Query Amplitude analytics data
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
+│   ├── applying-coding-style/  # Personal code writing standards
 │   ├── chrome-devtools-mcp/    # Debug runtime issues via DevTools
-│   ├── code-review/            # 4-layer heuristic code review
-│   ├── coding-style/           # Personal code writing standards
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
@@ -131,9 +130,10 @@ graph LR
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── playwright-mcp/         # Browser automation via Playwright
+│   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
-│   ├── tdd/                    # Test-driven development cycle
-│   └── ui-validation/          # Browser-level UI validation
+│   ├── test-driven-development/ # Test-driven development cycle
+│   └── validating-ui/          # Browser-level UI validation
 ├── agents/               # Custom agent modes
 │   ├── devils-advocate.agent.md
 │   ├── goal-setter.agent.md
@@ -193,7 +193,7 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 
 There are two skill families in this repo:
 
-1. **Workflow skills** — process-heavy skills like `debugging`, `code-review`, `tdd`, `git-workflow`
+1. **Workflow skills** — process-heavy skills like `debugging`, `reviewing-code`, `test-driven-development`, `git-workflow`
 2. **Tool skills** — tool-adapter skills like `contentful`, `playwright-mcp`, `atlassian-mcp`
 
 Every skill SKILL.md must have:

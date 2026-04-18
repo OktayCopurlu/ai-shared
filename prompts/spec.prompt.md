@@ -81,7 +81,7 @@ When the deliverable is a **net-new standalone tool, library, or CLI** (no Jira 
 1. Write the README first, as if the tool already existed — installation, usage examples, CLI flags, API signatures, expected output
 2. Include concrete input/output examples (these become the acceptance criteria)
 3. List non-goals explicitly — what the tool will not do
-4. Feed the README to the coding agent as the spec, then implement with red/green TDD (see `tdd` skill): write a failing test derived from a README example, make it pass, move to the next example
+4. Feed the README to the coding agent as the spec, then implement with red/green TDD (see `test-driven-development` skill): write a failing test derived from a README example, make it pass, move to the next example
 
 **Why this works:** AI agents are strong at implementation but weak at architecture and API design. A human-authored README forces the design decisions up front — naming, interface shape, scope boundaries — before the agent starts generating code. The README doubles as the spec, the acceptance criteria, and the shipped documentation.
 

@@ -1,5 +1,5 @@
 ---
-name: code-review
+name: reviewing-code
 description: 'Proactive code review using a 4-layer heuristic: surface correctness, test coverage gaps, bounded refactors, and architecture attention signals. USE FOR: reviewing PRs, self-review before creating a PR, evaluating changed files. Use when user says "review this", "check this PR", "anything I missed", or "review my changes".'
 ---
 
@@ -50,7 +50,7 @@ Behavior:
 
 - findings still come first
 - Layer 1 issues may be fixed inline when they are obvious and low-risk
-- Layer 2 may hand off to `test` or `tdd`, or be fixed in the same pass when appropriate
+- Layer 2 may hand off to `test` or `test-driven-development`, or be fixed in the same pass when appropriate
 - keep fixes scoped to the current change only
 
 ## Mode Selection Rules
@@ -64,9 +64,9 @@ Determine mode in this order:
 
 ## Layer 1 — Surface Correctness
 
-Scan every changed file for mechanical issues. Load `coding-style` first — naming and comment rules come from there.
+Scan every changed file for mechanical issues. Load `applying-coding-style` first — naming and comment rules come from there.
 
-**Check for:** unused imports/vars, incorrect prop types, `coding-style` naming violations, redundant conditions, dead code branches, hardcoded values that should be config, leftover console logs/debugger statements.
+**Check for:** unused imports/vars, incorrect prop types, `applying-coding-style` naming violations, redundant conditions, dead code branches, hardcoded values that should be config, leftover console logs/debugger statements.
 
 **Output:** File, line, one-line fix. In `self-review`, apply directly when confident. In `review-only`, report the fix without editing. Flag when ambiguous.
 
@@ -74,9 +74,9 @@ Scan every changed file for mechanical issues. Load `coding-style` first — nam
 
 For every changed function/component, check the test file.
 
-**Check for:** missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on.
+**Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on.
 
-**Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `tdd` when in scope.
+**Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `test-driven-development` when in scope.
 
 **When Layer 2 is N/A:** docs-only changes, formatting-only changes, generated files, config/types changes with no behavior impact, or explicitly temporary experiment code that should not drive new permanent coverage. State `N/A — no persistent behavior change to cover.`
 
@@ -188,7 +188,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
 - Do not suggest changes to files outside the PR diff.
 - Do not repeat findings already covered by lint or type-check errors.
-- Load `coding-style` before running Layer 1 — naming and comment rules come from there.
+- Load `applying-coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
 - When called from the `/address-review` prompt, run after triaging Copilot comments as an additional pass.
 
@@ -226,7 +226,7 @@ After completing the review:
 
 ## See Also
 
-- `coding-style` — naming and comment rules used in Layer 1
+- `applying-coding-style` — naming and comment rules used in Layer 1
 - `debugging` — when a review uncovers a bug that needs triage
 - `references/security-checklist.md` — for security-focused review passes
 - `references/testing-patterns.md` — for evaluating test quality in Layer 2

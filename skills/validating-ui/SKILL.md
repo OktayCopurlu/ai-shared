@@ -1,5 +1,5 @@
 ---
-name: ui-validation
+name: validating-ui
 description: "Frontend UI validation methodology after implementation. USE FOR: verifying visual correctness, runtime health, design comparison, regression checks, and deciding pass/fail after code changes. ALWAYS use when a ticket has UI impact and needs browser-level validation before PR."
 ---
 

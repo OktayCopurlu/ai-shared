@@ -1,5 +1,5 @@
 ---
-name: tdd
+name: test-driven-development
 description: "Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature."
 ---
 
@@ -28,7 +28,7 @@ Write the test first. Make it pass. Clean up. Repeat.
 
 - `describe` block: the unit being tested (function, composable, component)
 - `it` block: behavior in plain English — "returns X when Y", "throws when Z"
-- Test priority: happy path → edge cases → error cases → integration points (sparingly)
+- Test priority: happy path → business rules / invariants → edge cases → error cases → integration points (sparingly)
 - Each test sets up its own data — no shared mutable state
 - Mock external dependencies (API calls, timers) — not internal modules
 
@@ -85,4 +85,4 @@ After a TDD cycle:
 
 - `references/testing-patterns.md` — test structure, anti-patterns, Vue component testing
 - `debugging` — bug fix TDD overlaps with Step 5 (Guard)
-- `coding-style` — naming, formatting, and change discipline for test files
+- `applying-coding-style` — naming, formatting, and change discipline for test files

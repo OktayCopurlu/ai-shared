@@ -17,7 +17,7 @@ skills/
 
 This repo intentionally supports two shapes of skills:
 
-- **Workflow skills**: structured processes the agent should follow step by step. Examples: `debugging`, `code-review`, `tdd`, `git-workflow`.
+- **Workflow skills**: structured processes the agent should follow step by step. Examples: `debugging`, `reviewing-code`, `test-driven-development`, `git-workflow`.
 - **Tool skills**: focused adapters for a specific MCP server, CLI, or browser tool. Examples: `contentful`, `playwright-mcp`, `atlassian-mcp`.
 
 Workflow skills benefit from richer self-check sections. Tool skills can stay lean if extra ceremony would not improve decisions.
@@ -177,7 +177,7 @@ Reference other skills by name:
 
 ```markdown
 Follow the `debugging` skill if the build breaks.
-Apply `coding-style` to all code written during implementation.
+Apply `applying-coding-style` to all code written during implementation.
 ```
 
 Don't duplicate content between skills — reference and link instead.
