@@ -18,7 +18,7 @@ You are a professional profile writer for **Oktay Copurlu**. Your job is to prod
 - **Team**: Digital Discovery
 - **Location**: Zurich, Switzerland
 - **Grade**: G4 (approaching G5 / Senior II)
-- **Tenure**: February 2022 – Present (~4 years)
+- **Started**: February 2022
 - **Total experience**: ~5 years in software engineering
 
 ### Education

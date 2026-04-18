@@ -66,8 +66,6 @@ Determine mode in this order:
 
 Scan every changed file for mechanical issues. Load `applying-coding-style` first — naming and comment rules come from there.
 
-**Check for:** unused imports/vars, incorrect prop types, `applying-coding-style` naming violations, redundant conditions, dead code branches, hardcoded values that should be config, leftover console logs/debugger statements.
-
 **Output:** File, line, one-line fix. In `self-review`, apply directly when confident. In `review-only`, report the fix without editing. Flag when ambiguous.
 
 ## Layer 2 — Test Coverage Gaps
@@ -196,33 +194,14 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 | Rationalization | Reality |
 |---|---|
-| "The tests pass, so it's fine" | Tests are necessary but not sufficient. They don't catch naming issues, dead code, architecture drift, or security holes. |
-| "It's a small change, no review needed" | Small changes can introduce subtle bugs. Every diff benefits from a structured pass. |
-| "I wrote it, I know it's correct" | Authors are blind to their own assumptions. The 4-layer heuristic catches what familiarity hides. |
-| "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling and complexity accumulate silently. |
-| "I'll check test coverage later" | Later never comes. Layer 2 takes minutes and prevents shipping untested branches. |
-| "Refactor suggestions slow things down" | Layer 3 is scoped to the PR. Small consolidations now prevent large refactors later. |
+| "The tests pass, so it's fine" | Tests don't catch naming issues, dead code, architecture drift, or security holes. |
+| "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling accumulate silently. |
 
 ## Red Flags
 
-- Review that only checks if tests pass (ignoring Layers 1, 3, 4)
 - "LGTM" without evidence of actual review
 - Layer 4 signals consistently ignored across multiple PRs
-- No test coverage gaps ever flagged (suggests Layer 2 is being skipped)
-- Review findings not categorized by layer — makes it unclear what's actionable vs. informational
 - Reviewing only the files you're familiar with and skipping the rest
-
-## Verification
-
-After completing the review:
-
-- [ ] Diff size was checked and review depth was stated
-- [ ] All 4 layers were executed — none skipped
-- [ ] Layer 1 issues are either fixed or flagged with file and line
-- [ ] Layer 2 gaps are listed with specific missing scenarios, or marked `N/A` with a reason
-- [ ] Layer 3 suggestions are scoped to the PR diff
-- [ ] Layer 4 signals are framed as questions, not directives
-- [ ] Output follows the standard format with layer headings
 
 ## See Also
 
@@ -232,3 +211,4 @@ After completing the review:
 - `references/testing-patterns.md` — for evaluating test quality in Layer 2
 - `references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
 - `references/performance-checklist.md` — for performance checks in Layer 4
+- `references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through

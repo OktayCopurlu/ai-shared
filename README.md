@@ -63,6 +63,7 @@ graph LR
   R_PERF[\performance-checklist\]:::ref
   R_SEC[\security-checklist\]:::ref
   R_SEARCH[\search-first\]:::ref
+  R_COG[\cognitive-debt\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -88,6 +89,7 @@ graph LR
   S_GIT -. See Also .-> S_DEBUG
   S_DEBUG -. See Also .-> S_REVIEW
   S_DEBUG -. See Also .-> R_TEST
+  S_DEBUG -. See Also .-> R_COG
   S_TDD -. See Also .-> S_DEBUG
   S_TDD -. See Also .-> S_STYLE
   S_TDD -. See Also .-> R_TEST
@@ -100,6 +102,7 @@ graph LR
   S_A11Y -. See Also .-> S_UIVAL
   S_A11Y -. See Also .-> R_A11Y
   S_REVIEW -. See Also .-> R_A11Y
+  S_REVIEW -. See Also .-> R_COG
   S_REVIEW -. See Also .-> R_PERF
   S_STYLE -. See Also .-> R_TEST
   S_SEC -. See Also .-> S_REVIEW
@@ -107,6 +110,8 @@ graph LR
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
+  S_EVOLVE -. See Also .-> S_STYLE
+  S_EVOLVE -. See Also .-> R_COG
 ```
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
@@ -132,6 +137,7 @@ graph LR
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
+│   ├── skill-evolution/        # Learn, stage, codify reusable skills
 │   ├── test-driven-development/ # Test-driven development cycle
 │   └── validating-ui/          # Browser-level UI validation
 ├── agents/               # Custom agent modes
@@ -153,8 +159,11 @@ graph LR
 │   └── update-project-page.prompt.md # Ship — update Confluence
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
+│   ├── cognitive-debt.md
 │   ├── performance-checklist.md
+│   ├── search-first.md
 │   ├── security-checklist.md
+│   ├── sprint-review-pdf.sh
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills

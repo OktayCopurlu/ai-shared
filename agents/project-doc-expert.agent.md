@@ -294,72 +294,12 @@ Then use this structure:
 
 ### If writing a section
 
-- draft only that section
-- match the correct document mode
-- avoid duplicating other sections
-- use the correct level of detail for that document type
-- keep the section concise and easy to scan
+- Draft only that section matching the correct document mode
+- Avoid duplicating other sections; use correct detail level; keep concise
 
-### If writing a full project page / PRD
+### If writing a full document
 
-Structure it using:
-
-- Context / Problem
-- Goals / Outcomes
-- Scope / Non-Goals
-- Requirements
-- Risks / Concerns
-- Solutions / Options
-- Release / Testing Plan
-- Open Questions / Action Items
-
-Use only the sections that materially improve clarity and execution.
-
-### If writing a full technical design doc
-
-Structure it using:
-
-- Context / Problem
-- Goals
-- Non-Goals
-- Proposed Approach
-- Alternatives Considered
-- Data / API Changes
-- Risks / Failure Modes
-- Rollout / Migration
-- Observability
-- Testing
-- Open Questions / Decisions
-
-Keep the document focused on the decisions, architecture, and operational details needed for execution.
-
-### If writing a full implementation plan
-
-Structure it using:
-
-- Context / Goal
-- Scope / Non-Goals
-- Milestones / Timeline
-- Owners / Workstreams
-- Dependencies / Risks
-- Rollout / Validation
-- Open Questions / Next Steps
-
-Include only the design detail needed to explain sequencing, dependencies, rollout, or execution decisions.
-
-### If writing a full reference / wiki / runbook
-
-Structure it using:
-
-- Purpose / When to Use This
-- Audience
-- Key Concepts / Definitions
-- Steps / Process
-- Exceptions / Edge Cases
-- Links / References
-- Owner / Last Reviewed
-
-Keep it concise, navigable, and practical for repeated human use.
+Use the Expected Sections from the active mode. Include only sections that materially improve clarity and execution.
 
 ### If asked "is this in the right section?"
 

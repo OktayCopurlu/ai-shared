@@ -41,12 +41,8 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 ## Code Shape
 
-- **DRY — Don't Repeat Yourself**: When the same logic appears in two or more places, extract it into a shared helper, variable, or function. Duplicated conditions, ternaries, or formatting calls are a code smell — consolidate them at the source
-- **Guard clauses over nesting**: Early returns, not nested `if/else`
-- **One concept per function**: If you need a comment to separate sections within a function, extract a function instead
-- **Flat over nested**: Prefer `array.filter().map()` over nested loops with accumulators
-- **Explicit over clever**: Readable code > shorter code. No ternary chains, no comma operators, no void expressions
-- **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, stop and check whether passing a slot is cleaner and more future-proof than adding another prop. For example, if a component needs custom labels or content regions, a slot may be a better API than more props.
+- **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
+- **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
 
 ## Change Discipline
 
@@ -65,13 +61,6 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - **Stop when tired**: Fatigue produces vague prompts, which produce sprawling diffs, which produce more fatigue. Notice the loop and close the laptop.
 
 
-## Simplification
-
-- **Inline single-use helpers**: If a function is called exactly once and its body is short enough to read in place, inline it. A named function only earns its keep when it is reused or when the name genuinely clarifies intent beyond what the code already says
-- **Flatten nested conditionals**: When `if` blocks nest more than two levels, invert conditions and return early. Convert `if (a) { if (b) { if (c) { ... } } }` into sequential guard clauses
-- **Simplify boolean expressions**: `return condition` not `if (condition) return true; else return false;`. No double negation (`!!value`) when the consumer already expects a truthy check
-- **Remove unnecessary abstractions**: If a "pattern" (factory, strategy, builder) has only one concrete implementation and no realistic second use case, flatten it into plain code
-
 ## Testing Style
 
 - **Use `describe` blocks for each `when ...` case**: Group test cases by scenario with a clear `describe('when ...')` wrapper rather than mixing unrelated assertions at the top level
@@ -89,39 +78,18 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 
 | Rationalization | Reality |
 |---|---|
-| "The comment explains what the code does" | If the code needs a comment to explain what it does, rename the variable or extract a function. Comments restate; names document. |
-| "JSDoc is best practice" | JSDoc on internal functions adds noise. The function name + TypeScript types are the documentation. JSDoc is for public library APIs. |
-| "I'll clean up the naming later" | Later never comes. Name it right now — 30 seconds of thought prevents permanent confusion. |
-| "This helper might be useful elsewhere" | Single-use abstractions are overhead, not leverage. Inline it. Extract only when the third caller appears. |
-| "The test is simple, it doesn't need a describe block" | `describe('when ...')` blocks cost nothing and make test output scannable. Always group by scenario. |
-| "Commented-out code is useful as reference" | That's what git history is for. Dead code confuses everyone who reads the file after you. |
-| "A TODO is fine for now" | TODOs are where good intentions go to die. Create a Jira ticket or fix it now. |
+| "The comment explains what the code does" | Rename the variable or extract a function instead. |
+| "I'll clean up the naming later" | Later never comes. Name it right now. |
+| "This helper might be useful elsewhere" | Inline it. Extract only when the third caller appears. |
 
 ## Red Flags
 
-- JSDoc blocks appearing on internal functions
+- JSDoc blocks on internal functions
 - Inline comments restating what the next line does
 - Variables named `data`, `info`, `result`, `temp` in non-trivial scope
 - Commented-out code surviving review
 - Boolean variables without `is`/`has`/`should`/`can` prefix
-- Nested conditionals deeper than 2 levels
-- `!!value` used where a truthy check already suffices
-- Single-use helper functions that obscure rather than clarify
 - Tests with no `describe` grouping or asserting on mock internals
-
-## Verification
-
-After applying coding-style to a file or PR:
-
-- [ ] No JSDoc blocks on internal functions
-- [ ] No inline comments restating code behavior
-- [ ] No commented-out code
-- [ ] No generic names (`data`, `temp`, `result`) in scope > 3 lines
-- [ ] Boolean variables/props use `is`/`has`/`should`/`can` prefix
-- [ ] Functions use verb phrases
-- [ ] No nesting deeper than 2 levels (guard clauses used)
-- [ ] Tests grouped by `describe('when ...')`
-- [ ] No dead code, unused imports, or unused variables
 
 ## See Also
 

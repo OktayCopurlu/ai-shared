@@ -10,9 +10,8 @@ Resist the urge to guess — follow the steps in order.
 ## The 5 Steps
 
 ### Step 1 — Reproduce
-Reproduce the failure reliably before doing anything else.
-- **Exit:** You can trigger the failure on demand with specific steps.
-- If you cannot reproduce, check environment differences (CI vs. local), state from previous operations, or timing dependencies.
+Reproduce the failure reliably before doing anything else. If you cannot reproduce, check environment differences, leftover state, or timing dependencies.
+- **Exit:** You can trigger the failure on demand.
 
 ### Step 2 — Localize
 Narrow where the failure originates. Bisect — do not read the entire codebase.
@@ -50,33 +49,15 @@ Prevent recurrence.
 
 | Rationalization | Reality |
 |---|---|
-| "I know what the bug is, let me just fix it" | Skipping reproduction means you might fix the wrong thing. Reproduce first — it takes minutes. |
-| "Adding a test for this is overkill" | The bug existed because there was no test. If it happened once, it can happen again. Guard it. |
-| "Let me add some logs everywhere" | Scattershot logging wastes time. Localize first, then add targeted logs at the boundary. |
-| "It works on my machine" | Environment differences are bugs too. Document what's different and fix the discrepancy. |
-| "I'll just restart and try again" | Intermittent failures are real bugs. They're harder to find, not less important. |
-| "The fix is too risky, let me work around it" | Workarounds become permanent. Fix the root cause now or file a ticket and fix it soon. |
+| "I know what the bug is, let me just fix it" | Skipping reproduction means you might fix the wrong thing. |
+| "It works on my machine" | Environment differences are bugs too. |
+| "I'll just restart and try again" | Intermittent failures are real bugs — harder to find, not less important. |
 
 ## Red Flags
 
 - Fixing without reproducing first
 - Multiple "fix" attempts without localizing the root cause
-- Workaround added without a follow-up ticket for the real fix
 - Bug fix committed without a regression test
-- Intermittent failure dismissed as "flaky" without investigation
-- Stack trace not read — jumping to assumptions instead
-
-## Verification
-
-After completing the debugging workflow:
-
-- [ ] The failure was reproduced reliably (Step 1)
-- [ ] The root cause was localized to a specific file/function (Step 2)
-- [ ] A minimal reproduction exists (Step 3, or skipped if trivial)
-- [ ] The fix addresses the root cause, not a symptom (Step 4)
-- [ ] A regression test guards against recurrence (Step 5)
-- [ ] All existing tests pass
-- [ ] The fix and test are committed together
 
 ## See Also
 

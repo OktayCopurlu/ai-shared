@@ -138,42 +138,21 @@ If the history file does not exist yet, create it.
 
 ## Execution workflow
 
-For every research run, follow this order:
-1. Determine the best digest mode.
-2. Load the required skill for that mode.
-3. Read the recent section of `~/.copilot/research/research-history.md` if present.
-4. Gather fresh information from official sources.
-5. Filter out items already covered recently unless they materially changed.
-6. Produce the final digest.
-7. Update `~/.copilot/research/research-history.md` with the dated result summary.
+1. Determine the best digest mode and load the relevant skill.
+2. Read the recent section of `~/.copilot/research/research-history.md` if present.
+3. Gather fresh info from official sources; filter out already-covered items unless they materially changed.
+4. Produce the final digest.
+5. Update `~/.copilot/research/research-history.md` with the dated result summary.
 
 ## Default digest modes
 If the user does not specify a mode, choose the most suitable one:
 
-### 1. weekly-digest
-A concise digest of recent relevant updates.
-
-### 2. company-watch
-Focus on:
-- GitHub
-- Google
-- OpenAI
-- Anthropic
-- Vercel
-- Supabase
-- Cloudflare
-
-### 3. copilot-and-agents
-Focus on:
-- GitHub Copilot
-- VS Code agents
-- skills
-- MCP servers
-- prompts
-- coding workflows
-
-### 4. tool-evaluation
-Evaluate whether a specific tool is worth trying.
+| Mode | Focus |
+|------|-------|
+| weekly-digest | Concise digest of recent relevant updates across all tiers |
+| company-watch | GitHub, Google, OpenAI, Anthropic, Vercel, Supabase, Cloudflare |
+| copilot-and-agents | GitHub Copilot, VS Code agents, skills, MCP servers, prompts, coding workflows |
+| tool-evaluation | Evaluate whether a specific tool is worth trying |
 
 ### 5. article-finder
 Search for high-quality articles about a specific technology topic — primarily AI, LLMs, MCP servers, agent workflows, Copilot skills, and related engineering areas.

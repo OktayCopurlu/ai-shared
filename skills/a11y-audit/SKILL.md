@@ -76,36 +76,9 @@ Accessible enough / Needs fixes / High-risk accessibility issues
 
 | Rationalization | Reality |
 |---|---|
-| "Screen reader users are a tiny percentage" | Legal risk aside, accessibility fixes improve UX for everyone — keyboard users, motor impairments, temporary injuries. |
 | "We'll add accessibility later" | Retrofitting a11y is 5-10x harder than building it in. Semantic HTML costs nothing upfront. |
-| "It works with a mouse, so it's fine" | Mouse-only is not accessible. Keyboard and assistive tech must work independently. |
 | "ARIA will fix it" | ARIA is a last resort. Wrong ARIA is worse than no ARIA. Semantic HTML first. |
 | "The automated scan shows no issues" | Automated tools catch ~30% of a11y issues. Manual keyboard and focus testing is essential. |
-| "It's just a visual change, no a11y impact" | Color contrast, focus indicators, hover states, and motion all have direct a11y implications. |
-
-## Red Flags
-
-- Interactive elements built from `div` or `span` without keyboard support
-- `aria-label` used where a visible label should exist
-- Focus outline removed with no replacement
-- Modal or drawer opens without receiving focus
-- Form errors only indicated by color
-- `tabindex` values greater than 0
-- Animations without `prefers-reduced-motion` checks
-- "Accessible" verdict with no keyboard testing performed
-
-## Verification
-
-After accessibility work:
-
-- [ ] All interactive elements reachable by keyboard (Tab, Enter, Escape, Arrow keys)
-- [ ] Focus visible on every interactive element
-- [ ] Focus moves into modals/drawers and returns on close
-- [ ] Form inputs have associated labels and error descriptions
-- [ ] Semantic HTML used before ARIA
-- [ ] No new `tabindex > 0` values introduced
-- [ ] Animations respect `prefers-reduced-motion`
-- [ ] Verdict includes what was NOT tested
 
 ## See Also
 

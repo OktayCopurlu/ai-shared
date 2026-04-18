@@ -5,26 +5,16 @@ description: "Security review and hardening for frontend applications. OWASP Top
 
 # Security Hardening
 
-Prevent security vulnerabilities in Vue/Nuxt/TypeScript applications.
+Prevent security vulnerabilities in Vue/Nuxt/TypeScript applications. Use `references/security-checklist.md` as the detailed checklist; this skill defines when and how to apply it.
 
-## Boundary Rules
+## When To Apply
 
-### Client (Browser)
-- Sanitize any content rendered with `v-html` — or avoid `v-html` entirely
-- Never store auth tokens in `localStorage` — use HttpOnly cookies
-- Never embed secrets in client-side code or bundles
-- Use CSP headers to restrict script sources
-
-### API (Server / BFF)
-- Re-validate all input server-side — client validation is UX, not security
-- Use parameterized queries — no string interpolation in SQL/GraphQL
-- Rate-limit sensitive endpoints (login, registration, password reset)
-- Return minimal error details — no stack traces, no internal paths
-
-### Data (Storage / External)
-- Encrypt sensitive data at rest
-- Never log PII, tokens, or credentials
-- Minimize data stored — collect only what's needed
+- Handling any user input (forms, URL params, file uploads)
+- Adding or changing auth flows
+- Rendering dynamic content with `v-html`
+- Adding new dependencies
+- Integrating with external services
+- Any agent-generated code touching a system boundary
 
 ## Dependency Audit Workflow
 
@@ -49,34 +39,8 @@ yarn audit
 | Rationalization | Reality |
 |---|---|
 | "It's behind auth, so input validation isn't needed" | Authenticated users can still be attackers. Validate all input at every boundary. |
-| "We only use v-html for admin content" | Admin accounts get compromised. Sanitize everything rendered via v-html. |
 | "The secret is in an env var, it's safe" | Env vars in client-side builds are embedded in the bundle. They're public. Server-side only. |
-| "npm audit has too many false positives" | Triaging noise is cheaper than shipping a CVE. Check each finding. Suppress with justification. |
-| "CORS is already configured" | Configured doesn't mean configured correctly. Verify the allowlist matches expectations. |
 | "This is an internal tool, security doesn't matter" | Internal tools have access to internal data. That's exactly when security matters most. |
-
-## Red Flags
-
-- `v-html` used with any user-provided or external content
-- Auth tokens in `localStorage` or client-side JavaScript
-- Secrets or API keys in source code, even in "internal" repos
-- `npm audit` warnings ignored without review
-- CORS set to `*` in production
-- Client-side role checks without server-side enforcement
-- SQL/GraphQL queries built with string templates
-- Error responses showing stack traces or file paths
-
-## Verification
-
-After security hardening:
-
-- [ ] All user input validated at the API boundary (Tier 2)
-- [ ] `v-html` usage reviewed — all content sanitized or trusted
-- [ ] No secrets in client bundles (check build output if unsure)
-- [ ] `npm audit` / `yarn audit` returns no high/critical vulnerabilities
-- [ ] Auth checked server-side on all protected routes
-- [ ] CORS configured with explicit origin allowlist
-- [ ] Security headers present (CSP, X-Content-Type-Options, X-Frame-Options)
 
 ## See Also
 
