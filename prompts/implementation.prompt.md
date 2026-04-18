@@ -82,7 +82,7 @@ Recommended order:
 1. lint
 2. type checks
 3. unit tests
-4. coding-style review — review all changed files against the `applying-coding-style` skill (already loaded during implementation). Fix violations before continuing.
+4. coding style review — review all changed files against the `applying-coding-style` skill (already loaded during implementation). Fix violations before continuing.
 
 If shared packages were changed, widen the scope enough to cover the real impact.
 

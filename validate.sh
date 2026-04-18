@@ -342,7 +342,7 @@ for f in "$AI"/skills/*/SKILL.md; do
   rel="${f#$AI/}"
   desc=$(sed -n '/^---$/,/^---$/{ /^description:/{ s/^description: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
   if [[ -n "$desc" ]] && ! echo "$desc" | grep -qiE 'use for|use when'; then
-    warn "$rel: description missing 'USE FOR:' or 'Use when' trigger guidance"
+    warn "$rel: description missing trigger phrase (one of: 'USE FOR:', 'Use for', 'Use when')"
   fi
 done
 

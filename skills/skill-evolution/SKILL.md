@@ -146,7 +146,7 @@ Only when the learning represents a distinct workflow not covered by any existin
 
 These are things general LLM knowledge will not warn you about — they are specific to this repo:
 
-- **Description trigger phrase must satisfy two linters.** `validate.sh` requires `USE FOR:` or `Use when`; agnix requires `Use when`. Use `Use when …` to satisfy both.
+- **Description trigger phrase must satisfy two linters.** `validate.sh` accepts `use for` or `use when` (case-insensitive substring); agnix requires `Use when`. Use `Use when …` to satisfy both.
 - **Folder name must equal the `name:` field.** Mismatch silently breaks loading. After any rename, run `./setup.sh` to refresh per-skill symlinks (Codex needs one symlink per skill).
 - **Validate before declaring done.** Run all three from repo root, in order:
   1. `zsh validate.sh` — repo-local rules (frontmatter, name == folder, cross-refs)
