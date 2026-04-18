@@ -28,7 +28,7 @@ Write the test first. Make it pass. Clean up. Repeat.
 
 - `describe` block: the unit being tested (function, composable, component)
 - `it` block: behavior in plain English — "returns X when Y", "throws when Z"
-- Test priority: happy path → edge cases → error cases → integration points (sparingly)
+- Test priority: happy path → business rules / invariants → edge cases → error cases → integration points (sparingly)
 - Each test sets up its own data — no shared mutable state
 - Mock external dependencies (API calls, timers) — not internal modules
 
