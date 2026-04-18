@@ -51,10 +51,11 @@ describe('ComponentName', () => {
 | Priority | What | Example |
 |----------|------|---------|
 | 1 | Happy path | User submits form → success message shown |
-| 2 | Most likely error | API returns 500 → error state rendered |
-| 3 | Input boundaries | Empty string, null, max length |
-| 4 | State transitions | Loading → success, loading → error |
-| 5 | Edge cases | Only when a bug proves the gap matters |
+| 2 | Business rules / invariants | Discount stacking order, price rounding, inventory never goes negative, auth boundaries |
+| 3 | Most likely error | API returns 500 → error state rendered |
+| 4 | Input boundaries | Empty string, null, max length |
+| 5 | State transitions | Loading → success, loading → error |
+| 6 | Edge cases | Only when a bug proves the gap matters |
 
 ## Anti-Patterns
 

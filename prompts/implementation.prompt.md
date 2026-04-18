@@ -23,6 +23,7 @@ If the ticket is a code workflow:
 5. ensure the branch name includes the Jira ticket key
 6. load the `coding-style` skill — apply it to all code written from this point forward
 7. when behavior changes, read the existing test file first and decide test coverage intentionally:
+   - identify the **domain invariants / business rules** the change must preserve (what must always be true — e.g. totals, pricing/rounding, auth boundaries, state transitions) and ensure at least one test would fail if a rule were violated, not just if the happy path breaks
    - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
    - if the change is experiment-specific and likely temporary: test updates may be skipped to avoid wasting effort on short-lived code
    - do not remove or weaken existing meaningful coverage only because a change is experimental
