@@ -27,6 +27,7 @@ graph LR
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
+  P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
 
   %% ── Skills ──────────────────────────────────────────
@@ -148,6 +149,7 @@ graph LR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
+│   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
 │   └── update-project-page.prompt.md # Ship — update Confluence
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
@@ -182,6 +184,7 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 ## Rules for agents
 
 - **Creating/updating skills, prompts, or agents**: always write to `~/.ai-shared/...` — symlinks propagate automatically.
+- **Adding a new prompt**: create `~/.ai-shared/prompts/<name>.prompt.md`, then run `./setup.sh` so OpenCode per-command symlinks are refreshed.
 - **Adding a new skill**: create `~/.ai-shared/skills/<name>/SKILL.md`, then add a per-skill symlink to `~/.codex/skills/`.
 - **Global instructions**: edit `~/.ai-shared/instructions.md` — all tools pick up changes.
 - This folder is git-tracked. Commit changes to preserve them.
@@ -236,3 +239,10 @@ When writing or updating skills that need credentials, reference `/.secrets` wit
 ## Validation
 
 Run `./validate.sh` after making changes to catch broken symlinks, missing frontmatter, minimum skill structure issues, empty files, and duplicate names.
+
+When you add a new prompt or skill, run:
+
+```bash
+./setup.sh
+./validate.sh
+```

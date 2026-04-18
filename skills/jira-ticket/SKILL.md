@@ -95,7 +95,28 @@ Short, actionable engineering hints only:
 - Key prop/API hints, technical constraints
 - Reference sibling tickets as links (e.g., "ShoeGrid is built in DSC-2036")
 
+**Only include Dev Note if there is a genuine engineering hint.** Don't invent notes to fill the section. If the ticket is simple enough that the AC speaks for itself, omit Dev Note entirely.
+
 Do NOT use Dev Note for: acceptance criteria, scope, product decisions, open questions for PM/design, or long-form technical design.
+
+---
+
+## Open Questions (optional, only if needed)
+
+If the ticket has genuine ambiguity that blocks execution, add an **Open Questions** section below Dev Note:
+
+```
+## Open Questions
+- Should the warning appear for all locales or only EU?
+- What copy should we use when stock = 0 but the size still renders?
+```
+
+**Rules:**
+
+- **Only include if there are real, blocking ambiguities.** No forced content, no "just in case" questions.
+- **If everything is clear, omit the section entirely.** Do not add a placeholder.
+- **Flag, don't guess.** If something is unclear, surface it as an open question rather than inventing an answer in AC or Dev Note.
+- Each question should be answerable by PM, design, or another stakeholder — not something the engineer can resolve alone.
 
 ---
 
