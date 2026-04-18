@@ -66,6 +66,6 @@ After writing documentation:
 
 ## See Also
 
-- `coding-style` — inline comment and naming standards
+- `applying-coding-style` — inline comment and naming standards
 - `jira-ticket` — ticket writing standards (not the same as docs)
 - `git-workflow` — PR descriptions are a form of documentation

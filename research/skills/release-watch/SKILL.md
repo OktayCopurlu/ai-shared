@@ -71,9 +71,9 @@ For each breaking change, verify:
 
 # Release Watch
 
-Date: <YYYY-MM-DD>
-Subject: <product and version range>
-Time window: <N days or "version X to version Y">
+Date: {YYYY-MM-DD}
+Subject: {product and version range}
+Time window: {N days or "version X to version Y"}
 
 ## Summary
 One paragraph describing the overall scope and risk level of the changes.
@@ -82,10 +82,10 @@ One paragraph describing the overall scope and risk level of the changes.
 List each breaking change separately:
 
 - **Product + version**
-- Change type: <severity level>
-- What changed: <specific description>
+- Change type: {severity level}
+- What changed: {specific description}
 - Impact on our code: Yes / No / Unknown — explain briefly
-- Migration path: <codemod available? manual steps? guide URL?>
+- Migration path: {codemod available? manual steps? guide URL?}
 - Urgency: Critical / High / Medium / Low
 - Confidence: High / Medium / Low
 

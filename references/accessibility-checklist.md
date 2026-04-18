@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Quick-reference for accessibility review passes. Referenced by `a11y-audit` and `code-review`.
+Quick-reference for accessibility review passes. Referenced by `a11y-audit` and `reviewing-code`.
 
 ## Keyboard Navigation
 

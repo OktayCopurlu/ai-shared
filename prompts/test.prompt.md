@@ -37,8 +37,8 @@ If no test runner command is obvious, check `package.json` scripts for `test`, `
 
 When writing new tests:
 
-1. Load the `tdd` skill — follow Red → Green → Refactor
-2. Load the `coding-style` skill — apply naming and structure conventions
+1. Load the `test-driven-development` skill — follow Red → Green → Refactor
+2. Load the `applying-coding-style` skill — apply naming and structure conventions
 3. Reference `references/testing-patterns.md` for structure, factories, and anti-patterns
 
 ### Priority

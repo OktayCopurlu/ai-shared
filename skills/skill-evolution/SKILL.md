@@ -142,6 +142,18 @@ Only when the learning represents a distinct workflow not covered by any existin
 - [ ] `validate.sh` passes with no new errors
 - [ ] User approved
 
+## Repo-specific footguns when codifying
+
+These are things general LLM knowledge will not warn you about — they are specific to this repo:
+
+- **Description trigger phrase must satisfy two linters.** `validate.sh` requires `USE FOR:` or `Use when`; agnix requires `Use when`. Use `Use when …` to satisfy both.
+- **Folder name must equal the `name:` field.** Mismatch silently breaks loading. After any rename, run `./setup.sh` to refresh per-skill symlinks (Codex needs one symlink per skill).
+- **Validate before declaring done.** Run all three from repo root, in order:
+  1. `zsh validate.sh` — repo-local rules (frontmatter, name == folder, cross-refs)
+  2. `npx -y agnix .` — universal Agent Skills spec linter
+  3. `./setup.sh` — refresh symlinks if any folder was added/renamed
+- **Renames have blast radius.** After renaming a skill, `grep -rn '<old-name>' --include='*.md'` across the repo and update every hit (instructions.md, README mermaid+tree, prompts, sibling skills' See Also, references). Other repos that hard-code the old skill name in their own `copilot-instructions.md` will silently stop loading it.
+
 ## Safety Checks
 
 Before writing any skill content, verify:
@@ -199,7 +211,7 @@ Memory notes are a staging area, not a permanent archive. Prune periodically to 
 |---|---|---|
 | Reusable workflow or process | Skill (SKILL.md) | "When migrating APIs, always check X before Y" |
 | Project-specific convention | Project `copilot-instructions.md` | "This repo uses feature flags via LaunchDarkly" |
-| Personal preference | `instructions.md` or `coding-style` skill | "I prefer early returns over nested ifs" |
+| Personal preference | `instructions.md` or `applying-coding-style` skill | "I prefer early returns over nested ifs" |
 | Tool-specific pattern | Existing tool skill | "Contentful: always check locale before querying" |
 | One-off observation | Memory note only | "That API had a weird timeout issue" |
 | Debugging shortcut | `debugging` skill update | "Check hydration mismatches when SSR test fails" |
@@ -264,4 +276,4 @@ After codifying a learning:
 ## See Also
 
 - `docs/skill-anatomy.md` — format reference for creating new skills
-- `coding-style` — personal preferences go here, not in new skills
+- `applying-coding-style` — personal preferences go here, not in new skills

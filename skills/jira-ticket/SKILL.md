@@ -1,6 +1,6 @@
 ---
 name: jira-ticket
-description: "Creates, rewrites, reviews, and updates Jira tickets. Use for requests like 'write a Jira ticket', 'turn this into a ticket', 'review this Jira ticket', 'update this Jira ticket', 'is this ticket clear enough', or 'improve acceptance criteria'."
+description: "Creates, rewrites, reviews, and updates Jira tickets. Use when the user says 'write a Jira ticket', 'turn this into a ticket', 'review this Jira ticket', 'update this Jira ticket', 'is this ticket clear enough', or 'improve acceptance criteria'."
 ---
 
 # Jira Ticket Writer + Reviewer + Updater

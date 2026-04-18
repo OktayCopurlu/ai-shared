@@ -1,6 +1,6 @@
 # Testing Patterns
 
-Quick-reference for test structure, naming, and common patterns. Referenced by `code-review` (Layer 2) and `coding-style` (Testing Style).
+Quick-reference for test structure, naming, and common patterns. Referenced by `reviewing-code` (Layer 2) and `applying-coding-style` (Testing Style).
 
 ## Test Pyramid
 

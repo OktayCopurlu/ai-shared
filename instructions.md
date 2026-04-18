@@ -32,10 +32,10 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 
 Skills in `~/.ai-shared/skills/` activate by task context:
 
-- **Build**: `coding-style` (all code), `tdd` (test-first), `debugging` (breakage)
-- **Quality**: `code-review` (4-layer) before PRs, `security-hardening` (input/auth/deps)
+- **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first), `debugging` (breakage)
+- **Quality**: `reviewing-code` (4-layer) before PRs, `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
 - **Tools**: `atlassian-mcp` (Jira/Confluence), `github-mcp` (PRs/issues), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `playwright-mcp` (browser automation)
-- **Browser**: `ui-validation` + `a11y-audit` (UI changes), `chrome-devtools-mcp` (runtime debug)
+- **Browser**: `validating-ui` + `a11y-audit` (UI changes), `chrome-devtools-mcp` (runtime debug)
 - **References**: Checklists in `~/.ai-shared/references/` — load on demand, not upfront

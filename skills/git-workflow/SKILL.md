@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: "End-to-end git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. USE FOR: creating branches, writing commits, rebasing, resolving conflicts, creating PRs, submitting changes for review. Automates the full git-to-PR pipeline."
+description: "End-to-end git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. Use when creating a branch, writing commits, rebasing, resolving conflicts, opening a PR, or submitting changes for review. Automates the full git-to-PR pipeline."
 ---
 
 # Git Workflow
@@ -21,8 +21,8 @@ Automates the full flow from local changes to a reviewed pull request.
 
 ### 2. Pre-commit Checks
 
-- Read the `coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
-- Read the `code-review` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
+- Read the `applying-coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
+- Read the `reviewing-code` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
 - Run lint on the relevant package before committing (e.g., `yarn nx run <package>:lint`)
 - If `yarn lint` fails on unrelated packages due to pre-existing config issues, verify our files are lint-clean by checking the output for the changed files
 - Run type checks for the relevant package (e.g., `yarn nx run <package>:check-types`)
@@ -85,7 +85,7 @@ Automates the full flow from local changes to a reviewed pull request.
 | "I'll run lint after the PR is up" | Lint failures in CI waste reviewer time. Run lint before committing — always. |
 | "This file is tangentially related, I'll include it" | Unrelated changes make PRs harder to review and riskier to revert. One PR = one concern. |
 | "The commit message doesn't matter, the PR title matters" | Commit messages are permanent history. Imperative, descriptive messages make `git log` useful. |
-| "I'll skip the code-review skill, Copilot review will catch it" | Copilot review is a second opinion, not a replacement. Self-review catches 80% of issues before anyone else sees the code. |
+| "I'll skip the `reviewing-code` skill, Copilot review will catch it" | Copilot review is a second opinion, not a replacement. Self-review catches 80% of issues before anyone else sees the code. |
 | "The pre-commit hook is annoying, I'll bypass it" | Hooks exist for a reason. `--no-verify` erodes team guardrails — fix the root cause instead. |
 | "I'll address review comments in a follow-up PR" | Unresolved comments become tech debt. Address valid feedback before merge. |
 
@@ -104,7 +104,7 @@ Automates the full flow from local changes to a reviewed pull request.
 Before marking the PR workflow complete:
 
 - [ ] Branch name includes the Jira ticket key
-- [ ] `coding-style` and `code-review` skills were run against changed files
+- [ ] `applying-coding-style` and `reviewing-code` skills were run against changed files
 - [ ] Lint, type checks, and tests pass for changed files
 - [ ] Only ticket-relevant files are staged
 - [ ] Commit messages are imperative and descriptive
@@ -113,8 +113,8 @@ Before marking the PR workflow complete:
 
 ## See Also
 
-- `code-review` — run all 4 layers before creating the PR
-- `coding-style` — naming and comment rules applied during pre-commit checks
+- `reviewing-code` — run all 4 layers before creating the PR
+- `applying-coding-style` — naming and comment rules applied during pre-commit checks
 - `debugging` — when quality gates fail and need structured triage
 
 ## PR Description Template

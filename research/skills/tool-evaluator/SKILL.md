@@ -63,7 +63,7 @@ Define the smallest trial that would confirm or refute the tool:
 
 If comparing two tools, run the full matrix for each, then add:
 
-| Dimension | <Tool A> | <Tool B> |
+| Dimension | {Tool A} | {Tool B} |
 |---|---|---|
 | Use case fit | | |
 | Setup complexity | | |
@@ -83,9 +83,9 @@ Then write one paragraph: which tool wins on the dimensions that matter most for
 
 # Tool Evaluation
 
-Tool: <name>
-Use case: <what problem are we solving>
-Date: <YYYY-MM-DD>
+Tool: {name}
+Use case: {what problem are we solving}
+Date: {YYYY-MM-DD}
 
 ## Verdict
 Strong yes | Maybe later | Not worth it now
@@ -111,10 +111,10 @@ Strong yes | Maybe later | Not worth it now
 - ...
 
 ## Proof of value
-- Time box: <N days>
-- Success criteria: <what confirms this is worth it>
-- Failure criteria: <what confirms it is not worth it>
-- Risk: <what could go wrong>
+- Time box: {N days}
+- Success criteria: {what confirms this is worth it}
+- Failure criteria: {what confirms it is not worth it}
+- Risk: {what could go wrong}
 
 ## Recommendation
 Try now | Monitor | Ignore

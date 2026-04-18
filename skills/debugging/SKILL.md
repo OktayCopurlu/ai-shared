@@ -80,6 +80,6 @@ After completing the debugging workflow:
 
 ## See Also
 
-- `code-review` — when debugging uncovers code quality issues for review
+- `reviewing-code` — when debugging uncovers code quality issues for review
 - `references/testing-patterns.md` — for writing effective regression tests
 - `references/cognitive-debt.md` — when the bug is in agent-generated code you never read; run the walkthrough workflow before trying to localize

@@ -44,21 +44,21 @@ Narrow to the vendor(s) the user specified. Go deeper across multiple source typ
 
 # Research Digest
 
-Date: <YYYY-MM-DD>
+Date: {YYYY-MM-DD}
 Mode: weekly-digest | company-watch
-Scope: <vendors covered>
-Time window: <N days>
+Scope: {vendors covered}
+Time window: {N days}
 
 ## Top findings
 
-### 1. <title>
-- Source: <canonical URL>
-- Vendor: <vendor>
-- Published: <date if available>
+### 1. {title}
+- Source: {canonical URL}
+- Vendor: {vendor}
+- Published: {date if available}
 - Status: Released | Preview | Beta | Announced | Deprecated | Breaking change | Rumor
-- Summary: <2-4 sentences>
-- Why it matters: <engineering value>
-- Relevance to our stack: <specific call-out: Vue / Nuxt / TS / Nx / Copilot / MCP / GraphQL / Contentful / Amplitude>
+- Summary: {2-4 sentences}
+- Why it matters: {engineering value}
+- Relevance to our stack: {specific call-out: Vue / Nuxt / TS / Nx / Copilot / MCP / GraphQL / Contentful / Amplitude}
 - Recommendation: Try this week | Add to watchlist | Ignore for now | Create spike ticket
 - Priority: P0 | P1 | P2
 - Confidence: High | Medium | Low

@@ -1,5 +1,5 @@
 ---
-name: tdd
+name: test-driven-development
 description: "Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature."
 ---
 
@@ -85,4 +85,4 @@ After a TDD cycle:
 
 - `references/testing-patterns.md` — test structure, anti-patterns, Vue component testing
 - `debugging` — bug fix TDD overlaps with Step 5 (Guard)
-- `coding-style` — naming, formatting, and change discipline for test files
+- `applying-coding-style` — naming, formatting, and change discipline for test files

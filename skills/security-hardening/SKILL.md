@@ -1,6 +1,6 @@
 ---
 name: security-hardening
-description: "Security review and hardening for frontend applications. OWASP Top 10 prevention, input validation, auth patterns, secrets management, dependency auditing. USE FOR: handling user input, auth flows, data storage, external integrations, or any security-sensitive change."
+description: "Security review and hardening for frontend applications. OWASP Top 10 prevention, input validation, auth patterns, secrets management, dependency auditing. Use when handling user input, building auth flows, storing data, integrating with external services, or making any security-sensitive change."
 ---
 
 # Security Hardening
@@ -81,4 +81,4 @@ After security hardening:
 ## See Also
 
 - `references/security-checklist.md` — quick-reference checklist for review passes
-- `code-review` — security checks in Layer 4 (architecture signals)
+- `reviewing-code` — security checks in Layer 4 (architecture signals)

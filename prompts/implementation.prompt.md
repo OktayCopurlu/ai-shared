@@ -21,7 +21,7 @@ If the ticket is a code workflow:
 3. reuse an existing ticket branch for `in-progress` work when possible
 4. create a new ticket branch for `todo` work when needed
 5. ensure the branch name includes the Jira ticket key
-6. load the `coding-style` skill — apply it to all code written from this point forward
+6. load the `applying-coding-style` skill — apply it to all code written from this point forward
 7. when behavior changes, read the existing test file first and decide test coverage intentionally:
    - identify the **domain invariants / business rules** the change must preserve (what must always be true — e.g. totals, pricing/rounding, auth boundaries, state transitions) and ensure at least one test would fail if a rule were violated, not just if the happy path breaks
    - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
@@ -82,11 +82,11 @@ Recommended order:
 1. lint
 2. type checks
 3. unit tests
-4. coding-style review — review all changed files against the `coding-style` skill (already loaded during implementation). Fix violations before continuing.
+4. coding-style review — review all changed files against the `applying-coding-style` skill (already loaded during implementation). Fix violations before continuing.
 
 If shared packages were changed, widen the scope enough to cover the real impact.
 
-Quality gates are complete when all mandatory checks pass, coding-style violations are resolved, and no known validation failure remains.
+Quality gates are complete when all mandatory checks pass, `applying-coding-style` violations are resolved, and no known validation failure remains.
 
 ### Failure Policy
 
@@ -111,7 +111,7 @@ Cross-check is complete when every AC item and spec-defined behavior is accounte
 
 After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
-If yes: load the `ui-validation` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
+If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
 
 If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
 

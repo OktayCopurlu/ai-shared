@@ -26,7 +26,7 @@ If the ticket branch name is needed, derive it from the PR's head branch using `
 3. Evaluate whether the comment makes sense in context.
 4. Address comments that make sense.
 5. Dismiss or note comments that do not make sense.
-6. Run the `code-review` skill (all 4 layers) on the full PR diff as an additional pass — report any findings not already covered by Copilot comments.
+6. Run the `reviewing-code` skill (all 4 layers) on the full PR diff as an additional pass — report any findings not already covered by Copilot comments.
 7. Run quality gates if any code was changed.
 8. Push the updates.
 9. Assign human reviewers.
@@ -114,6 +114,16 @@ After all comments are addressed or dismissed:
 4. Request review from the assigned reviewers.
 
 Do not assign reviewers before triage is complete — the PR should be clean when they see it.
+
+## Compound
+
+After the PR is review-ready, run the `skill-evolution` skill to capture any reusable insight from this triage:
+
+- Did a recurring class of Copilot comment surface? Note the pattern.
+- Did a fix expose a missing step in an existing skill? Update that skill.
+- Did the review reveal a project convention worth recording? Stage it in memory or repo-scoped notes per `skill-evolution`.
+
+Skip this step only when nothing non-obvious was learned.
 
 ## Guardrails
 

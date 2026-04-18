@@ -1,5 +1,5 @@
 ---
-name: coding-style
+name: applying-coding-style
 description: 'Personal code writing standards for naming, comments, and cleanliness. USE FOR: writing new code, reviewing code, refactoring. ALWAYS apply when generating or editing TypeScript, Vue, or SCSS files. Use when user says "write clean code", "fix naming", "remove comments", or "code quality".'
 ---
 
