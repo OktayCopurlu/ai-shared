@@ -65,3 +65,17 @@ Guards against maintainer-account hijacks and malicious version injections (e.g.
 - [ ] No sensitive data in URL parameters (visible in logs, browser history, referrer headers)
 - [ ] Form data submitted over HTTPS only
 - [ ] Client-side storage (cookies, sessionStorage) contains no sensitive data in plain text
+
+## Code Sweep
+
+Run this pass on any diff authored or heavily edited by a coding agent. Agents produce functionally-correct code far more reliably than secure code — the SUSVIBES benchmark found only 10.5% of SWE-Agent+Claude solutions were secure despite 61% functional correctness, and the Endor Labs AI Code Security Benchmark reports a 17.3% max security-correctness ceiling across 13 agent/model combos.
+
+- [ ] Every new boundary (route handler, form handler, message consumer, CLI arg) has explicit input validation — don't trust that the agent added it
+- [ ] Every new protected endpoint has an auth/authz check server-side — grep the diff for new routes and verify
+- [ ] No new `v-html`, `innerHTML`, `eval`, `Function(...)`, `dangerouslySetInnerHTML`, or string-interpolated SQL/shell commands
+- [ ] No secrets, API keys, or tokens inlined in the diff — scan with `scan-for-secrets` or equivalent before committing
+- [ ] New dependencies justified and vetted — agents frequently suggest unmaintained or typo-squatted packages
+- [ ] Error handling does not swallow security-relevant failures (auth failures, signature mismatches, decryption errors) silently
+- [ ] Logging added by the agent does not include tokens, passwords, session IDs, or full request bodies
+- [ ] Crypto primitives use library defaults — reject any hand-rolled key derivation, IV reuse, or custom hashing
+- [ ] Feature-request prompts with "vulnerability hints" are insufficient — do the sweep manually; hinted prompts did not measurably improve security in the SUSVIBES evaluation
