@@ -55,7 +55,7 @@ Quick-reference for security review passes. Referenced by `code-review` and `sec
 - [ ] Form data submitted over HTTPS only
 - [ ] Client-side storage (cookies, sessionStorage) contains no sensitive data in plain text
 
-## AI-Generated Code Sweep
+## Code Sweep
 
 Run this pass on any diff authored or heavily edited by a coding agent. Agents produce functionally-correct code far more reliably than secure code — the SUSVIBES benchmark found only 10.5% of SWE-Agent+Claude solutions were secure despite 61% functional correctness, and the Endor Labs AI Code Security Benchmark reports a 17.3% max security-correctness ceiling across 13 agent/model combos.
 
