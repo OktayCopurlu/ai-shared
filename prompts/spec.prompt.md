@@ -67,6 +67,26 @@ Match the spec depth to the scope:
 - **Medium feature** (3–6 AC items): Full spec with all sections. Fits on one screen.
 - **Large initiative** (cross-team, new architecture): Full spec + link to solution design. Consider using `solution-design` prompt.
 
+## Variant: README-Driven for New Tools/Libraries/CLIs
+
+When the deliverable is a **net-new standalone tool, library, or CLI** (no Jira ticket, no existing app to extend), use README-driven development (RDD) as the spec format.
+
+**When to use this variant (decision rule):**
+
+- Net-new standalone tool, library, package, or CLI — yes, use RDD
+- New feature inside an existing app, or change to existing code — no, use the standard spec above
+
+**Workflow:**
+
+1. Write the README first, as if the tool already existed — installation, usage examples, CLI flags, API signatures, expected output
+2. Include concrete input/output examples (these become the acceptance criteria)
+3. List non-goals explicitly — what the tool will not do
+4. Feed the README to the coding agent as the spec, then implement with red/green TDD (see `tdd` skill): write a failing test derived from a README example, make it pass, move to the next example
+
+**Why this works:** AI agents are strong at implementation but weak at architecture and API design. A human-authored README forces the design decisions up front — naming, interface shape, scope boundaries — before the agent starts generating code. The README doubles as the spec, the acceptance criteria, and the shipped documentation.
+
+**Sources:** Tom Preston-Werner, "Readme Driven Development" (2010); Simon Willison, `scan-for-secrets` and `datasette-ports` build logs (Apr 2026); Lalit Maganti, "Building syntaqlite with AI" (2026).
+
 ## Output Options
 
 1. **Inline in chat** — for quick review and iteration
