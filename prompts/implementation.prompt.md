@@ -98,11 +98,14 @@ Pause only when it is unsafe to continue or the failure cannot be attributed.
 
 ## Cross-Check
 
-After quality gates pass, compare the implementation against the ticket's acceptance criteria.
+After quality gates pass, compare the implementation against the ticket's full contract — not just the AC list.
 
-For each AC item, confirm it is covered by the code changes. If an AC item is not addressed, go back and implement it before continuing.
+1. for each AC item, confirm it is covered by the code changes
+2. also check behaviors the spec defines beyond AC bullets — failure states, duplicate/repeat behavior, edge cases, and business invariants identified in step 7
+3. if an AC item or contract behavior is not addressed, go back and implement it before continuing
+4. if the implementation had to invent behavior because the spec did not settle it, flag that as a **spec gap** (not a code bug) and surface it in the PR description so the ticket or spec can be tightened
 
-Cross-check is complete when every AC item is accounted for.
+Cross-check is complete when every AC item and spec-defined behavior is accounted for, and any spec gaps are explicitly recorded.
 
 ## UI Validation
 
