@@ -63,6 +63,8 @@ graph LR
   R_PERF[\performance-checklist\]:::ref
   R_SEC[\security-checklist\]:::ref
   R_SEARCH[\search-first\]:::ref
+  R_SUBAGENT[\subagent-delegation\]:::ref
+  R_COGDEBT[\cognitive-debt\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -107,6 +109,8 @@ graph LR
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
+  S_DEBUG -. See Also .-> R_SUBAGENT
+  S_REVIEW -. See Also .-> R_SUBAGENT
 ```
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
@@ -153,8 +157,11 @@ graph LR
 │   └── update-project-page.prompt.md # Ship — update Confluence
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
+│   ├── cognitive-debt.md
 │   ├── performance-checklist.md
+│   ├── search-first.md
 │   ├── security-checklist.md
+│   ├── subagent-delegation.md
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
