@@ -54,9 +54,9 @@ These rules apply to ALL code I write or modify. They override generic conventio
 - **Test between changes**: Don't write 100+ lines without running tests. Make a change, verify it works (tests pass, build succeeds), then move on. Bugs compound when changes pile up untested.
 - **Keep it compilable**: After every meaningful change, the project must build and existing tests must pass. Never leave the codebase in a broken state between edits.
 
-## Working With AI-Generated Code
+## Working With Code
 
-These rules apply when an agent is writing code on your behalf. They prevent the "losing touch" failure mode where the codebase drifts past your understanding while looking fine on the surface.
+Coding agent or human prevent the "losing touch" failure mode where the codebase drifts past your understanding while looking fine on the surface.
 
 - **Read every diff before accepting it**: If you haven't read the code, you haven't reviewed it, and you haven't done the work. Opening a PR with unreviewed agent output delegates your job to the reviewer.
 - **Refactor continuously, not later**: Agents happily add near-duplicate code and layers of indirection. When the same shape appears twice, stop and consolidate — don't promise yourself a cleanup pass. If you can no longer hold the module in your head, throw the branch away and regenerate with a tighter prompt.
@@ -64,7 +64,6 @@ These rules apply when an agent is writing code on your behalf. They prevent the
 - **Don't delegate what you can't evaluate**: Agents are useful where you can check the result — failing test, compiler error, behavior you can exercise. They are dangerous where "correct" is subjective (API design, abstraction choice, product shape). In that zone, write it yourself or sketch it first.
 - **Stop when tired**: Fatigue produces vague prompts, which produce sprawling diffs, which produce more fatigue. Notice the loop and close the laptop.
 
-Sources: Lalit Maganti, [Building SyntaQLite with an AI agent](https://lalitm.com/post/building-syntaqlite-ai/); Simon Willison, [Anti-patterns: things to avoid](https://simonwillison.net/guides/agentic-engineering-patterns/anti-patterns/).
 
 ## Simplification
 
