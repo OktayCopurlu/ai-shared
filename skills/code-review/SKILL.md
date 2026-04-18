@@ -203,9 +203,9 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 | "I'll check test coverage later" | Later never comes. Layer 2 takes minutes and prevents shipping untested branches. |
 | "Refactor suggestions slow things down" | Layer 3 is scoped to the PR. Small consolidations now prevent large refactors later. |
 
-## Agent-Generated Code: Extra Scrutiny
+## Extra Scrutiny
 
-When reviewing code produced by a coding agent (Claude Code, Codex, Copilot, etc.), apply additional checks. LLMs lack the "virtue of laziness" — work costs them nothing, so they default to adding more code rather than simplifying. Left unchecked, agents make systems larger, not better.
+When reviewing code apply additional checks. LLMs lack the "virtue of laziness" — work costs them nothing, so they default to adding more code rather than simplifying. Left unchecked, agents make systems larger, not better.
 
 ### Agent Bloat Signals
 
@@ -218,11 +218,10 @@ Flag these patterns that are common in agent output but rare in human-written co
 - **Copy-paste with slight variation**: Multiple functions or components that are nearly identical. Agent may have duplicated rather than parameterized.
 - **Defensive overkill**: Excessive null checks, try/catch blocks, or fallback values that mask real errors instead of surfacing them.
 
-### PR Readiness for Agent-Authored Code
+### PR Readiness
 
-Before approving a PR that contains agent-generated code, verify:
+Before approving a PR that contains verify:
 
-- [ ] Author confirms they reviewed the code themselves — not just that tests pass
 - [ ] No files, exports, or dependencies were added that nothing uses
 - [ ] Diff size is proportional to the feature scope (a 20-line feature should not produce a 400-line diff)
 - [ ] The change doesn't introduce a new pattern when an existing codebase pattern covers the same case
@@ -230,7 +229,7 @@ Before approving a PR that contains agent-generated code, verify:
 
 ### Compound Step
 
-After completing a review of agent-generated code, note any recurring issues for the author to feed back into their agent instructions (AGENTS.md, .cursorrules, or equivalent). Small instruction improvements compound — a one-line rule like "prefer existing utilities over new helpers" prevents the same bloat pattern across future agent runs.
+After completing a review, note any recurring issues for the author to feed back into their agent instructions (AGENTS.md, .cursorrules, or equivalent). Small instruction improvements compound — a one-line rule like "prefer existing utilities over new helpers" prevents the same bloat pattern across future agent runs.
 
 ## Red Flags
 
@@ -240,7 +239,6 @@ After completing a review of agent-generated code, note any recurring issues for
 - No test coverage gaps ever flagged (suggests Layer 2 is being skipped)
 - Review findings not categorized by layer — makes it unclear what's actionable vs. informational
 - Reviewing only the files you're familiar with and skipping the rest
-- Agent-generated PR merged without author confirming they reviewed the code
 
 ## Verification
 
