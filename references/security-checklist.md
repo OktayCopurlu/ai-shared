@@ -40,6 +40,17 @@ Quick-reference for security review passes. Referenced by `code-review` and `sec
 - [ ] Lock file committed (`package-lock.json` or `yarn.lock`)
 - [ ] New dependencies justified — prefer standard library and existing utilities
 
+## Supply Chain Compromise
+
+Guards against maintainer-account hijacks and malicious version injections (e.g. axios `1.14.1`/`0.30.4`, March 2026).
+
+- [ ] CI installs with `npm ci --ignore-scripts` (or `pnpm install --ignore-scripts`) — blocks postinstall RAT droppers
+- [ ] Cooldown gate configured: `min-release-age` (npm 11.10.0+), `minimumReleaseAge` (pnpm), or `npmMinimalAgeGate` (yarn) set to ≥3 days
+- [ ] Never use `@latest` or unpinned `npx` in CI/MCP configs — pin exact versions, prefer `npx --no --offline`
+- [ ] Red flags to reject in review: phantom deps (in manifest, never imported), npm version with no matching git tag, missing `_npmUser.trustedPublisher` (OIDC) on a project that normally publishes with provenance
+- [ ] Never install "meeting app updates" prompted mid-call — known social-engineering vector for maintainer account takeover
+- [ ] On suspected compromise: `grep -E "<pkg>@<bad-version>" package-lock.json yarn.lock pnpm-lock.yaml`, then rotate tokens, revoke sessions, rebuild CI images from clean base
+
 ## API Security
 
 - [ ] SQL/NoSQL queries use parameterized queries — no string concatenation
