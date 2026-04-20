@@ -39,7 +39,7 @@ When writing new tests:
 
 1. Load the `test-driven-development` skill — follow Red → Green → Refactor
 2. Load the `applying-coding-style` skill — apply naming and structure conventions
-3. Reference `references/testing-patterns.md` for structure, factories, and anti-patterns
+3. Reference `~/.ai-shared/references/testing-patterns.md` for structure, factories, and anti-patterns
 
 ### Priority
 

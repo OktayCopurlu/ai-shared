@@ -55,6 +55,6 @@ Each cycle should respond to what you learned from the previous one.
 
 ## See Also
 
-- `references/testing-patterns.md` — test structure, anti-patterns, Vue component testing
+- `~/.ai-shared/references/testing-patterns.md` — test structure, anti-patterns, Vue component testing
 - `debugging` — bug fix TDD overlaps with Step 5 (Guard)
 - `applying-coding-style` — naming, formatting, and change discipline for test files

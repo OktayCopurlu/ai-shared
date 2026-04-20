@@ -79,7 +79,7 @@ document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$pinia
 1. Profile a specific user action (click, navigation), not the whole session
 2. Look for: long tasks (>50ms), layout thrashing, excessive re-renders
 3. Check the Network tab for slow or blocking requests
-4. Compare against Core Web Vitals targets in `references/performance-checklist.md`
+4. Compare against Core Web Vitals targets in `~/.ai-shared/references/performance-checklist.md`
 
 ## Rules
 
@@ -91,4 +91,4 @@ document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$pinia
 
 ## See Also
 
-- project-specific environment references such as `references/on-frontend-urls.md`
+- project-specific environment references such as `~/.ai-shared/references/on-frontend-urls.md`

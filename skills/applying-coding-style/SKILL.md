@@ -93,4 +93,4 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 
 ## See Also
 
-- `references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section
+- `~/.ai-shared/references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section

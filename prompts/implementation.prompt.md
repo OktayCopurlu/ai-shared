@@ -27,7 +27,7 @@ If the ticket is a code workflow:
    - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
    - if the change is experiment-specific and likely temporary: test updates may be skipped to avoid wasting effort on short-lived code
    - do not remove or weaken existing meaningful coverage only because a change is experimental
-8. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `references/search-first.md`):
+8. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `~/.ai-shared/references/search-first.md`):
    - search shared/design-system components for anything that matches the UI elements in the ticket or Figma
    - search the codebase for similar patterns already implemented elsewhere (e.g. same layout, same interaction, same data shape)
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new

@@ -123,6 +123,6 @@ If a tool-adapter skill drifted during the task and the fix looks reusable, sugg
 
 ## See Also
 
-- `docs/skill-anatomy.md` — format reference for creating new skills
+- `~/.ai-shared/docs/skill-anatomy.md` — format reference for creating new skills
 - `applying-coding-style` — personal preferences go here, not in new skills
-- `references/cognitive-debt.md` — when agent-generated code needs walkthrough before evolving
+- `~/.ai-shared/references/cognitive-debt.md` — when agent-generated code needs walkthrough before evolving

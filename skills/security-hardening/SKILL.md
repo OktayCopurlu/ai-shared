@@ -5,7 +5,7 @@ description: "Security review and hardening for frontend applications. OWASP Top
 
 # Security Hardening
 
-Prevent security vulnerabilities in Vue/Nuxt/TypeScript applications. Use `references/security-checklist.md` as the detailed checklist; this skill defines when and how to apply it.
+Prevent security vulnerabilities in Vue/Nuxt/TypeScript applications. Use `~/.ai-shared/references/security-checklist.md` as the detailed checklist; this skill defines when and how to apply it.
 
 ## When To Apply
 
@@ -44,5 +44,5 @@ yarn audit
 
 ## See Also
 
-- `references/security-checklist.md` — quick-reference checklist for review passes
+- `~/.ai-shared/references/security-checklist.md` — quick-reference checklist for review passes
 - `reviewing-code` — security checks in Layer 4 (architecture signals)

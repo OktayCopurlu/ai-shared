@@ -62,5 +62,5 @@ Prevent recurrence.
 ## See Also
 
 - `reviewing-code` — when debugging uncovers code quality issues for review
-- `references/testing-patterns.md` — for writing effective regression tests
-- `references/cognitive-debt.md` — when the bug is in agent-generated code you never read; run the walkthrough workflow before trying to localize
+- `~/.ai-shared/references/testing-patterns.md` — for writing effective regression tests
+- `~/.ai-shared/references/cognitive-debt.md` — when the bug is in agent-generated code you never read; run the walkthrough workflow before trying to localize

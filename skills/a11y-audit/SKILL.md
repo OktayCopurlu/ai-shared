@@ -82,6 +82,6 @@ Accessible enough / Needs fixes / High-risk accessibility issues
 
 ## See Also
 
-- `references/accessibility-checklist.md` — full checklist for keyboard, focus, semantics, labels, and visual design
+- `~/.ai-shared/references/accessibility-checklist.md` — full checklist for keyboard, focus, semantics, labels, and visual design
 - `reviewing-code` — a11y issues may surface during Layer 1 or Layer 4 review
 - `validating-ui` — browser-level validation that may include accessibility checks

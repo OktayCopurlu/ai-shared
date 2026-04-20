@@ -83,7 +83,7 @@ After completing the skill's process:
 
 ## See Also
 - `other-skill` — when to cross-reference
-- `references/checklist.md` — supporting material
+- `~/.ai-shared/references/checklist.md` — supporting material
 ```
 
 Use this fuller template for process-heavy skills where self-monitoring matters.
@@ -178,6 +178,18 @@ Reference other skills by name:
 ```markdown
 Follow the `debugging` skill if the build breaks.
 Apply `applying-coding-style` to all code written during implementation.
+```
+
+When linking to references, docs, or other files in this repo, always use the absolute `~/.ai-shared/` path — never a bare relative path like `references/foo.md`. Skills and prompts are consumed via symlinks from other repos, so a relative path resolves inside the wrong workspace.
+
+```markdown
+# ✅ Correct
+- `~/.ai-shared/references/security-checklist.md`
+- `~/.ai-shared/docs/skill-anatomy.md`
+
+# ❌ Wrong — will look inside the current project repo
+- `references/security-checklist.md`
+- `docs/skill-anatomy.md`
 ```
 
 Don't duplicate content between skills — reference and link instead.

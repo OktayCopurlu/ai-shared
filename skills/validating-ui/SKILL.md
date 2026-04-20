@@ -145,4 +145,4 @@ After completing UI validation:
 - `a11y-audit` — accessibility validation (separate from UI validation)
 - `playwright-mcp` — browser automation for navigation and interaction
 - `chrome-devtools-mcp` — console, network, DOM inspection
-- `references/performance-checklist.md` — Core Web Vitals and frontend performance checks
+- `~/.ai-shared/references/performance-checklist.md` — Core Web Vitals and frontend performance checks

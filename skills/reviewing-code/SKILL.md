@@ -207,8 +207,8 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 - `applying-coding-style` — naming and comment rules used in Layer 1
 - `debugging` — when a review uncovers a bug that needs triage
-- `references/security-checklist.md` — for security-focused review passes
-- `references/testing-patterns.md` — for evaluating test quality in Layer 2
-- `references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
-- `references/performance-checklist.md` — for performance checks in Layer 4
-- `references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through
+- `~/.ai-shared/references/security-checklist.md` — for security-focused review passes
+- `~/.ai-shared/references/testing-patterns.md` — for evaluating test quality in Layer 2
+- `~/.ai-shared/references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
+- `~/.ai-shared/references/performance-checklist.md` — for performance checks in Layer 4
+- `~/.ai-shared/references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through

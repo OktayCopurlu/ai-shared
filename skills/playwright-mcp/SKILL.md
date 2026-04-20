@@ -140,4 +140,4 @@ When a click or fill doesn't work:
 
 ## See Also
 
-- project-specific environment references such as `references/on-frontend-urls.md`
+- project-specific environment references such as `~/.ai-shared/references/on-frontend-urls.md`
