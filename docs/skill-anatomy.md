@@ -163,6 +163,9 @@ Shared reference material goes in `references/` at the project root, not inside 
 4. **Anti-rationalization.** Every skip-worthy step needs a counter-argument.
 5. **Progressive disclosure.** SKILL.md is the entry point. Supporting files load only when needed.
 6. **Token-conscious.** Every section must justify its inclusion. If removing it wouldn't change agent behavior, remove it.
+7. **Explain the why.** State the reasoning behind a rule when it isn't self-evident. Agents follow rules more reliably when they understand the intent.
+8. **Show preferred vs. avoided.** For non-trivial conventions, pair a short "do this" example with a short "not this" example. Concrete code beats abstract description.
+9. **Skip what tooling enforces.** Don't restate rules the linter, formatter, or type-checker already catches. Spend tokens on non-obvious decisions the agent would otherwise get wrong.
 
 ## Naming Conventions
 
