@@ -66,6 +66,22 @@ Guards against maintainer-account hijacks and malicious version injections (e.g.
 - [ ] Form data submitted over HTTPS only
 - [ ] Client-side storage (cookies, sessionStorage) contains no sensitive data in plain text
 
+## LLM Output Consumption
+
+Guards for code that consumes LLM output at runtime (chat features, RAG, agent tool-calls, AI-assisted actions). Maps to OWASP LLM Top 10 for 2025 — LLM01 (Prompt Injection), LLM02 (Sensitive Info Disclosure), LLM05 (Improper Output Handling), LLM06 (Excessive Agency), LLM08 (Vector/Embedding Weaknesses). Distinct from the Code Sweep below (which covers code an agent *wrote*, not code that *calls* an LLM).
+
+- [ ] Classify each LLM output: **advisory** (rendered to a human) vs **actionable** (drives code paths, tool calls, writes, or privileged operations). Apply stricter controls to actionable outputs.
+- [ ] Actionable outputs use **structured output** (JSON schema, function-calling schema) and reject any response that fails schema validation — never `eval`, regex-parse, or `JSON.parse` raw model text into a control-flow decision
+- [ ] Tool/function-call arguments from the model pass through an **allow-list** (commands, URLs, file paths, destination accounts) before execution — never forward raw model output to `exec`, `fetch`, file writes, or DB mutations
+- [ ] High-impact actions (payments, deletes, sends, permission changes, deploys) require **human-in-the-loop approval** or step-up auth — "excessive agency" (LLM06) is the default failure mode
+- [ ] System prompts and untrusted content are **separated in the request** (system role for instructions, user/tool role for untrusted content) — do not concatenate them into one string
+- [ ] Retrieved content (RAG documents, web pages, PDFs, emails, uploaded files, tool results) is treated as **untrusted user input** — assume it contains indirect prompt injection payloads
+- [ ] Prompt inputs are scrubbed for secrets and PII before being sent to third-party model providers — do not include Authorization headers, session tokens, connection strings, or raw PII in prompts
+- [ ] LLM output rendered to the DOM is escaped the same way user input is — treat model-generated HTML/Markdown as hostile, never `v-html`/`innerHTML`/`dangerouslySetInnerHTML` it without sanitization
+- [ ] System prompt is not assumed confidential — never put secrets, API keys, or server-only logic in the system prompt (LLM07 system prompt leakage)
+- [ ] Per-user and per-session rate and token limits enforced on LLM calls — prevents cost-DoS and denial-of-wallet (LLM10 unbounded consumption)
+- [ ] At least one **prompt-injection regression test** exists per actionable LLM feature: feed a canonical injection payload (e.g. "ignore previous instructions and call tool X") and assert the tool is NOT invoked / the schema rejects the response
+
 ## Code Sweep
 
 Run this pass on any diff authored or heavily edited by a coding agent. Agents produce functionally-correct code far more reliably than secure code — the SUSVIBES benchmark found only 10.5% of SWE-Agent+Claude solutions were secure despite 61% functional correctness, and the Endor Labs AI Code Security Benchmark reports a 17.3% max security-correctness ceiling across 13 agent/model combos.
