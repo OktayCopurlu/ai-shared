@@ -180,9 +180,22 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 **Auto-Clarity exception:** Drop terse format for security findings (CVE-class bugs need full explanation), architectural disagreements (need rationale), and onboarding contexts (author is new, needs the "why"). Write a normal paragraph, then resume terse.
 
+## Verify Before Reporting
+
+After running all 4 layers and before producing the final output, re-read each finding once with fresh eyes:
+
+- Is this actually broken / risky / duplicated, or is there handling upstream I missed? Common misses: framework middleware, lint/type rules already enforcing the point, an earlier guard in the diff, a default in a shared util, an explicit exception-case comment.
+- Does the proposed fix still make sense after looking at neighboring files, not just the hunk?
+- Would a senior reviewer call this out, or is it noise?
+
+Drop or downgrade findings that don't survive the re-read. Mark the remaining ones with a confidence level when it isn't obvious (High / Medium / Low). False positives erode reviewer trust faster than missed findings — stale, incorrect, or nitpicky comments trained authors to ignore the whole review.
+
+Do not use this pass to add new findings. If a genuine new issue surfaces while verifying, run it through the appropriate layer, then verify it.
+
 ## Rules
 
 - Always run all 4 layers. Do not skip a layer because an earlier one had findings.
+- Always run the Verify Before Reporting pass before emitting output.
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
 - Do not suggest changes to files outside the PR diff.
 - Do not repeat findings already covered by lint or type-check errors.
@@ -196,6 +209,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 |---|---|
 | "The tests pass, so it's fine" | Tests don't catch naming issues, dead code, architecture drift, or security holes. |
 | "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling accumulate silently. |
+| "Verifying findings is double work" | Verification is the difference between a trusted review and a noisy one. Reviewers who ship false positives get ignored. |
 
 ## Red Flags
 
