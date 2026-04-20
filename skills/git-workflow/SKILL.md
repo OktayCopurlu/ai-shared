@@ -21,6 +21,8 @@ Automates the full flow from local changes to a reviewed pull request.
 
 ### 2. Pre-commit Checks
 
+- Discover active CI gates before running local checks — list `.github/workflows/*.yml`, keep only workflows whose `on: push` / `on: pull_request` triggers match the current branch and changed paths (honor `branches`, `branches-ignore`, `paths`, `paths-ignore` filters), then mirror each matched check locally so CI cannot fail on something you could have caught
+- Map each matched workflow step to its local equivalent using the cheat sheet below; for explicit `run:` steps, execute the exact command locally
 - Read the `applying-coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
 - Read the `reviewing-code` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
 - Run lint on the relevant package before committing (e.g., `yarn nx run <package>:lint`)
@@ -29,6 +31,19 @@ Automates the full flow from local changes to a reviewed pull request.
 - Run related tests to verify nothing is broken
 - If checks fail on our changes, fix the issues before proceeding — do not skip or suppress errors
 - Only proceed to commit after lint, types, and tests all pass for our changes
+
+#### CI-Gate → Local Command Cheat Sheet
+
+| Workflow step | Local mirror |
+|---|---|
+| `DavidAnson/markdownlint-cli2-action` | `npx markdownlint-cli2 "**/*.md"` |
+| `raven-actions/actionlint` | `actionlint` |
+| `ludeeus/action-shellcheck` | `shellcheck <scripts>` |
+| `rhysd/action-setup-vim` / `stefanzweifel/git-auto-commit-action` | no local equivalent — skip |
+| Explicit `run: <cmd>` | run `<cmd>` verbatim from the repo root |
+
+- If a workflow uses a matrix (`strategy.matrix`), mirror one representative cell locally; rely on CI for full coverage
+- If `paths` / `paths-ignore` filters exclude your changes, skip that workflow — do not waste time mirroring checks CI will not run
 
 ### 3. Commit Changes
 
