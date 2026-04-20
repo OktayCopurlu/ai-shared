@@ -10,16 +10,9 @@ Use this skill with the Playwright MCP server that exposes `browser_*` tools suc
 `browser_select_option`, `browser_press_key`, `browser_wait_for`,
 `browser_evaluate`, and `browser_file_upload`.
 
-## on-frontend URLs
+## Environment-Specific URLs
 
-- **Local dev**: `http://localhost:5050`
-- **Production**: `https://www.on.com`
-- **Staging / Preview**: Require HTTP basic auth — read `STAGING_USER` and `STAGING_PASS` from `/.secrets` in the repo root and embed in the URL: `https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR_NUMBER>.on-running.com/...`
-
-Examples:
-- `https://www.on.com/en-ch/shop/mens/low` → `http://localhost:5050/en-ch/shop/mens/low`
-- `https://www.on.com/en-ch/products/cloudflow-5-m-3mf1011/mens/juniper-ice-shoes-3MF10114851` → `http://localhost:5050/en-ch/products/cloudflow-5-m-3mf1011/mens/juniper-ice-shoes-3MF10114851`
-- Preview: `https://<STAGING_USER>:<STAGING_PASS>@on-shop-8895.on-running.com/en-ch/products/...`
+If the task involves project-specific local/staging/production URL mapping or preview authentication, load the relevant project reference before navigating.
 
 ## Core Workflow
 
@@ -114,11 +107,11 @@ Examples:
 4. Continue with the actual task
 ```
 
-### Authentication (staging/preview)
+### Authenticated preview access
 
-Read `STAGING_USER` and `STAGING_PASS` from `/.secrets` in the repo root, then embed in URL:
+If the target environment uses preview or staging auth, follow the project-specific reference and use the credentialed URL with `browser_navigate`:
 ```
-browser_navigate → https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR>.on-running.com/...
+browser_navigate → https://<USER>:<PASS>@<preview-host>/<path>
 ```
 
 ### Debugging failed interactions
@@ -136,7 +129,7 @@ When a click or fill doesn't work:
 - After navigation or DOM changes, take a fresh snapshot
 - Use `browser_wait_for` instead of arbitrary delays
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
-- For staging URLs, always include basic auth credentials in the URL
+- For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
 - Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
 - Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
@@ -144,3 +137,7 @@ When a click or fill doesn't work:
 ## Alternatives
 
 - **Playwright CLI** (`@playwright/cli`, [github.com/microsoft/playwright-cli](https://github.com/microsoft/playwright-cli)) — a CLI-based alternative to Playwright MCP, designed to be more token-efficient for coding agents. Uses text commands instead of MCP tool calls. Consider for batch automation or when MCP overhead is high.
+
+## See Also
+
+- project-specific environment references such as `references/on-frontend-urls.md`

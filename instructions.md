@@ -27,6 +27,7 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 - Correctness and maintainability over speed.
 - Quick second pass after completing work — mention better approach if one becomes apparent.
 - New files, functions, env vars, routes, configs, helpers allowed when needed.
+- If a skill is materially stale relative to the connected tools, treat that as `skill-evolution` input: finish the user task, then capture or codify the drift instead of silently normalizing it away.
 
 ## Skill Awareness
 

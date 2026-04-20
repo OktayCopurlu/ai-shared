@@ -27,6 +27,7 @@ graph LR
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
+  P_REVIEWPR[/review-pr/]:::prompt
   P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
 
@@ -64,6 +65,7 @@ graph LR
   R_SEC[\security-checklist\]:::ref
   R_SEARCH[\search-first\]:::ref
   R_COG[\cognitive-debt\]:::ref
+  R_ON[\on-frontend-urls\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -81,6 +83,13 @@ graph LR
   P_TEST --> R_TEST
   P_PR --> S_GIT
   P_REVIEW --> S_REVIEW
+  P_REVIEWPR --> S_REVIEW
+  P_REVIEWPR --> S_UIVAL
+  P_REVIEWPR --> S_ATLAS
+  P_REVIEWPR --> S_GH
+  P_REVIEWPR --> S_PW
+  P_REVIEWPR --> S_CHROME
+  P_REVIEWPR -. optional .-> S_A11Y
 
   %% ── Skill → Skill ──────────────────────────────────
   S_REVIEW --> S_STYLE
@@ -98,6 +107,8 @@ graph LR
   S_UIVAL -. See Also .-> S_CHROME
   S_UIVAL -. See Also .-> S_AMP
   S_UIVAL -. See Also .-> R_PERF
+  S_PW -. See Also .-> R_ON
+  S_CHROME -. See Also .-> R_ON
   S_A11Y -. See Also .-> S_REVIEW
   S_A11Y -. See Also .-> S_UIVAL
   S_A11Y -. See Also .-> R_A11Y
@@ -153,6 +164,7 @@ graph LR
 │   ├── start-working.prompt.md     # Build — full delivery workflow
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
+│   ├── review-pr.prompt.md         # Review — full PR review against ticket
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
 │   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
@@ -160,10 +172,10 @@ graph LR
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── search-first.md
 │   ├── security-checklist.md
-│   ├── sprint-review-pdf.sh
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
@@ -227,7 +239,7 @@ See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the full format spec with
 
 This repo is **public**. Never commit credentials, tokens, or passwords directly in skill/agent/prompt files.
 
-Secrets are stored in a local `.secrets` file at the repo root, which is gitignored. Skills reference it by path (`/.secrets`), and any AI agent can read it at runtime.
+Secrets are stored in a local `.secrets` file in `~/.ai-shared/.secrets`, which is gitignored. This is the shared AI config repo, not the target project workspace. Skills should reference this path explicitly so agents do not look for secrets in the app repo they are currently editing.
 
 **After cloning, create your own `.secrets` file:**
 
@@ -243,7 +255,7 @@ STAGING_USER=...
 STAGING_PASS=...
 ```
 
-When writing or updating skills that need credentials, reference `/.secrets` with variable names — never hardcode values.
+When writing or updating skills that need credentials, reference `~/.ai-shared/.secrets` with variable names — never hardcode values.
 
 ## Validation
 

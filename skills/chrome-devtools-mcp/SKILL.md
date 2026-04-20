@@ -16,6 +16,10 @@ When debugging runtime issues in the browser, **always prefer using the Chrome D
 - **Performance**: Profile page load, rendering, and script execution
 - **Storage**: Inspect localStorage, sessionStorage, cookies
 
+## Environment Access
+
+If debugging a project-specific preview or staging environment, load the relevant project reference first so you use the correct host, auth pattern, and access method.
+
 ## Procedure
 
 1. Ensure the local dev server is running (`yarn on-shop dev:safe`)
@@ -83,3 +87,8 @@ document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$pinia
 - Do not guess at state — evaluate expressions to see actual values
 - If the page shows a blank screen, check console errors first, then network failures
 - Take a methodical approach: console → network → DOM → state → performance
+- For preview or staging environments, follow the project's documented access pattern instead of guessing credentials or hostnames
+
+## See Also
+
+- project-specific environment references such as `references/on-frontend-urls.md`

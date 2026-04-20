@@ -12,6 +12,7 @@ Turn hard-won experience into reusable skills. Memory is the staging area; skill
 - A pattern or workflow repeated across 2+ tasks/sessions
 - User explicitly says "save this", "remember this", "add this to skills"
 - An existing skill was missing a step that caused a failure
+- A skill's documented tool names, tool examples, or workflow assumptions materially drifted from the connected MCP/tool reality
 
 **When NOT to use:** the solution is trivial (any LLM would know it), project-specific (belongs in project `copilot-instructions.md`), or a one-off fix.
 
@@ -27,6 +28,24 @@ All skills live in `~/.ai-shared/skills/`. Other repos see them via symlinks —
 
 Prune memory notes that have been codified, are stale (30+ days, no recurrence), or are project-specific.
 
+## Tool Drift While Using Skills
+
+When using a tool-adapter skill such as `playwright-mcp`, `chrome-devtools-mcp`, `github-mcp`, or `atlassian-mcp`, watch for runtime drift:
+
+- documented tool names no longer exist
+- documented examples use outdated tool shapes or parameters
+- a newer canonical tool replaces an older one
+- the skill contains a stale exhaustive tool list that no longer matches reality
+
+When drift is detected:
+
+1. finish the user task first unless the stale skill blocks success
+2. do not silently rewrite the skill mid-task unless the user asked for it
+3. capture the mismatch as a `skill-evolution` candidate
+4. codify only when the mismatch is real, reusable, and not just a one-off environment quirk
+
+Prefer updating selection heuristics, workflow guidance, and representative examples over maintaining exhaustive tool inventories that will drift again.
+
 ### Path A: Update an Existing Skill
 
 1. **Branch**: `cd ~/.ai-shared && git checkout main && git pull origin main && git checkout -b skill/<name>-<brief-description>`
@@ -38,6 +57,12 @@ Prune memory notes that have been codified, are stale (30+ days, no recurrence),
    2. `npx -y agnix .`
    3. `./setup.sh` if any skill folder was added or renamed
 6. **Commit & PR** — user reviews and merges
+
+When the change comes from runtime drift discovered while using a skill:
+
+- prefer branch names like `skill-evolution/<name>-tool-drift`
+- state clearly in the PR title or body that the update was opened by `skill-evolution`
+- summarize the observed mismatch and the new source of truth
 
 ### Path B: Create a New Skill
 
@@ -77,8 +102,12 @@ All skill changes go through a PR — never push directly to main.
 
 1. **Commit** with a brief imperative message: `Update <skill-name>: add missing X step`
 2. **Push & create PR** — include what changed and why (1–2 sentences) plus validation output
-3. **Wait for merge** — do not merge PRs yourself
-4. **After merge**: `git checkout main && git pull origin main`
+3. If the PR was created by this workflow, mark it explicitly:
+   - title prefix: `[skill-evolution]` when appropriate
+   - body note: `Opened by skill-evolution after detecting reusable skill drift during task execution.`
+   - include the observed mismatch: missing tool, renamed tool, outdated example, or stale workflow step
+4. **Wait for merge** — do not merge PRs yourself
+5. **After merge**: `git checkout main && git pull origin main`
 
 ## Rollback
 
@@ -89,6 +118,8 @@ All skill changes go through a PR — never push directly to main.
 ## Proactive Behavior
 
 After completing a complex task, suggest to the user: _"I learned something reusable here — want me to capture it?"_ Only after genuinely non-trivial tasks, and only at the end of the task.
+
+If a tool-adapter skill drifted during the task and the fix looks reusable, suggest the stronger follow-up: _"I found a reusable skill drift here — want me to open an ai-shared PR via skill-evolution so you can review it later?"_
 
 ## See Also
 
