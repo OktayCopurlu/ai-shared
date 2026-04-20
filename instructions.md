@@ -33,6 +33,7 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 
 Skills in `~/.ai-shared/skills/` activate by task context:
 
+- **Define**: `clarifying-questions` (ask before acting on underspecified requests), `jira-ticket` (ticket writing/review)
 - **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first), `debugging` (breakage)
 - **Quality**: `reviewing-code` (4-layer) before PRs, `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)

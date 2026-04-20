@@ -50,6 +50,7 @@ graph LR
   S_GH([github-mcp]):::skill
   S_CTF([contentful]):::skill
   S_GDRIVE([google-drive]):::skill
+  S_CLARIFY([clarifying-questions]):::skill
 
   %% ── Agents ──────────────────────────────────────────
   A_DEVIL{{devils-advocate}}:::agent
@@ -123,6 +124,9 @@ graph LR
   S_DOC -. See Also .-> S_GIT
   S_EVOLVE -. See Also .-> S_STYLE
   S_EVOLVE -. See Also .-> R_COG
+  S_CLARIFY -. See Also .-> R_SEARCH
+  S_CLARIFY -. See Also .-> S_JIRA
+  S_CLARIFY -. See Also .-> P_SPEC
 ```
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
@@ -138,6 +142,7 @@ graph LR
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
 │   ├── applying-coding-style/  # Personal code writing standards
 │   ├── chrome-devtools-mcp/    # Debug runtime issues via DevTools
+│   ├── clarifying-questions/   # Ask structured questions before acting
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
