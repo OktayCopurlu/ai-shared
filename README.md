@@ -176,6 +176,7 @@ graph LR
 │   ├── performance-checklist.md
 │   ├── search-first.md
 │   ├── security-checklist.md
+│   ├── stop-triggers.md
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
