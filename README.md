@@ -65,6 +65,7 @@ graph LR
   R_SEARCH[\search-first\]:::ref
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
+  R_REFAC[\refactoring-patterns\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -115,6 +116,7 @@ graph LR
   S_REVIEW -. See Also .-> R_COG
   S_REVIEW -. See Also .-> R_PERF
   S_STYLE -. See Also .-> R_TEST
+  S_STYLE -. See Also .-> R_REFAC
   S_SEC -. See Also .-> S_REVIEW
   S_SEC -. See Also .-> R_SEC
   S_DOC -. See Also .-> S_STYLE
@@ -187,6 +189,7 @@ graph LR
 │   ├── cognitive-debt.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
+│   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
 │   └── testing-patterns.md

@@ -94,3 +94,4 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 ## See Also
 
 - `~/.ai-shared/references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section
+- `~/.ai-shared/references/refactoring-patterns.md` — structured simplification process and pattern tables for refactoring tasks
