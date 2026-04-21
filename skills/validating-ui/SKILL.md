@@ -71,6 +71,7 @@ Only when the ticket mentions analytics or tracking:
 2. Use `playwright-mcp` tools to navigate, interact, and snapshot.
 3. Use `chrome-devtools-mcp` tools when deeper inspection is needed (console, network, DOM state).
 4. If a11y is relevant, load `a11y-audit` separately — do not mix a11y findings into this validation.
+5. If the change is behind a feature flag, experiment, or A/B test, try using cookie overrides to toggle between variants. Test both the enabled and disabled states.
 
 ## Verdict
 
