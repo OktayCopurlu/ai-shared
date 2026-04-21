@@ -172,6 +172,7 @@ graph LR
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── exec-plan.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── search-first.md
