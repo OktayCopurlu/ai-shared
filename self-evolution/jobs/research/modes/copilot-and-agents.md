@@ -1,12 +1,6 @@
----
-name: copilot-and-agents
-description: "Track GitHub Copilot, VS Code agent mode, MCP servers, skills, prompts, and AI developer workflow updates. USE FOR: 'what's new in Copilot?', 'any new MCP servers?', 'what changed in VS Code agent mode?', 'any useful new skills or prompts?', 'is there a new agent workflow worth adopting?'. ALWAYS use when the focus is AI coding tools, agent workflows, or developer automation."
-disable-model-invocation: true
----
+# Copilot & Agents Mode
 
-# Copilot & Agents Skill
-
-Use this skill when the user asks about:
+Use this mode when the user asks about:
 - GitHub Copilot (chat, agent mode, coding agent, workspace, review agent)
 - VS Code agent mode: `.instructions.md`, `.prompt.md`, `.agent.md`, SKILL.md, toolsets
 - MCP servers (new releases, maturity, breaking changes, new integrations)
@@ -72,39 +66,25 @@ Use this skill when the user asks about:
 
 ---
 
-## Output format
+## Execution contract
 
-# Copilot & Agents Digest
+This mode is for internal research automation, not for producing a polished newsletter.
 
-Date: {YYYY-MM-DD}
-Time window: {N days}
+Keep only compact working notes:
+- top PR candidate, if any
+- up to 3 watchlist items
+- short ignore reasons for noisy or duplicate updates
 
-## Top findings
+For each kept item, record only:
+- title
+- canonical source URL
+- what changed
+- why it matters to skills / prompts / MCP / permissions
+- score / action
 
-### 1. {title}
-- Source: {canonical URL}
-- Vendor: {vendor}
-- Published: {date if available}
-- Status: Released | Preview | Beta | Announced | Deprecated
-- Summary: {2-3 sentences}
-- Why it matters: {engineering impact}
-- Affects: {skills / instructions / MCP / toolsets / workflow / permissions}
-- Recommendation: Try this week | Add to watchlist | Ignore for now | Create spike ticket
-- Priority: P0 | P1 | P2
-- Confidence: High | Medium | Low
-
-### 2. ...
-
-## Watchlist
-Items in Preview or Beta worth revisiting. Include a re-evaluate date.
-
-## Ignore
-Items checked but excluded — one-line reason each.
-
-## Recommended next steps
-- Try now: {1 item}
-- Investigate: {1 item}
-- Ignore: {1 item}
+Final action:
+- choose at most one PR-worthy candidate
+- otherwise log the strongest watchlist items and exit
 
 ---
 

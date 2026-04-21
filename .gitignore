@@ -3,3 +3,4 @@
 *.tmp
 *.swp
 .secrets
+self-evolution/jobs/*/logs/

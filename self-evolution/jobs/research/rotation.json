@@ -1,0 +1,46 @@
+{
+  "rotation": [
+    {
+      "day": 1,
+      "name": "monday",
+      "focus": "repo-mining-copilot-instructions",
+      "description": "Search GitHub for repos with `.github/copilot-instructions.md`, `.copilot/` skill folders, or custom agent definitions. Read their actual files — not just READMEs. Extract patterns, constraints, and techniques that could improve our skills, prompts, or agents. GitHub search queries: `path:.github/copilot-instructions.md`, `path:.copilot/ filename:SKILL.md`, `filename:.copilot-codegeneration`."
+    },
+    {
+      "day": 2,
+      "name": "tuesday",
+      "focus": "repo-mining-agents-md",
+      "description": "Search GitHub for repos with `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, or `CODEX.md` files. These are real-world AI agent instruction files. Read them, compare patterns with our instructions.md. Look for constraint techniques, safety patterns, tool-use patterns, and workflow structures we can adopt. GitHub search queries: `filename:AGENTS.md`, `filename:CLAUDE.md`, `filename:.cursorrules`, `filename:CODEX.md`."
+    },
+    {
+      "day": 3,
+      "name": "wednesday",
+      "focus": "repo-mining-prompt-engineering",
+      "description": "Search GitHub for repos focused on prompt engineering, AI workflow automation, or OpenCode/Copilot customization. Look for `.prompt.md` files, prompt template collections, reusable command patterns, and novel agent architectures. Also search for articles/blog posts about practical prompt engineering techniques that could improve our prompts/. GitHub search queries: `filename:.prompt.md`, `path:prompts/ extension:md`, `opencode commands`."
+    },
+    {
+      "day": 4,
+      "name": "thursday",
+      "focus": "skill-health-and-updates",
+      "description": "Audit our existing skills/ for staleness. Check changelogs and release notes of the tools they cover (Contentful, Amplitude, Playwright, Atlassian, GitHub MCP, etc.). Also search GitHub for other repos with similar skills to see if they have better patterns or newer info. If a skill is outdated, update it."
+    },
+    {
+      "day": 5,
+      "name": "friday",
+      "focus": "articles-and-practices",
+      "description": "Search for high-quality articles and blog posts about AI-assisted development workflows, agent patterns, testing strategies, security practices, and accessibility. Sources: engineering blogs (simonwillison.net, eugeneyan.com, etc.), dev.to, lobste.rs, Hacker News, InfoQ, Pragmatic Engineer, and any valuable technical blog. Extract actionable improvements for our skills, references, or prompts."
+    },
+    {
+      "day": 6,
+      "name": "saturday",
+      "focus": "deep-dive",
+      "description": "Pick the most interesting finding from the past week's run-log.jsonl entries (score 5-8 watchlist items). Do a deep investigation — follow every lead, read source code, check issues and PRs. Promote to a PR if the deep dive reveals it's now actionable."
+    },
+    {
+      "day": 7,
+      "name": "sunday",
+      "focus": "repo-mining-mcp-and-tools",
+      "description": "Search GitHub for MCP server repos, AI tool configuration repos, and dev tool integration patterns. Check awesome-mcp-servers, modelcontextprotocol.io, and repos that combine multiple MCP servers. Look for new MCP server ideas, configuration patterns, and tool integration techniques that could become new skills or improve existing ones."
+    }
+  ]
+}

@@ -26,7 +26,6 @@ symlink_targets=(
   "$HOME/.copilot/skills"
   "$HOME/.copilot/agents"
   "$HOME/Library/Application Support/Code/User/prompts"
-  "$HOME/.copilot/research/skills"
   "$HOME/.copilot/references"
   "$HOME/.codex/prompts"
   "$HOME/.codex/references"
@@ -74,7 +73,7 @@ echo "\n── Skill structure ──"
 # Directories that are support folders, not skills
 skip_dirs=(shared templates)
 
-for skill_dir in "$AI"/skills/*/ "$AI"/research/skills/*/; do
+for skill_dir in "$AI"/skills/*/; do
   [[ -d "$skill_dir" ]] || continue
   name=$(basename "$skill_dir")
   # Skip known non-skill directories
@@ -114,7 +113,7 @@ check_frontmatter() {
   fi
 }
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   check_frontmatter "$f" "$rel"
@@ -132,7 +131,7 @@ green "Frontmatter check done"
 
 echo "\n── Name == directory ──"
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   dir_name=$(basename "$(dirname "$f")")
@@ -164,7 +163,7 @@ green "Name == directory check done"
 
 echo "\n── Minimum skill structure ──"
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
 
@@ -200,7 +199,7 @@ for f in "$AI"/agents/*.agent.md; do
   fi
 done
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   name=$(sed -n '/^---$/,/^---$/{ /^name:/{ s/^name: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
   if [[ -z "$name" ]]; then
@@ -219,7 +218,7 @@ green "Duplicate name check done"
 
 echo "\n── Empty sections ──"
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
 
@@ -273,7 +272,7 @@ green "Reference file check done"
 
 echo "\n── Cross-references ──"
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
 
@@ -302,7 +301,7 @@ for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
         # Skip if it looks like a code keyword, not a skill name
         [[ "$skill_ref" == references* ]] && continue
         # Check if it's a known skill
-        if [[ ! -d "$AI/skills/$skill_ref" ]] && [[ ! -d "$AI/research/skills/$skill_ref" ]]; then
+        if [[ ! -d "$AI/skills/$skill_ref" ]]; then
           warn "$rel: See Also references unknown skill '$skill_ref'"
         fi
       done
@@ -317,7 +316,7 @@ green "Cross-reference check done"
 echo "\n── Skill smoke tests ──"
 
 # 9a. Internal file references: check that paths mentioned in skills resolve
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
 
@@ -347,7 +346,7 @@ for f in "$AI"/skills/*/SKILL.md; do
 done
 
 # 9c. Skill size: warn if over 500 lines (per skill-anatomy.md guideline)
-for f in "$AI"/skills/*/SKILL.md "$AI"/research/skills/*/SKILL.md; do
+for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   line_count=$(wc -l < "$f" | tr -d ' ')
@@ -369,7 +368,7 @@ if [[ -f "$instructions_file" ]]; then
 fi
 
 # 9e. Supporting files: check that non-SKILL.md files in skill dirs are referenced
-for skill_dir in "$AI"/skills/*/ "$AI"/research/skills/*/; do
+for skill_dir in "$AI"/skills/*/; do
   [[ -d "$skill_dir" ]] || continue
   name=$(basename "$skill_dir")
   skill_file="$skill_dir/SKILL.md"

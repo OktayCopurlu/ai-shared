@@ -1,12 +1,6 @@
----
-name: tool-evaluator
-description: "Evaluate whether a new tool, platform, MCP server, SDK, workflow, or skill is worth adopting. USE FOR: 'is X worth trying?', 'should I use X or Y?', 'is this production-ready?', 'evaluate this tool for me', 'is this hype or practical?', 'should we adopt this?', 'is this MCP server mature enough?'. ALWAYS use when asked to assess or compare a new technology, library, or workflow."
-disable-model-invocation: true
----
+# Tool Evaluator Mode
 
-# Tool Evaluator Skill
-
-Use this skill when the user asks:
+Use this mode when the user asks:
 - Is this tool worth trying?
 - Is this production-ready or still hype?
 - Should I adopt X or Y?
@@ -79,45 +73,23 @@ Then write one paragraph: which tool wins on the dimensions that matter most for
 
 ---
 
-## Output format
+## Execution contract
 
-# Tool Evaluation
+This mode is internal. Do not generate a consultant-style evaluation memo.
 
-Tool: {name}
-Use case: {what problem are we solving}
-Date: {YYYY-MM-DD}
+Record only:
+- tool name and use case
+- total score
+- verdict (`strong yes`, `maybe later`, `not worth it now`)
+- top 2-3 reasons driving the verdict
+- minimum proof-of-value trial
 
-## Verdict
-Strong yes | Maybe later | Not worth it now
+The proof-of-value trial should stay terse:
+- time box
+- success criteria
+- failure criteria
+- main risk
 
-## Score: <total>/16
-
-## Summary
-2-4 sentences.
-
-## Pros
-- ...
-
-## Cons
-- ...
-
-## Risks
-- ...
-
-## Best use cases
-- ...
-
-## Not a fit for
-- ...
-
-## Proof of value
-- Time box: {N days}
-- Success criteria: {what confirms this is worth it}
-- Failure criteria: {what confirms it is not worth it}
-- Risk: {what could go wrong}
-
-## Recommendation
-Try now | Monitor | Ignore
-
-## Confidence
-High | Medium | Low
+Final action:
+- if evaluation reveals one small, high-confidence repo improvement, open one PR
+- otherwise log the verdict and exit

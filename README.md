@@ -50,7 +50,6 @@ graph LR
   S_GH([github-mcp]):::skill
   S_CTF([contentful]):::skill
   S_GDRIVE([google-drive]):::skill
-
   %% ── Agents ──────────────────────────────────────────
   A_DEVIL{{devils-advocate}}:::agent
   A_GOAL{{goal-setter}}:::agent
@@ -151,6 +150,20 @@ graph LR
 │   ├── skill-evolution/        # Learn, stage, codify reusable skills
 │   ├── test-driven-development/ # Test-driven development cycle
 │   └── validating-ui/          # Browser-level UI validation
+├── self-evolution/       # Internal research automation and run history
+│   ├── policy.md               # Shared source registry, scoring, dedupe
+│   ├── runner.sh               # Automation runner
+│   └── jobs/
+│       └── research/
+│           ├── command.md      # Autonomous research workflow
+│           ├── job.json        # Scheduler + model config
+│           ├── rotation.json   # Day-by-day focus rotation
+│           ├── run-log.jsonl   # Run history and dedupe state
+│           └── modes/          # Internal research playbooks, not top-level skills
+│               ├── copilot-and-agents.md
+│               ├── release-watch.md
+│               ├── research-digest.md
+│               └── tool-evaluator.md
 ├── agents/               # Custom agent modes
 │   ├── devils-advocate.agent.md
 │   ├── goal-setter.agent.md
@@ -179,8 +192,6 @@ graph LR
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
-└── research/             # Research-specific skills
-    └── skills/
 ```
 
 ## Symlinks
@@ -200,7 +211,6 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 | `prompts/`            | `~/Library/Application Support/Code/User/prompts/` | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder                                                            |
 | `prompts/`            | `~/.codex/prompts/`                                | Codex           | Slash-command prompts                                                                                                         |
 | `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file)      | OpenCode        | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
-| `research/skills/`    | `~/.copilot/research/skills/`                      | VS Code Copilot | Copilot only — research agent skills                                                                                          |
 
 ## Rules for agents
 

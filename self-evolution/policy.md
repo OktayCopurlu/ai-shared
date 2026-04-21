@@ -122,13 +122,15 @@ Score every candidate finding before deciding to include it.
 
 ## Dedupe Policy
 
-Before including a finding, check `research-history.md`.
+Before including a finding, check `self-evolution/jobs/research/run-log.jsonl`.
 
 Skip an item if any of these are true:
 
 - Same title with the same status already in history
-- Same canonical URL already in history
+- Same canonical URL already in history for a concrete item page (article, release note, docs page)
 - Materially identical release (same version, same vendor)
+
+Recurring feeds and index pages may be revisited. Do not treat news hubs, changelog indexes, monthly archives, or landing pages as duplicates on URL alone; dedupe the specific article or release item they surface instead.
 
 Re-surface a previously logged item **only** if:
 
@@ -154,43 +156,3 @@ If no strong findings exist for a run, say so explicitly:
 > "No significant new updates found in the defined time window. [N] watchlist items are pending re-evaluation."
 
 Do not invent or force low-quality items to fill a digest.
-
----
-
-## Persistence Formats
-
-### History entry shape (append to `research-history.md`, newest first)
-
-```md
-## YYYY-MM-DD - <mode>
-
-- Query: <what the user asked>
-- Scope: <mode name>
-- Time window: <N days or "none">
-- Sources checked:
-  - <vendor> — <URL>
-- Reported findings:
-  - <vendor> | <title> | <status> | <canonical URL>
-- Watchlist updates:
-  - Added: <title> — <reason>
-  - Promoted: <title> — <reason>
-  - Removed: <title> — <reason>
-- Skipped as duplicates:
-  - <title> — <reason>
-- Notes:
-  - <any dedupe or follow-up note>
-```
-
-### Watchlist entry shape (in `watchlist.md`)
-
-```md
-## <title>
-
-- Vendor: <vendor>
-- Status: <current status>
-- Added: <YYYY-MM-DD>
-- Re-evaluate by: <YYYY-MM-DD or "next run">
-- Reason for watching: <one line>
-- Canonical URL: <URL>
-- Dedupe fingerprint: <vendor>/<topic-slug>/<status>
-```

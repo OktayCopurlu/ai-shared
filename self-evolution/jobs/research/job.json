@@ -1,0 +1,16 @@
+{
+  "label": "com.ai-shared.research",
+  "description": "Research sweep for ai-shared — mines open-source repos and articles for patterns to improve AI config.",
+  "target_dir": "~/.ai-shared",
+  "model": "github-copilot/claude-opus-4.6",
+  "variant": "high",
+  "timeout": 3600,
+  "schedule": [
+    { "hour": 9, "minute": 0 },
+    { "hour": 11, "minute": 30 },
+    { "hour": 14, "minute": 0 },
+    { "hour": 16, "minute": 30 },
+    { "hour": 19, "minute": 0 },
+    { "hour": 21, "minute": 30 }
+  ]
+}

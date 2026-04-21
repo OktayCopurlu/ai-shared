@@ -1,12 +1,6 @@
----
-name: release-watch
-description: "Track release notes, changelogs, deprecations, and breaking changes across developer platforms and tools. USE FOR: 'what changed in X?', 'any breaking changes in Y?', 'check the changelog for Z', 'are there deprecations I should know about?', 'what's new in Vue/Nuxt/TypeScript/Node/Nx?', 'should I upgrade?'. ALWAYS use when asked about specific version changes, upgrade risks, or deprecation status."
-disable-model-invocation: true
----
+# Release Watch Mode
 
-# Release Watch Skill
-
-Use this skill when the user asks:
+Use this mode when the user asks:
 - what changed in X recently?
 - any breaking changes in Y?
 - should I upgrade to this version?
@@ -67,43 +61,24 @@ For each breaking change, verify:
 
 ---
 
-## Output format
+## Execution contract
 
-# Release Watch
+This mode should optimize for upgrade decisions, not presentation.
 
-Date: {YYYY-MM-DD}
-Subject: {product and version range}
-Time window: {N days or "version X to version Y"}
+Keep only:
+- concrete breaking changes
+- meaningful deprecations
+- one final recommendation (`upgrade now`, `next sprint`, `spike first`, `no action`)
 
-## Summary
-One paragraph describing the overall scope and risk level of the changes.
+For each kept change, record only:
+- product + version
+- what changed
+- whether our stack is affected
+- migration path or blocker
+- urgency
 
-## Breaking changes
-List each breaking change separately:
+Ignore non-actionable feature noise unless it materially changes the recommendation.
 
-- **Product + version**
-- Change type: {severity level}
-- What changed: {specific description}
-- Impact on our code: Yes / No / Unknown — explain briefly
-- Migration path: {codemod available? manual steps? guide URL?}
-- Urgency: Critical / High / Medium / Low
-- Confidence: High / Medium / Low
-
-## Deprecations
-Separate list. Include the planned removal version or timeline if known.
-
-## Migrations to consider
-Structured checklist: one row per affected area with owner-ready action items.
-
-## New features (non-breaking)
-Brief list only. No deep analysis unless relevant to something actively in progress.
-
-## Upgrade recommendation
-Final verdict per product:
-- Upgrade now
-- Plan for next sprint
-- Create spike first
-- No action needed
-
-## Noisy items
-Updates checked but not worth acting on. One-line reason each.
+Final action:
+- if the best finding maps to one small repo improvement, open one PR
+- otherwise log the recommendation and exit
