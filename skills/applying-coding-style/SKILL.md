@@ -44,6 +44,21 @@ These rules apply to ALL code I write or modify. They override generic conventio
 - **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
 
+### Module & Function Size
+
+Keep files and functions small enough to hold in your head. These are guidelines, not hard limits — but exceeding them should trigger a split-or-justify decision.
+
+| Metric | Guideline | Action when exceeded |
+|---|---|---|
+| File length | ~300 lines (TS/Vue/SCSS) | Split into focused modules |
+| Function / method length | ~50 lines | Extract helper functions |
+| Nesting depth | 4 levels | Flatten with early returns or extract |
+
+When a file or function exceeds these guidelines:
+1. Check whether the code has multiple responsibilities — if yes, extract the secondary concern into its own module
+2. If the code is genuinely single-responsibility, add a brief comment at the top explaining why the length is justified
+3. Prefer adding new files over growing existing ones — especially for high-churn files that already attract unrelated changes
+
 ## Change Discipline
 
 - **Scope**: Touch only what the task requires. Don't "clean up" adjacent code, refactor imports in unrelated files, or add features not in the spec. Note improvements for later — don't fix them mid-task.
