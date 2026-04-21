@@ -1,6 +1,6 @@
 ---
 name: a11y-audit
-description: 'Build and review frontend UI with accessibility in mind. USE FOR: implementing components, forms, dialogs, menus, and flows that need good semantics, labels, keyboard support, focus management, error handling, and reduced-motion behavior. Use when implementing UI, running an a11y audit, checking keyboard/focus, or prioritizing accessibility issues.'
+description: 'Build and review frontend UI with accessibility in mind. USE FOR: implementing components, forms, dialogs, menus, and flows that need good semantics, labels, keyboard support, focus management, error handling, and reduced-motion behavior. Use when implementing UI, running an a11y audit, checking keyboard/focus, or prioritizing accessibility issues. NOT FOR: backend code, API design, or non-visual logic.'
 ---
 
 # Accessibility Build And Audit

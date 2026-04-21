@@ -1,6 +1,6 @@
 ---
 name: github-mcp
-description: 'Interact with GitHub via the GitHub MCP server. USE FOR: reading/creating/updating pull requests, issues, branches, commits, reviews, code search, repository operations. ALWAYS use when user references a PR number, issue, or asks to perform GitHub operations.'
+description: 'Interact with GitHub via the GitHub MCP server API. USE FOR: reading/creating/updating pull requests, issues, branches, commits, reviews, code search, repository operations. ALWAYS use when user references a PR number, issue, or asks to perform GitHub API operations. NOT FOR: local git operations like committing, rebasing, or branch management (git-workflow).'
 ---
 
 # GitHub MCP

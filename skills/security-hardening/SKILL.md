@@ -1,6 +1,6 @@
 ---
 name: security-hardening
-description: "Security review and hardening for frontend applications. OWASP Top 10 prevention, input validation, auth patterns, secrets management, dependency auditing. Use when handling user input, building auth flows, storing data, integrating with external services, or making any security-sensitive change."
+description: 'Security review and hardening for frontend applications. OWASP Top 10 prevention, input validation, auth patterns, secrets management, dependency auditing. USE FOR: handling user input, building auth flows, storing data, integrating with external services, or making security-sensitive changes. NOT FOR: general code style review (reviewing-code) — activate alongside reviewing-code when changes touch auth, input handling, or data boundaries.'
 ---
 
 # Security Hardening

@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: "Write and maintain technical documentation: ADRs, READMEs, inline docs, and wiki pages. USE FOR: writing ADRs, updating READMEs, documenting architecture decisions, creating onboarding docs. Use when a decision needs recording, a module needs documenting, or docs are stale."
+description: 'Write and maintain technical documentation: ADRs, READMEs, inline docs, and wiki pages. USE FOR: writing ADRs, updating READMEs, documenting architecture decisions, creating onboarding docs. Use when a decision needs recording, a module needs documenting, or docs are stale. NOT FOR: Jira ticket writing (jira-ticket), or code comments and naming conventions (applying-coding-style).'
 ---
 
 # Documentation

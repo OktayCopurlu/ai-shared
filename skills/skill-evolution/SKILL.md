@@ -1,6 +1,6 @@
 ---
 name: skill-evolution
-description: "Capture learnings and evolve skills from experience. USE FOR: end of complex tasks where something reusable was learned, when user says 'save this', 'remember this', or 'this should be a skill'. Use when a pattern repeats across sessions or a hard-won insight deserves persistence."
+description: "Capture learnings and evolve skills from experience. USE FOR: end of complex tasks where something reusable was learned, when user says 'save this', 'remember this', or 'this should be a skill'. Use when a pattern repeats across sessions or a hard-won insight deserves persistence. NOT FOR: mid-task execution — finish the user's task first, then capture the learning."
 ---
 
 # Skill Evolution — Learn, Stage, Codify

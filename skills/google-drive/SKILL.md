@@ -1,6 +1,6 @@
 ---
 name: google-drive
-description: 'Fetch Google Sheets, Docs, and other Drive content via CLI using existing OAuth credentials. USE FOR: reading spreadsheets, downloading CSV data, accessing Google Docs. ALWAYS use when user shares a Google Sheets/Docs link or asks to read spreadsheet data.'
+description: 'Fetch Google Sheets, Docs, and other Drive content via CLI using existing OAuth credentials. USE FOR: reading spreadsheets, downloading CSV data, accessing Google Docs. ALWAYS use when user shares a Google Sheets/Docs link or asks to read spreadsheet data. READ-ONLY — does not modify Drive content.'
 ---
 
 # Google Drive CLI Access

@@ -1,6 +1,6 @@
 ---
 name: jira-ticket
-description: "Creates, rewrites, reviews, and updates Jira tickets. Use when the user says 'write a Jira ticket', 'turn this into a ticket', 'review this Jira ticket', 'update this Jira ticket', 'is this ticket clear enough', or 'improve acceptance criteria'."
+description: "Write, rewrite, review, and improve Jira ticket content quality. USE FOR: crafting ticket titles, descriptions, acceptance criteria, and story structure. Use when user says 'write a Jira ticket', 'turn this into a ticket', 'review this ticket', 'is this ticket clear enough', or 'improve acceptance criteria'. NOT FOR: API operations like creating/searching/transitioning issues in Jira (atlassian-mcp). This skill handles content quality, not CRUD."
 ---
 
 # Jira Ticket Writer + Reviewer + Updater

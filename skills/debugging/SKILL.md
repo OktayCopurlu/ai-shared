@@ -1,6 +1,6 @@
 ---
 name: debugging
-description: "Structured debugging workflow: reproduce, localize, reduce, fix, guard. USE FOR: test failures, build breaks, unexpected behavior, runtime errors. Use when quality gates fail, a bug is reported, or behavior doesn't match expectations."
+description: 'Structured debugging workflow: reproduce, localize, reduce, fix, guard. USE FOR: test failures, build breaks, unexpected behavior, runtime errors. Use when quality gates fail, a bug is reported, or behavior does not match expectations. NOT FOR: writing new features test-first (test-driven-development), or reviewing code that already works (reviewing-code).'
 ---
 
 # Debugging — 5-Step Triage

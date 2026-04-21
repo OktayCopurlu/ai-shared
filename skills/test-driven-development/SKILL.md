@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature."
+description: 'Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature. NOT FOR: debugging existing failures without writing new code (debugging), or reviewing test coverage in existing code (reviewing-code layer 2).'
 ---
 
 # Test-Driven Development

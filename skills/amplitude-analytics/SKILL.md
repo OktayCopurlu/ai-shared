@@ -1,6 +1,6 @@
 ---
 name: amplitude-analytics
-description: 'Query analytics data from Amplitude via the Amplitude MCP server. USE FOR: debugging tracking events, verifying analytics implementation, checking event payloads, reviewing user funnels. ALWAYS use when user asks about tracking, analytics, or Amplitude events.'
+description: 'Query and verify analytics data from Amplitude via the Amplitude MCP server. USE FOR: debugging tracking events, verifying analytics implementation, checking event payloads, reviewing user funnels. ALWAYS use when user asks about tracking data, analytics queries, or Amplitude events. NOT FOR: implementing tracking code in source files — that is regular coding with applying-coding-style.'
 ---
 
 # Amplitude Analytics

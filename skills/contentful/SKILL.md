@@ -1,6 +1,6 @@
 ---
 name: contentful
-description: 'Read content from Contentful CMS via MCP server or CLI. USE FOR: reading content types, entries, assets, spaces, and environments. ALWAYS use when user asks about Contentful content, product data, or CMS entries. READ-ONLY — never create, update, or delete Contentful data.'
+description: 'Read content from Contentful CMS via MCP server or CLI. USE FOR: reading content types, entries, assets, spaces, and environments. ALWAYS use when user asks about Contentful content, product data, or CMS entries. READ-ONLY — never create, update, or delete Contentful data. NOT FOR: modifying CMS content or managing Contentful configuration.'
 ---
 
 # Contentful — Read Content from CMS
