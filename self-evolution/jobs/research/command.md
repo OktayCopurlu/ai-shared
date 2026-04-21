@@ -136,6 +136,18 @@ PR filters:
 - no overview docs that nobody will use
 - prefer decision rules, gotchas, workflows, and compact cheat sheets
 
+### Challenge before committing
+
+Before implementing, argue against your own candidate. Ask these questions and answer them honestly:
+
+1. **Is this already covered?** Read the target file carefully. If existing rules, principles, or patterns already produce the same behavior, the candidate is redundant — even if it uses different words. Drop it.
+2. **Can the agent actually follow this?** If the guidance requires counting lines, measuring complexity, or other things LLMs do poorly, it will be ignored or applied incorrectly. Drop it.
+3. **Does it contradict something already in the file?** If the new content creates tension with existing rules (e.g. adding comment guidance that conflicts with a no-comments policy), it will confuse more than it helps. Drop it.
+4. **Is the evidence from our stack?** If every supporting source is from a different language, framework, or team shape, the pattern may not transfer. Discount the score.
+5. **Would a reviewer push back?** Imagine the repo owner reading this PR. If the likely response is "this is already implicit" or "this doesn't fit here," do not open the PR.
+
+If any answer is a clear yes, downgrade the candidate to watchlist regardless of score. Do not open the PR.
+
 Before opening a PR:
 - run `zsh validate.sh`
 - fix what you reasonably can
