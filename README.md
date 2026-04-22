@@ -30,6 +30,7 @@ graph LR
   P_REVIEWPR[/review-pr/]:::prompt
   P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
+  P_UPGDEPS[/upgrade-deps/]:::prompt
 
   %% ── Skills ──────────────────────────────────────────
   S_STYLE([applying-coding-style]):::skill
@@ -90,6 +91,7 @@ graph LR
   P_REVIEWPR --> S_PW
   P_REVIEWPR --> S_CHROME
   P_REVIEWPR -. optional .-> S_A11Y
+  P_UPGDEPS -. optional .-> S_SEC
 
   %% ── Skill → Skill ──────────────────────────────────
   S_REVIEW --> S_STYLE
@@ -183,7 +185,8 @@ graph LR
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
 │   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
-│   └── update-project-page.prompt.md # Ship — update Confluence
+│   ├── update-project-page.prompt.md # Ship — update Confluence
+│   └── upgrade-deps.prompt.md       # Maintain — audit and upgrade dependencies
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
