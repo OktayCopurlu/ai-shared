@@ -86,6 +86,7 @@ A prompt should contain everything needed to execute after the user provides its
 | **Silent skip** | A step says "if applicable" without saying how to decide | Replace with a concrete condition: "If the ticket contains a Figma link…" |
 | **Inline expertise** | Prompt duplicates content from a skill or reference | Replace with "Load skill X" or "See `references/Y.md`" |
 | **Missing failure path** | Only the happy path is described | Add a failure policy section or per-step fallback |
+| **Self-describing trigger** | A `When to Use` section tells the user when to invoke a prompt they already invoked — too late to be useful | Put trigger context in the `description` frontmatter; it appears in the command palette *before* invocation. Reserve body sections for what to do, not when to call |
 
 ## Frontmatter Reference
 
@@ -110,4 +111,5 @@ Before shipping a new or updated prompt:
 - [ ] Skills are referenced by name, not inlined
 - [ ] Guardrails cover the top 3-5 failure modes for this workflow
 - [ ] Prompt is self-contained given its expected input
+- [ ] No `When to Use` section duplicating the frontmatter description
 - [ ] No placeholder or TODO content remains
