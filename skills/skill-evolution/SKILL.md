@@ -84,7 +84,7 @@ When the change comes from runtime drift discovered while using a skill:
 Use for slash-command workflows (`.prompt.md` files) rather than auto-loaded skills. A prompt is appropriate when the workflow needs explicit user invocation, orchestrates multiple skills, or drives a repeatable task (spec, review, investigation).
 
 1. **Branch**: `cd ~/.ai-shared && git checkout main && git pull origin main && git checkout -b prompt/<action-name>`
-2. Draft the `.prompt.md` following `~/.ai-shared/references/prompt-anatomy.md` — trigger context in frontmatter `description`, numbered steps, guardrails, no self-describing `When to Use` sections
+2. Draft the `.prompt.md` following `~/.ai-shared/docs/prompt-anatomy.md` — trigger context in frontmatter `description`, numbered steps, guardrails, no self-describing `When to Use` sections
 3. Reference existing skills by name rather than inlining their content
 4. Present the draft to the user for review
 5. Place the file in `~/.ai-shared/prompts/<action-name>.prompt.md` after approval
@@ -143,6 +143,6 @@ If a tool-adapter skill drifted during the task and the fix looks reusable, sugg
 ## See Also
 
 - `~/.ai-shared/docs/skill-anatomy.md` — format reference for creating new skills
-- `~/.ai-shared/references/prompt-anatomy.md` — format reference for creating or editing prompts (Path C)
+- `~/.ai-shared/docs/prompt-anatomy.md` — format reference for creating or editing prompts (Path C)
 - `applying-coding-style` — personal preferences go here, not in new skills
 - `~/.ai-shared/references/cognitive-debt.md` — when agent-generated code needs walkthrough before evolving

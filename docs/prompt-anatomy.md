@@ -1,6 +1,6 @@
-# Prompt Anatomy — Writing Effective `.prompt.md` Files
+# Prompt Anatomy
 
-Reference for authoring and reviewing prompt files in `prompts/`. Loaded by `skill-evolution` Path C when creating or editing a prompt.
+This document defines the structure and format for all prompts in `~/.ai-shared/prompts/`. Use it when creating or reviewing prompts. Loaded by `skill-evolution` Path C.
 
 ## Required Structure
 

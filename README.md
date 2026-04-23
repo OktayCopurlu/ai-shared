@@ -66,7 +66,6 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
-  R_PROMPT[\prompt-anatomy\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -193,9 +192,9 @@ graph LR
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
-│   ├── prompt-anatomy.md
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
+│   ├── prompt-anatomy.md        # Format spec for writing prompts
 │   └── skill-anatomy.md         # Format spec for writing skills
 ```
 
