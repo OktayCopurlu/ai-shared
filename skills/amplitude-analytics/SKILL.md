@@ -11,7 +11,7 @@ Always prefer the Amplitude MCP server tools over manual API calls or asking the
 
 - **Amplitude MCP** for querying charts, experiments, session replays, and content
 - **Codebase search** for verifying tracking implementation matches Amplitude schema
-- **REST API via curl** only as fallback when MCP is unavailable (see vm0-ai pattern below)
+- **REST API via curl** only as fallback when MCP is unavailable
 
 ## Available Tools
 
@@ -58,15 +58,7 @@ Always prefer the Amplitude MCP server tools over manual API calls or asking the
 
 ### Creation
 
-| Tool | Use when |
-|------|----------|
-| `save_chart_edits` | Saving chart edits or converting temp charts to permanent |
-| `create_dashboard` | Building dashboards with charts and layouts |
-| `create_notebook` | Creating notebooks with charts and rich text |
-| `create_experiment` | Setting up A/B tests with variants and metrics |
-| `create_cohort` | Creating cohorts from user properties and behaviors |
-| `create_flags` | Creating feature flags in batch |
-| `create_metric` | Creating reusable KPI metrics |
+Write tools (use only when explicitly asked to create Amplitude content): `save_chart_edits`, `create_dashboard`, `create_notebook`, `create_experiment`, `create_cohort`, `create_flags`, `create_metric`.
 
 ### Feedback
 
@@ -91,12 +83,10 @@ Always prefer the Amplitude MCP server tools over manual API calls or asking the
 
 ## Gotchas
 
-- **OAuth-based**: The MCP server uses OAuth 2.0 with your Amplitude permissions. You only see data you already have access to.
 - **Two regions**: US default (`mcp.amplitude.com/mcp`), EU (`mcp.eu.amplitude.com/mcp`). Use the region matching the user's data residency.
 - **Dashboard filters**: Querying charts from dashboards may use default chart settings instead of saved dashboard filters.
 - **Session replay window**: `get_session_replays` only covers the last 30 days.
-- **`query_amplitude_data`**: Uses a two-mode discover/execute workflow — discover available events first, then execute the query.
-- **Large results**: AI platforms may truncate large chart data. Break complex requests into smaller queries.
+- **`query_amplitude_data`**: Two-mode discover/execute workflow — discover available events first, then execute the query.
 
 ## Procedure
 
