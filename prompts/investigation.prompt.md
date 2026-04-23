@@ -1,36 +1,22 @@
 ---
-description: "Run a time-boxed investigation (spike). Research a technical question, validate with evidence, and produce a clear recommendation. Use when start-working routes to analysis-only."
+description: "Run a time-boxed investigation (spike) from a Jira ticket or freeform question. Research, validate with evidence, and produce a clear recommendation. Use when start-working routes to analysis-only or for tickets labeled as Spikes."
 ---
 
 # Investigation
 
 Run a time-boxed investigation for a spike or research ticket. The goal is a concrete recommendation backed by evidence — not a report for its own sake.
 
-## When to Use
-
-- `start-working` routed the ticket to `analysis-only`
-- A ticket is explicitly labeled as a Spike
-- A technical question must be answered before implementation can begin
-- Multiple approaches exist and the team needs evidence to decide
-
-## Inputs
-
-The user provides:
-
-- A Jira ticket key or link (preferred)
-- Or a freeform research question
-
 ## Process
 
 ### 1. Frame the Investigation
 
-If a ticket exists:
+If a Jira ticket key or link is provided:
 1. Read the full Jira detail via Atlassian MCP
 2. Open and read every link — wiki pages, linked tickets, external docs
 3. Extract the primary question the spike must answer
 
-If no ticket exists:
-1. Ask the user for the question, the decision it unblocks, and who needs the answer
+If only a freeform research question is provided:
+1. Ask the user for the decision it unblocks and who needs the answer
 
 Produce a short investigation frame:
 
