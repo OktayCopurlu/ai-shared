@@ -1,18 +1,19 @@
 ---
 name: skill-evolution
-description: "Capture learnings and evolve skills from experience. USE FOR: end of complex tasks where something reusable was learned, when user says 'save this', 'remember this', or 'this should be a skill'. Use when a pattern repeats across sessions or a hard-won insight deserves persistence."
+description: "Capture learnings and evolve skills, prompts, or references from experience. USE FOR: end of complex tasks where something reusable was learned, when user says 'save this', 'remember this', or 'this should be a skill/prompt'. Use when a pattern repeats across sessions or a hard-won insight deserves persistence. NOT FOR: mid-task execution — finish the user's task first, then capture the learning."
 ---
 
 # Skill Evolution — Learn, Stage, Codify
 
-Turn hard-won experience into reusable skills. Memory is the staging area; skills are the verified output. Not everything learned deserves a skill — most learnings stay as memory notes.
+Turn hard-won experience into reusable skills, prompts, or references. Memory is the staging area; the `~/.ai-shared/` repo is the verified output. Not everything learned deserves codification — most learnings stay as memory notes.
 
 ## When to Use
 
 - A pattern or workflow repeated across 2+ tasks/sessions
-- User explicitly says "save this", "remember this", "add this to skills"
-- An existing skill was missing a step that caused a failure
+- User explicitly says "save this", "remember this", "add this to skills", "make this a prompt"
+- An existing skill, prompt, or reference was missing a step that caused a failure
 - A skill's documented tool names, tool examples, or workflow assumptions materially drifted from the connected MCP/tool reality
+- A new slash-command workflow is worth codifying as a prompt
 
 **When NOT to use:** the solution is trivial (any LLM would know it), project-specific (belongs in project `copilot-instructions.md`), or a one-off fix.
 
@@ -78,6 +79,24 @@ When the change comes from runtime drift discovered while using a skill:
    3. `./setup.sh`
 8. **Commit & PR** — user reviews and merges
 
+### Path C: Create or Edit a Prompt
+
+Use for slash-command workflows (`.prompt.md` files) rather than auto-loaded skills. A prompt is appropriate when the workflow needs explicit user invocation, orchestrates multiple skills, or drives a repeatable task (spec, review, investigation).
+
+1. **Branch**: `cd ~/.ai-shared && git checkout main && git pull origin main && git checkout -b prompt/<action-name>`
+2. Draft the `.prompt.md` following `~/.ai-shared/references/prompt-anatomy.md` — trigger context in frontmatter `description`, numbered steps, guardrails, no self-describing `When to Use` sections
+3. Reference existing skills by name rather than inlining their content
+4. Present the draft to the user for review
+5. Place the file in `~/.ai-shared/prompts/<action-name>.prompt.md` after approval
+6. Update `README.md` (prompt graph + directory tree) if adding a new prompt
+7. **Run repo checks from the repo root, in order**:
+   1. `zsh validate.sh`
+   2. `npx -y agnix .`
+   3. `./setup.sh` if any prompt was added or renamed
+8. **Commit & PR** — user reviews and merges
+
+For prompt edits (not creation), skip steps 5-6 and walk through `prompt-anatomy`'s validation checklist before committing.
+
 ## Repo-specific footguns when codifying
 
 These are things general LLM knowledge will not warn you about — they are specific to this repo:
@@ -124,5 +143,6 @@ If a tool-adapter skill drifted during the task and the fix looks reusable, sugg
 ## See Also
 
 - `~/.ai-shared/docs/skill-anatomy.md` — format reference for creating new skills
+- `~/.ai-shared/references/prompt-anatomy.md` — format reference for creating or editing prompts (Path C)
 - `applying-coding-style` — personal preferences go here, not in new skills
 - `~/.ai-shared/references/cognitive-debt.md` — when agent-generated code needs walkthrough before evolving

@@ -1,6 +1,6 @@
 # Prompt Anatomy — Writing Effective `.prompt.md` Files
 
-Reference for authoring and reviewing prompt files in `prompts/`.
+Reference for authoring and reviewing prompt files in `prompts/`. Loaded by `skill-evolution` Path C when creating or editing a prompt.
 
 ## Required Structure
 
