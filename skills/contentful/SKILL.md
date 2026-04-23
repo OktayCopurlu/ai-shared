@@ -9,22 +9,36 @@ description: 'Read content from Contentful CMS via MCP server or CLI. USE FOR: r
 
 ## Tool Selection
 
-1. Try loading MCP tools via `tool_search_tool_regex` with pattern `contentful`
-2. If MCP tools found → use MCP (do NOT call any write/publish/delete tools even though the server exposes them)
-3. If no MCP tools → use CLI + curl below
+Check if Contentful MCP tools are available in your current session (e.g. `get_initial_context`, `list_content_types`). If available, use MCP. If not, use the CLI + curl fallback below.
 
 ## Gotchas — Official Contentful MCP Server (`@contentful/mcp-server`)
 
-The official Contentful MCP server (v1.7+) exposes **both read and write tools** including `create_entry`, `update_entry`, `publish_entry`, `delete_entry`, `create_content_type`, `upload_asset`, etc. **Our policy is read-only. Never call write tools.**
+The official Contentful MCP server (v1.7+) exposes **both read and write tools**. **Our policy is read-only. Never call write tools.**
 
-Safe tools to use:
-- `get_initial_context` — initialize connection and get usage instructions (call this first)
-- `list_content_types`, `get_content_type` — content model discovery
-- `search_entries`, `get_entry` — read entries with filtering
-- `list_assets`, `get_asset` — browse assets
-- `list_spaces`, `get_space`, `list_environments` — space/env context
-- `list_locales`, `get_locale` — locale information
-- `list_tags` — tag discovery
+### Safe tools (read-only)
+
+| Category | Tools |
+|---|---|
+| Context | `get_initial_context` |
+| Content Types | `list_content_types`, `get_content_type` |
+| Entries | `search_entries`, `get_entry` |
+| Assets | `list_assets`, `get_asset` |
+| Spaces & Environments | `list_spaces`, `get_space`, `list_environments` |
+| Locales | `list_locales`, `get_locale` |
+| Tags | `list_tags` |
+| AI Actions | `get_ai_action`, `list_ai_actions`, `get_ai_action_invocation` |
+
+### Forbidden tools — do NOT call
+
+| Category | Tools | Why |
+|---|---|---|
+| Content Types | `create_content_type`, `update_content_type`, `publish_content_type`, `unpublish_content_type`, `delete_content_type` | Mutates content model |
+| Entries | `create_entry`, `update_entry`, `publish_entry`, `unpublish_entry`, `delete_entry` | Mutates content |
+| Assets | `upload_asset`, `update_asset`, `publish_asset`, `unpublish_asset`, `delete_asset` | Mutates assets |
+| Environments | `create_environment`, `delete_environment` | Destructive infrastructure change |
+| Locales | `create_locale`, `update_locale`, `delete_locale` | Mutates locale config |
+| Tags | `create_tag` | Mutates taxonomy |
+| AI Actions | `create_ai_action`, `update_ai_action`, `publish_ai_action`, `unpublish_ai_action`, `delete_ai_action`, `invoke_ai_action` | Mutates or triggers AI workflows |
 
 **Workflow**: Always call `get_initial_context` first — it initializes the connection and returns usage guidance from the server.
 
