@@ -26,9 +26,18 @@ Always prefer Atlassian MCP tools over fetching web pages or asking the user to 
 - **Footer comments**: Use `getConfluencePageFooterComments`, `createConfluenceFooterComment`
 - **Inline comments**: Use `getConfluencePageInlineComments`, `createConfluenceInlineComment`
 
+## Viewing Jira Attachments (Images)
+
+The Atlassian MCP tools cannot download attachment files directly. To view images:
+
+1. Fetch the ticket with `getJiraIssue` — the `attachment` field has the download URL in `content`
+2. Download via `curl` with basic auth using `$JIRA_USER_EMAIL` and `$JIRA_API_TOKEN` from `~/.zshrc`
+3. Use `view_image` to inspect the downloaded file
+
 ## Procedure
 
 1. Load Atlassian MCP tools via `tool_search_tool_regex` with pattern `mcp_atlassian`
 2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID
 3. Call the appropriate tool for the operation
 4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser
+5. If the ticket has attachments with images, download and view them using the method above
