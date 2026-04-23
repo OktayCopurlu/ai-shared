@@ -64,77 +64,23 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Record video | `browser_start_video` / `browser_stop_video` | Record browser session; `browser_video_chapter` adds markers |
 | Trace recording | `browser_start_tracing` / `browser_stop_tracing` | Capture Playwright trace for debugging |
 
-## Available Tools — Core (always on)
+## Opt-in Tools (enabled via `--caps`)
 
-- `browser_click` — click element by ref or CSS selector; supports `doubleClick`, `button`, `modifiers`
-- `browser_close` — close the page
-- `browser_console_messages` — filter by level: `error`, `warning`, `info`, `debug`; `all` flag for full session
-- `browser_drag` — drag between two elements by ref
-- `browser_evaluate` — run JS on page or a specific element via `ref`
-- `browser_file_upload` — upload files by absolute path
-- `browser_fill_form` — fill multiple fields at once (textbox, checkbox, radio, combobox, slider)
-- `browser_handle_dialog` — accept/dismiss browser dialogs
-- `browser_hover` — hover over element
-- `browser_navigate` — go to URL
-- `browser_navigate_back` — go back in history
-- `browser_network_requests` — supports `filter` (URL regexp), `requestBody`, `requestHeaders`, `static` params
-- `browser_press_key` — press keyboard key
-- `browser_resize` — resize browser window
-- `browser_run_code` — execute arbitrary Playwright code snippets
-- `browser_select_option` — select dropdown option
-- `browser_snapshot` — accessibility snapshot; supports `depth` param to limit tree depth
-- `browser_tabs` — list, new, close, select tabs
-- `browser_take_screenshot` — supports element screenshots via `ref`, `fullPage`, `jpeg`/`png` format
-- `browser_type` — type text into element; `slowly` for keystroke mode, `submit` to press Enter after
-- `browser_wait_for` — wait for text appear/disappear or fixed time
+These tools are **not** in the default tool set. Check your server config before relying on them.
 
-## Available Tools — Recording
+**Recording / tracing**: `browser_start_video`, `browser_stop_video`, `browser_video_chapter`, `browser_start_tracing`, `browser_stop_tracing`, `browser_resume`.
 
-- `browser_start_video` / `browser_stop_video` — record browser session video
-- `browser_video_chapter` — add chapter marker with title overlay during recording
-- `browser_start_tracing` / `browser_stop_tracing` — capture Playwright trace
-- `browser_resume` — resume paused execution
+**`--caps=storage`** — cookies & storage: `browser_cookie_{list,get,set,delete,clear}`, `browser_localstorage_*`, `browser_sessionstorage_*`, `browser_storage_state` (export), `browser_set_storage_state` (restore).
 
-## Available Tools — Storage (`--caps=storage`)
+**`--caps=network`** — request control: `browser_route` (intercept/fulfill/abort/modify), `browser_route_list`, `browser_unroute`, `browser_network_state_set` (offline toggle).
 
-- `browser_cookie_list` / `browser_cookie_get` / `browser_cookie_set` / `browser_cookie_delete` / `browser_cookie_clear`
-- `browser_localstorage_list` / `browser_localstorage_get` / `browser_localstorage_set` / `browser_localstorage_delete` / `browser_localstorage_clear`
-- `browser_sessionstorage_list` / `browser_sessionstorage_get` / `browser_sessionstorage_set` / `browser_sessionstorage_delete` / `browser_sessionstorage_clear`
-- `browser_storage_state` — export full storage state (cookies + localStorage)
-- `browser_set_storage_state` — restore storage state from file
+**`--caps=devtools`** — locator tooling: `browser_highlight` / `browser_hide_highlight`, `browser_pick_locator`, `browser_generate_locator`.
 
-## Available Tools — Network (`--caps=network`)
+**`--caps=vision`** — coordinate-based mouse: `browser_mouse_click_xy`, `browser_mouse_down`, `browser_mouse_up`, `browser_mouse_move_xy`, `browser_mouse_drag_xy`, `browser_mouse_wheel`. Use for canvas, maps, or anything the accessibility tree can't reach.
 
-- `browser_route` — intercept requests matching a URL pattern; fulfill, abort, or modify
-- `browser_route_list` — list active routes
-- `browser_unroute` — remove a route
-- `browser_network_state_set` — toggle network offline mode
+**`--caps=testing`** — in-browser assertions: `browser_verify_element_visible`, `browser_verify_list_visible`, `browser_verify_text_visible`, `browser_verify_value`.
 
-## Available Tools — DevTools (`--caps=devtools`)
-
-- `browser_highlight` / `browser_hide_highlight` — visually highlight elements on page
-- `browser_pick_locator` — interactive locator picker
-- `browser_generate_locator` — generate locator for element
-
-## Available Tools — Vision (`--caps=vision`)
-
-- `browser_mouse_click_xy` — click at coordinates; supports `button`, `clickCount`, `delay`
-- `browser_mouse_down` / `browser_mouse_up` — press/release mouse button
-- `browser_mouse_move_xy` — move mouse to coordinates
-- `browser_mouse_drag_xy` — drag between coordinates
-- `browser_mouse_wheel` — scroll via mouse wheel
-
-## Available Tools — Testing (`--caps=testing`)
-
-- `browser_verify_element_visible` — assert element is visible
-- `browser_verify_list_visible` — assert list of elements visible
-- `browser_verify_text_visible` — assert text is visible on page
-- `browser_verify_value` — assert element has expected value
-
-## Available Tools — Other opt-in
-
-- `browser_get_config` (`--caps=config`) — read server configuration
-- `browser_pdf_save` (`--caps=pdf`) — save page as PDF
+**`--caps=pdf`** — `browser_pdf_save`. **`--caps=config`** — `browser_get_config`.
 
 ## Snapshot Rules
 
@@ -184,6 +130,16 @@ If the task involves project-specific local/staging/production URL mapping or pr
 3. browser_snapshot → verify logged-in state
 ```
 
+### Authenticated preview access (HTTP basic auth)
+
+If the target environment is protected by HTTP basic auth (common for staging/preview), embed credentials in the URL:
+
+```
+browser_navigate → https://<USER>:<PASS>@<preview-host>/<path>
+```
+
+Follow the project-specific reference for the actual credentials.
+
 ### API mocking with route interception
 
 ```
@@ -212,7 +168,6 @@ When a click or fill doesn't work:
 - Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
 - Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
-- Tools now accept CSS selectors in addition to ref handles — useful when refs are unstable
 
 ## Alternatives
 
