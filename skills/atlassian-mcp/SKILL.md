@@ -5,67 +5,27 @@ description: 'Interact with Jira tickets and Confluence wiki pages via the Atlas
 
 # Atlassian MCP
 
-Always prefer Atlassian MCP tools over fetching web pages or asking the user to paste content.
+Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking the user to paste content.
 
-## Cross-System Search (Rovo)
+## Default Route
 
-- **Rovo Search**: Use `search` to search across Jira, Confluence, and Compass simultaneously — best default for finding content when you don't know which system has it
-- **Fetch by ARI**: Use `fetch` to get full details of a Jira issue or Confluence page by its Atlassian Resource Identifier (ARI) returned from search results
+1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue`.
+2. If the user gives a Confluence URL, pass the site hostname as `cloudId` and fetch the page directly with `getConfluencePage`.
+3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with `search`, then use `fetch` on the returned ARI.
+4. Use `searchJiraIssuesUsingJql` or `searchConfluenceUsingCql` only when you need precise filtering that `search` cannot express.
+5. Once the target object is identified, use the matching Jira or Confluence tool for the requested read/write action.
 
-## Jira Operations
+## Non-Obvious Rules
 
-- **Reading issues**: Use `getJiraIssue` to fetch ticket details (summary, description, acceptance criteria, comments, status, etc.)
-- **Searching issues**: Use `searchJiraIssuesUsingJql` to find relevant tickets with JQL
-- **Creating issues**: Use `createJiraIssue` for new tickets
-- **Updating issues**: Use `editJiraIssue` to modify existing tickets
-- **Transitions**: Use `getTransitionsForJiraIssue` to list available status transitions, then `transitionJiraIssue` to move an issue through its workflow
-- **Comments**: Use `addCommentToJiraIssue` to add comments
-- **Work logs**: Use `addWorklogToJiraIssue` to log time
-- **Issue links**: Use `getIssueLinkTypes` to discover link types, then `createIssueLink` to link issues
-- **Remote links**: Use `getJiraIssueRemoteIssueLinks` to get external links on an issue
-- **Projects**: Use `getVisibleJiraProjects` to list accessible projects
-- **Issue types**: Use `getJiraProjectIssueTypesMetadata` to list issue types for a project, `getJiraIssueTypeMetaWithFields` to get field metadata for a specific issue type
-- **User lookup**: Use `lookupJiraAccountId` to find account IDs by name (needed for assignee fields)
+- Prefer `responseContentFormat: "markdown"` / `contentFormat: "markdown"` when you need readable text. Use ADF only when rich formatting matters.
+- When the user provides an Atlassian URL such as `https://site.atlassian.net/...`, try `site.atlassian.net` as `cloudId` before calling `getAccessibleAtlassianResources`.
+- Keep JQL/CQL searches small by default with `maxResults: 10` or `limit: 10`.
+- Before transitioning a Jira issue, call `getTransitionsForJiraIssue` to get a valid transition ID.
+- Before assigning a Jira issue by display name, call `lookupJiraAccountId`.
+- Confluence tiny-link IDs from `/wiki/x/<id>` can be passed directly as `pageId`.
 
-## Confluence Operations
+## Guardrails
 
-- **Reading pages**: Use `getConfluencePage` to fetch wiki content (pages or blog posts)
-- **Searching**: Use `searchConfluenceUsingCql` to find content with CQL queries
-- **Listing pages**: Use `getPagesInConfluenceSpace` to browse a space
-- **Spaces**: Use `getConfluenceSpaces` to list available spaces
-- **Child pages**: Use `getConfluencePageDescendants` to get child pages of a page
-- **Creating pages**: Use `createConfluencePage` for new pages or blog posts
-- **Updating pages**: Use `updateConfluencePage` to modify existing pages
-- **Footer comments**: Use `getConfluencePageFooterComments` to read, `createConfluenceFooterComment` to add
-- **Inline comments**: Use `getConfluencePageInlineComments` to read, `createConfluenceInlineComment` to add (supports text selection highlighting)
-- **Comment replies**: Use `getConfluenceCommentChildren` to read replies to a comment
-
-## Identity
-
-- **User info**: Use `atlassianUserInfo` to get the current authenticated user
-- **Cloud ID**: Use `getAccessibleAtlassianResources` to discover cloud IDs when needed
-
-## Content Format
-
-Most read/write tools accept a `contentFormat` parameter:
-- `"adf"` (default) — Atlassian Document Format JSON, full fidelity with mentions, panels, Smart Links
-- `"markdown"` — simplified text, easier to read and generate
-
-Prefer `"markdown"` for reading content you need to understand. Use `"adf"` when you need to preserve rich formatting or when writing content with mentions/panels.
-
-## Gotchas
-
-- **Cloud ID shortcut**: When a user provides a link like `https://site.atlassian.net/...`, pass `site.atlassian.net` as the `cloudId` directly — only call `getAccessibleAtlassianResources` if that fails
-- **Search first**: Use `search` (Rovo Search) as the default discovery tool — it searches across Jira, Confluence, and Compass in one call. Use JQL/CQL only when you need precise filtering
-- **maxResults/limit**: Always set `maxResults: 10` or `limit: 10` for JQL and CQL searches to avoid excessive token usage — increase only if the user needs more
-- **Ticket ID patterns**: When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly with `getJiraIssue` — never try to open the URL in a browser
-- **Transitions require ID**: Always call `getTransitionsForJiraIssue` first to get valid transition IDs before calling `transitionJiraIssue`
-- **User assignment**: Use `lookupJiraAccountId` to resolve display names to account IDs before setting assignees
-- **Confluence page IDs**: Tiny link IDs from `/wiki/x/` URLs (e.g., `Fc1bBw`) can be passed directly as `pageId`
-
-## Procedure
-
-1. If needed, use `getAccessibleAtlassianResources` to get the cloud ID (or extract from user-provided URLs)
-2. For discovery, start with `search` (Rovo Search) to find content across systems
-3. For specific operations, call the appropriate tool listed above
-4. When creating or updating content, prefer `"markdown"` content format for simplicity
+- Do not open Jira or Confluence links in a browser when MCP can fetch them directly.
+- Do not start with broad search when the user already gave an exact key, page ID, or URL.
+- Use `search` as the default discovery tool; use JQL/CQL only for explicit or precision-filtered queries.
