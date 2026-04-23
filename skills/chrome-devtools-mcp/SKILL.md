@@ -21,14 +21,6 @@ When debugging runtime issues in the browser, **always prefer using the Chrome D
 
 If debugging a project-specific preview or staging environment, load the relevant project reference first so you use the correct host, auth pattern, and access method.
 
-## Core Concepts
-
-**Browser lifecycle**: The browser starts automatically on the first tool call using a persistent Chrome profile. Configure via CLI args: `npx chrome-devtools-mcp@latest --help`. Use `--categoryExtensions` to enable extension tools.
-
-**Page selection**: Tools operate on the currently selected page. Use `list_pages` to see available pages, then `select_page` to switch context.
-
-**Element interaction**: Use `take_snapshot` to get the page structure with element `uid`s. Each element has a unique `uid` for interaction. If an element isn't found, take a fresh snapshot — the page may have changed.
-
 ## Procedure
 
 1. Ensure the local dev server is running
@@ -56,19 +48,7 @@ If debugging a project-specific preview or staging environment, load the relevan
 | Memory leaks | `take_memory_snapshot` | Compare heap snapshots before/after to find retained objects |
 | Visual verification | `take_screenshot` | When snapshot semantics are not enough; use `filePath` for large screenshots |
 | Storage | `evaluate_script` | `localStorage.getItem('key')`, `document.cookie`, `sessionStorage` |
-| Click / interact | `click` | Use `uid` from `take_snapshot` |
-| Fill input | `fill`, `fill_form` | Single field or multiple fields at once |
-| Type text | `type_text` | Keystroke-style input into focused element |
-| Keyboard | `press_key` | Key combinations like `Control+S`, `Enter`, `Tab` |
-| Hover | `hover` | Trigger menus, tooltips, hidden actions |
-| Drag and drop | `drag` | Use `from_uid` and `to_uid` from snapshot |
-| File upload | `upload_file` | Use `uid` of the file input + local `filePath` |
-| Dialog handling | `handle_dialog` | Accept or dismiss browser dialogs |
-| Navigate | `navigate_page` | Go to URL, back, forward, or reload |
-| Page management | `list_pages`, `select_page`, `new_page`, `close_page` | Multi-tab debugging |
-| Wait for content | `wait_for` | Wait for text, element, URL, or network idle |
-| Emulate device | `emulate` | Test mobile viewports, user agents, touch |
-| Resize | `resize_page` | Test specific viewport dimensions |
+| Multi-tab debugging | `list_pages`, `select_page` | Tools operate on the currently selected page |
 
 ## Debugging Patterns
 
@@ -142,11 +122,7 @@ document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$pinia
 
 ## Troubleshooting
 
-If `chrome-devtools-mcp` is insufficient, guide users to use Chrome DevTools UI:
-- https://developer.chrome.com/docs/devtools
-- https://developer.chrome.com/docs/devtools/ai-assistance
-
-For launch or connection errors, refer to the Chrome DevTools MCP troubleshooting guide on GitHub.
+If `chrome-devtools-mcp` tools are failing or unavailable, fall back to asking the user to paste console output or open Chrome DevTools UI manually.
 
 ## See Also
 
