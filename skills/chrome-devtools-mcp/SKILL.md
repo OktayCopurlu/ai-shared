@@ -27,4 +27,3 @@ Use Chrome DevTools MCP when you need to inspect a live Chrome page directly.
 
 - Do not guess browser state when `evaluate_script`, console output, network data, or snapshots can show the real value.
 - Do not describe DevTools UI workflows when MCP can inspect the page directly.
-- Do not turn this skill into a general debugging checklist. It exists to route the agent to the right MCP tools.
