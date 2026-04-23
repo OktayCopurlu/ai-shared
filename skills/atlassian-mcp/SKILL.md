@@ -10,14 +10,13 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 ## Default Route
 
 1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue`.
-2. If the user gives a Confluence URL, pass the site hostname as `cloudId` and fetch the page directly with `getConfluencePage`.
+2. If the user gives a Confluence URL, extract the site hostname as `cloudId` and fetch the page directly if the URL contains a usable page ID.
 3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with `search`, then use `fetch` on the returned ARI.
 4. Use `searchJiraIssuesUsingJql` or `searchConfluenceUsingCql` only when you need precise filtering that `search` cannot express.
-5. Once the target object is identified, use the matching Jira or Confluence tool for the requested read/write action.
 
 ## Non-Obvious Rules
 
-- Prefer `responseContentFormat: "markdown"` / `contentFormat: "markdown"` when you need readable text. Use ADF only when rich formatting matters.
+- Prefer Markdown output when you need readable text. Use ADF only when rich formatting matters.
 - When the user provides an Atlassian URL such as `https://site.atlassian.net/...`, try `site.atlassian.net` as `cloudId` before calling `getAccessibleAtlassianResources`.
 - Keep JQL/CQL searches small by default with `maxResults: 10` or `limit: 10`.
 - Before transitioning a Jira issue, call `getTransitionsForJiraIssue` to get a valid transition ID.
