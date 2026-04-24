@@ -66,6 +66,7 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
+  R_CTX[\context-hygiene\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -124,6 +125,8 @@ graph LR
   S_DOC -. See Also .-> S_GIT
   S_EVOLVE -. See Also .-> S_STYLE
   S_EVOLVE -. See Also .-> R_COG
+  S_DEBUG -. See Also .-> R_CTX
+  S_REVIEW -. See Also .-> R_CTX
 ```
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
@@ -187,6 +190,7 @@ graph LR
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── context-hygiene.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md
