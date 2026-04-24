@@ -44,7 +44,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Use available GitHub MCP tools to create the pull request
 - Title format: `Brief description` (e.g., `Add product franchise chips to PDP purchase pod`) — the ticket ID is prepended automatically from the branch name
 - Assign the PR to `OktayCopurlu` using the appropriate GitHub MCP issue or pull request management tool
-- Do NOT add Preview or Jira ticket links manually — the GitHub PR workflow extracts the ticket key from the branch and adds both the Jira link and preview link to the PR description automatically
+- Do NOT add Preview or Jira ticket links manually when the workflow has already added them — but always preserve them when updating the PR body. If creating a new PR, include them yourself using the format in step 5
 - Body structure (top to bottom):
   1. **Description** — One or two sentences: what changed and why
   2. **Test Instructions** — Bullet list: link to the preview page, inline design links (Figma), brief notes on what to verify
@@ -53,10 +53,15 @@ Automates the full flow from local changes to a reviewed pull request.
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
 
-### 5. Preview URLs
+### 5. Preview & Jira Links
 
-- The PR workflow automatically adds the preview link to the description — do not duplicate it at the top
-- Link to the preview deployment for the specific page (e.g., `https://<app>-<PR_NUMBER>.<domain>/<path>`)
+- The PR workflow adds Preview and Jira links at the very top of the body in this format:
+  ```
+  **[Preview](https://on-shop-<PR_NUMBER>.on.com)**
+  **[Jira ticket](https://onrunning.atlassian.net/browse/<TICKET_KEY>)**
+  ```
+- When updating a PR body, always preserve these two lines at the top — they are part of the body, not separate comments
+- If the workflow hasn't run yet (e.g., you just created the PR), include the links yourself using the format above
 - For component library changes, include the Storybook preview URL in test instructions
 - Reviewers do NOT need to run Storybook locally — they can use the preview URL
 
@@ -122,6 +127,9 @@ Before marking the PR workflow complete:
 ## PR Description Template
 
 ```markdown
+**[Preview](https://on-shop-<PR_NUMBER>.on.com)**
+**[Jira ticket](https://onrunning.atlassian.net/browse/<TICKET_KEY>)**
+
 ### Description
 
 One or two sentences: what changed and why.
@@ -137,4 +145,4 @@ One or two sentences: what changed and why.
 Temporary caveats, mock data, or follow-up ticket links (if any).
 ```
 
-> Preview link and Jira ticket link are added automatically by the PR workflow — do not include them manually.
+> When updating a PR body, always read the existing body first and preserve the Preview/Jira links at the top.
