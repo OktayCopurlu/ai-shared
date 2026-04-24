@@ -166,6 +166,7 @@ Shared reference material goes in `references/` at the project root, not inside 
 7. **Explain the why.** State the reasoning behind a rule when it isn't self-evident. Agents follow rules more reliably when they understand the intent.
 8. **Show preferred vs. avoided.** For non-trivial conventions, pair a short "do this" example with a short "not this" example. Concrete code beats abstract description.
 9. **Skip what tooling enforces.** Don't restate rules the linter, formatter, or type-checker already catches. Spend tokens on non-obvious decisions the agent would otherwise get wrong.
+10. **Never add output-length constraints.** Do not include word limits, line limits, or brevity instructions (e.g. "keep responses under 25 words", "be concise between tool calls"). Anthropic's April 2026 postmortem showed that a single verbosity-reducing prompt line ("keep text between tool calls to ≤25 words") degraded Claude's coding intelligence by 3% — undetected by narrow evals. Control skill length by writing fewer instructions, not by constraining model output.
 
 ## Naming Conventions
 
