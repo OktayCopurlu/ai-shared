@@ -98,6 +98,13 @@ Questions only — never directives. Direct senior reviewer attention.
 - Client-side computation of server-derivable data
 - Component prop interface beyond 8 props
 
+**Design pressure erosion (especially in agent-generated code):**
+- Business logic embedded in framework/ORM classes instead of standalone domain types — the domain model should be sovereign, not shaped by storage or API concerns
+- Same class or type serves as both data model and API contract — conflating layers that change for different reasons ("your data model is not your object model is not your resource model")
+- Missing boundary parsing/validation — raw external data flows into domain logic without being parsed into a stricter domain type at the edge
+- New code takes the path of least resistance (god file, one giant component, nested conditionals) instead of introducing a small new type or module — agents avoid friction by default and will not feel the pain of a bad structure
+- Almost-correct implementation that passes tests but encodes a subtly wrong invariant — "almost right is worse than wrong" because it ships unnoticed and becomes load-bearing
+
 **Output:** Question per signal with file/line. Never state an architectural decision.
 
 ## Output Format
@@ -212,3 +219,4 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - `~/.ai-shared/references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
 - `~/.ai-shared/references/performance-checklist.md` — for performance checks in Layer 4
 - `~/.ai-shared/references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through
+- Hynek Schlawack, *Design Pressure* (PyCon US 2025, EuroPython 2025, PyTexas 2026) — domain model sovereignty, double impedance mismatch, design pressure from AI
