@@ -2,6 +2,13 @@
 
 Research before coding. The cost of searching is minutes; the cost of duplicating or breaking existing code is hours.
 
+## Before Asking the User
+
+- [ ] Minor unspecified detail → make a reasonable attempt, don't interview
+- [ ] Ambiguity a tool can resolve (read, grep, glob, git log) → call the tool, don't ask the user to look it up
+- [ ] Only ask when a choice is material, reversible only at cost, and no tool can resolve it
+- [ ] Once started, see the task through — don't stop partway to confirm what a search would answer
+
 ## Before Writing New Code
 
 - [ ] Search for existing utilities — the codebase likely has a helper for it
