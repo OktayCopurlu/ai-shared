@@ -28,3 +28,18 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 - Do not open Jira or Confluence links in a browser when MCP can fetch them directly.
 - Do not start with broad search when the user already gave an exact key, page ID, or URL.
 - Use `search` as the default discovery tool; use JQL/CQL only for explicit or precision-filtered queries.
+## Viewing Jira Attachments (Images)
+
+The Atlassian MCP tools cannot download attachment files directly. To view images:
+
+1. Fetch the ticket with `getJiraIssue` — the `attachment` field has the download URL in `content`
+2. Download via `curl` with basic auth using `$JIRA_USER_EMAIL` and `$JIRA_API_TOKEN` from `~/.zshrc`
+3. Use `view_image` to inspect the downloaded file
+
+## Procedure
+
+1. Load Atlassian MCP tools via `tool_search_tool_regex` with pattern `mcp_atlassian`
+2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID
+3. Call the appropriate tool for the operation
+4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser
+5. If the ticket has attachments with images, download and view them using the method above

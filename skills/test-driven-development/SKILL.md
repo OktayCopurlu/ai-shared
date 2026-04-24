@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature."
+description: 'Test-driven development: write failing test, make it pass, refactor. USE FOR: implementing new functions, fixing bugs with regression tests, adding behavior to existing code. Use when writing tests before code or when asked to TDD a feature. NOT FOR: debugging existing failures without writing new code (debugging), or reviewing test coverage in existing code (reviewing-code layer 2).'
 ---
 
 # Test-Driven Development
@@ -19,6 +19,9 @@ Write the test first. Make it pass. Clean up. Repeat.
 - Test priority: happy path → business rules / invariants → edge cases → error cases
 - Each test sets up its own data — no shared mutable state
 - Mock external dependencies (API calls, timers) — not internal modules
+- If `beforeEach` is longer than the test body, use a factory with sensible defaults: `buildOrder({ status: 'pending' })`
+- Extract test helpers only when duplication causes maintenance pain — keep them in the same file, not a shared grab bag
+- Assert properties and invariants alongside specific values — ask "what must always be true about the output?"
 
 ## Bug Fix TDD
 
@@ -45,6 +48,8 @@ Each cycle should respond to what you learned from the previous one.
 |---|---|
 | "I need to see the implementation first to know what to test" | If you can't describe the expected behavior, you're not ready to implement. |
 | "Mocking everything makes tests brittle" | Mock boundaries (APIs, filesystem), not internals. TDD naturally pushes toward better boundaries. |
+| "DRY means I should extract all shared setup" | Tests are read 10x more than written. Repeat setup when it makes intent clearer — extract only when duplication causes maintenance pain. |
+| "If the expected output matches, the code is correct" | Output equality catches regressions but misses invariant violations. Assert properties (sorted, unique, within range) alongside specific values. |
 
 ## Red Flags
 
@@ -52,6 +57,8 @@ Each cycle should respond to what you learned from the previous one.
 - Test name describes implementation instead of behavior
 - Shared mutable state between tests
 - Skipping the refactor step
+- `beforeEach` that sets up more state than any single test needs
+- Tests that only assert equality to hardcoded values without checking invariants
 
 ## See Also
 

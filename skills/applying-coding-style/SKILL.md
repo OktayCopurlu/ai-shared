@@ -1,6 +1,6 @@
 ---
 name: applying-coding-style
-description: 'Personal code writing standards for naming, comments, and cleanliness. USE FOR: writing new code, reviewing code, refactoring. ALWAYS apply when generating or editing TypeScript, Vue, or SCSS files. Use when user says "write clean code", "fix naming", "remove comments", or "code quality".'
+description: 'Personal code writing standards for naming, comments, and cleanliness. USE FOR: writing new code, reviewing code style, refactoring for readability. ALWAYS apply when generating or editing TypeScript, Vue, or SCSS files. Use when user says "write clean code", "fix naming", "remove comments", or "code quality". NOT FOR: architecture decisions (reviewing-code layer 4), security patterns (security-hardening), or test strategy (test-driven-development).'
 ---
 
 # Coding Style — Personal Standards

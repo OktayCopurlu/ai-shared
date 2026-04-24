@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: "End-to-end git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. Use when creating a branch, writing commits, rebasing, resolving conflicts, opening a PR, or submitting changes for review. Automates the full git-to-PR pipeline."
+description: "End-to-end local git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. USE FOR: creating a branch, writing commits, rebasing, resolving conflicts, opening a PR, or submitting changes for review. NOT FOR: GitHub API operations like listing issues, searching code, or reading PR reviews (github-mcp)."
 ---
 
 # Git Workflow
@@ -77,6 +77,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Always run lint before committing — never skip this step
 - Do not force-push without checking if anyone else has the branch
 - Do not blindly accept one side of a merge conflict without reading both
+- Do not add AI-assistant attribution anywhere — no `Co-Authored-By: Claude`/`Copilot`/etc. trailers, no "🤖 Generated with…" lines in commit messages, no "written by Claude/GPT/Copilot" notes in PR bodies or code comments. The human submitter owns the change.
 
 ## Common Rationalizations
 
@@ -88,6 +89,7 @@ Automates the full flow from local changes to a reviewed pull request.
 | "I'll skip the `reviewing-code` skill, Copilot review will catch it" | Copilot review is a second opinion, not a replacement. Self-review catches 80% of issues before anyone else sees the code. |
 | "The pre-commit hook is annoying, I'll bypass it" | Hooks exist for a reason. `--no-verify` erodes team guardrails — fix the root cause instead. |
 | "I'll address review comments in a follow-up PR" | Unresolved comments become tech debt. Address valid feedback before merge. |
+| "Adding `Co-Authored-By: Claude` credits the tool honestly" | Multiple OSS projects (pydantic-ai, dd-sdk-ios, vllm) explicitly ban AI co-author trailers and attribution lines. The submitter is the author and must defend every line. Strip these before committing. |
 
 ## Red Flags
 
