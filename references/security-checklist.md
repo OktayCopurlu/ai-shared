@@ -59,6 +59,18 @@ Guards against maintainer-account hijacks and malicious version injections (e.g.
 - [ ] CORS configured to allow only expected origins
 - [ ] API responses include proper security headers (CSP, X-Content-Type-Options, X-Frame-Options)
 
+## CSRF Protection (Fetch Metadata)
+
+Prefer Fetch Metadata headers over token-based CSRF for new services. Browsers have sent `Sec-Fetch-Site` on every request since 2023 (Safari 16.4), and Go 1.25 promoted this pattern to stdlib via `net/http.CrossOriginProtection` (Aug 2025). Tokens remain valid but add state and template coupling that Fetch Metadata avoids.
+
+- [ ] Safe methods (GET, HEAD, OPTIONS) allowed without CSRF checks — they must be side-effect-free by spec
+- [ ] For unsafe methods: reject unless `Sec-Fetch-Site` is `same-origin` or `none` (direct navigation, bookmarks)
+- [ ] Fallback for older clients missing `Sec-Fetch-Site`: require `Origin` header and verify it matches the request host (or an explicit allowlist)
+- [ ] Requests with no `Origin` and no `Sec-Fetch-Site` on unsafe methods are rejected — do not treat "missing" as "trusted"
+- [ ] Cross-origin POSTs (SSO callbacks, payment webhooks, OAuth form_post) have an explicit bypass list — keep it narrow and documented
+- [ ] Session cookies set `SameSite=Lax` (or `Strict`) as defense in depth — do not rely on SameSite alone, Lax permits top-level POST in some flows
+- [ ] CSRF defenses enforced server-side on the same handler that mutates state — never only in a reverse proxy or client-side guard
+
 ## Data Handling
 
 - [ ] Sensitive data (PII, payment info) encrypted at rest and in transit
