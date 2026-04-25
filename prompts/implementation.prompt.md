@@ -113,9 +113,36 @@ If a gate fails for a likely unrelated or flaky reason: record it, continue by d
 
 Pause only when it is unsafe to continue or the failure cannot be attributed.
 
+## Smoke Test the Change
+
+After quality gates pass and before cross-check, exercise the running code at least once. Tests proving "the unit works" do not prove "the change works wired up". This catches missing wiring, server startup crashes, mock/real divergence, and regressions automated tests did not cover.
+
+Skip only if the change is a pure cosmetic refactor with no behavior change, or if the change is UI-only (use `validating-ui` instead).
+
+Pick a method that matches the change:
+
+| Change type | Smoke method |
+|---|---|
+| New or changed library function | `python -c` / `node -e` / `tsx` script that imports and calls it with realistic inputs |
+| New or changed JSON / REST endpoint | start the dev server, run `curl` against the route, inspect status and payload |
+| New or changed GraphQL field/resolver | run the actual query against the dev server, not the unit test mock |
+| New or changed CLI command | run `--help` plus one realistic invocation |
+| Server / build / worker change | restart the process, confirm it boots, hit a health endpoint or grep the expected log line |
+| Config / dependency change | run the build and one downstream command that exercises the changed surface |
+
+Rules:
+
+- exercise the **running code**, not a mock, stub, or unit-test harness
+- use real-shaped inputs and at least one edge case (empty, null, max length, unicode, unauthenticated)
+- after a server, worker, or build change, restart and re-test — never trust the old process
+- write throwaway scripts to `/tmp/` so they cannot be committed by accident
+- if the smoke test exposes a defect, fix it and add a regression test before continuing — load `test-driven-development`
+
+Smoke test is complete when at least one method has been run successfully against the actual change and any defects discovered have been fixed and guarded.
+
 ## Cross-Check
 
-After quality gates pass, compare the implementation against the ticket's full contract — not just the AC list.
+After the smoke test passes, compare the implementation against the ticket's full contract — not just the AC list.
 
 1. for each AC item, confirm it is covered by the code changes
 2. also check behaviors the spec defines beyond AC bullets — failure states, duplicate/repeat behavior, edge cases, and business invariants identified in step 7
