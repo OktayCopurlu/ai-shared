@@ -43,6 +43,7 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 - **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
+- **Keep files small**: Target files under 300 lines. When a file approaches 500 lines, split by responsibility — extract helpers, composables, or sub-components into their own modules. Do not add new functionality to an already-large file; create a new file and import from it. Move co-located tests and docs with the extracted code so invariants stay close to the implementation
 
 ## Change Discipline
 
@@ -90,6 +91,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - Commented-out code surviving review
 - Boolean variables without `is`/`has`/`should`/`can` prefix
 - Tests with no `describe` grouping or asserting on mock internals
+- Files exceeding 500 lines that keep growing instead of being split
 
 ## See Also
 
