@@ -66,6 +66,7 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
+  R_DESTOP[\destructive-ops-guardrail\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -119,6 +120,8 @@ graph LR
   S_STYLE -. See Also .-> R_REFAC
   S_SEC -. See Also .-> S_REVIEW
   S_SEC -. See Also .-> R_SEC
+  S_SEC -. See Also .-> R_DESTOP
+  S_GIT -. See Also .-> R_DESTOP
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
@@ -191,6 +194,7 @@ graph LR
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
+│   ├── destructive-ops-guardrail.md
 │   ├── security-checklist.md
 │   └── testing-patterns.md
 ├── docs/                 # Contributor documentation
