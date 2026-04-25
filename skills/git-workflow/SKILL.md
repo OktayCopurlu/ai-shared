@@ -52,8 +52,9 @@ Automates the full flow from local changes to a reviewed pull request.
 - For preview or Storybook links, use the current repo's real host and path format from one of these sources: the existing PR body, a recent PR in the same repo, repo docs/workflows, or a repo-specific URL reference. Do not hardcode one repo's URL pattern into this shared skill
 - Body structure (top to bottom):
   1. **Description** — One or two sentences: what changed and why
-  2. **Test Instructions** — Bullet list: preview links, design links, and brief notes on what to verify
-  3. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
+  2. **Verification** — Concrete proof you ran the change yourself. See "Verification evidence" below for what to include per change type
+  3. **Test Instructions** — Bullet list: preview links, design links, and brief notes on what reviewers should verify
+  4. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
 - Do NOT include a "Key Changes" section unless the PR is large or spans multiple areas
 - Do NOT include file-by-file changelogs or implementation inventories in small PRs — reviewers need intent and verification, not a duplicate of the diff
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
@@ -61,6 +62,18 @@ Automates the full flow from local changes to a reviewed pull request.
 - For UI changes on an existing route, include at least one concrete baseline-vs-preview comparison link and say what reviewers should compare
 - In Test Instructions, prefer concrete links and page paths over generic directions like "open Storybook" or "navigate to a PDP"
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
+
+#### Verification evidence
+
+The Verification section proves the author exercised the change before opening the PR. CI passing is necessary but not sufficient — it shows nothing broke, not that the new behavior actually works. Include at least one of the following, matched to the change type:
+
+- **CLI / script change** — paste the command and the relevant output (trim noise, keep the lines that prove the new behavior)
+- **API / backend endpoint** — paste the `curl` (or equivalent) request and the response status + body excerpt
+- **UI change** — attach a before/after screenshot, or a short screen capture for interactions; say which viewport
+- **Bug fix** — show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test
+- **Refactor / no behavior change** — name the existing test or smoke check that you re-ran, and state that observable behavior is unchanged
+
+If a change genuinely cannot be exercised locally (e.g., infra-only, depends on production data), state that explicitly and name what was checked instead (type checks, dry-run output, staged-env link).
 
 ### 5. Preview & Jira Links
 
@@ -115,6 +128,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - PR includes secrets, debug logs, or `console.log` statements
 - Review comments resolved without corresponding commits
 - PR description promises behavior the code doesn't deliver
+- PR body omits author-side verification evidence — "CI is green" is not proof the new behavior works, only that nothing obvious broke
 
 ## Verification
 
@@ -127,7 +141,8 @@ Before marking the PR workflow complete:
 - [ ] Only ticket-relevant files are staged
 - [ ] Commit messages are imperative and descriptive
 - [ ] Test instructions use concrete repo-valid links and comparisons where applicable
-- [ ] PR body has Description, Test Instructions, and (optional) Note
+- [ ] PR body has Description, Verification, Test Instructions, and (optional) Note
+- [ ] Verification section contains concrete proof the author ran the change (command output, screenshot, curl response, or named regression check)
 - [ ] PR is assigned and review is requested
 
 ## See Also
@@ -145,6 +160,10 @@ Before marking the PR workflow complete:
 ### Description
 
 One or two sentences: what changed and why.
+
+### Verification
+
+How I confirmed it works (e.g., paste the `curl` + response, the CLI command + output, a before/after screenshot, or the regression test that now passes). One change type, one piece of evidence is enough — pick the most telling one.
 
 ### Test Instructions
 
