@@ -50,6 +50,7 @@ graph LR
   S_JIRA([jira-ticket]):::skill
   S_MQA([manual-qa]):::skill
   S_EVOLVE([skill-evolution]):::skill
+  S_AUDIT([context-audit]):::skill
   S_FIGMA([figma-mcp]):::skill
   S_LINK([linked-context-routing]):::skill
   S_PW([playwright-mcp]):::skill
@@ -159,6 +160,8 @@ graph LR
   S_DOC -. See Also .-> S_GIT
   S_EVOLVE -. See Also .-> S_STYLE
   S_EVOLVE -. See Also .-> R_COG
+  S_AUDIT -. See Also .-> S_EVOLVE
+  S_AUDIT -. See Also .-> S_REVIEW
 ```
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
@@ -342,6 +345,7 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
 │   ├── applying-coding-style/  # Personal code writing standards
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
+│   ├── context-audit/          # Hygiene pass for skills/refs/prompts
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
 │   ├── figma-mcp/              # Read Figma designs via MCP before browser fallback
