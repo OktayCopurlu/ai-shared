@@ -29,3 +29,14 @@ Research before coding. The cost of searching is minutes; the cost of duplicatin
 - [ ] Search the codebase for similar functionality already available
 - [ ] Check bundle impact — 2KB utility or 200KB library?
 - [ ] Check existing `package.json` for a library that already covers this
+
+## Before Destructive or Irreversible Operations
+
+Operations whose blast radius extends beyond the working tree need a pause point. Examples: `rm -rf`, `git push --force`, `git reset --hard`, branch deletion, database migrations, schema/auth/permission changes, external API calls with side effects.
+
+- [ ] Name the exact operation, target, and blast radius before running it — vague intent produces wrong targets
+- [ ] Confirm the operation is reversible — if not, snapshot, branch, or back up first
+- [ ] Search for callers, references, and downstream consumers the change will break if the target disappears
+- [ ] Prefer the narrowest equivalent: a file path over a directory, a single commit over a branch reset, a dry-run over an apply
+- [ ] When running unattended, require an explicit acknowledgment phrase from the user before proceeding — silent vetoes hide intent, ceremonies preserve it
+- [ ] Verify the actual outcome after the operation — destructive commands often "succeed" silently against the wrong target
