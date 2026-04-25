@@ -81,6 +81,10 @@ After completing the skill's process:
 - [ ] Checklist of exit criteria
 - [ ] Evidence requirements
 
+## Output Contract (optional)
+Mandatory sections, in order, that the produced artifact must contain.
+Add only if the skill hands off a structured deliverable.
+
 ## See Also
 - `other-skill` — when to cross-reference
 - `~/.ai-shared/references/checklist.md` — supporting material
@@ -108,6 +112,7 @@ Mutation guardrails, safety boundaries, or things the skill must never do.
 - `When to Use`
 - `Guardrails`
 - `Verification`
+- `Output Contract` — when the skill produces a structured artifact (report, plan, query)
 - `See Also`
 ```
 
@@ -134,6 +139,19 @@ Observable signs the skill is being violated. Useful during self-monitoring and 
 
 ### Verification
 Exit criteria. A checklist the agent uses to confirm the process is complete. Every checkbox should be verifiable with evidence (test output, build result, screenshot, etc.).
+
+### Output Contract (optional)
+Specifies the **structure of the artifact** the skill produces — distinct from `Verification`, which checks whether the process ran. Add this section when the skill must hand off a structured deliverable (PR body, ADR, ticket, audit report, code-review summary). Without it, agents tend to inline prose where downstream readers expect named sections.
+
+Include:
+- An ordered list of mandatory sections, each one or two words.
+- Per-section content rules ("≤2 sentences", "checkbox list", "code block").
+- An explicit fallback for partial outputs ("If section X cannot be produced, state why and continue").
+
+Skip this section for skills whose artifact is the side effect itself (e.g. `playwright-mcp` runs an action and returns nothing structured).
+
+- **Good:** "Mandatory sections in order: 1) Summary (≤3 sentences) 2) Verification (per-change-type evidence) 3) Risk & Rollback (single line)."
+- **Bad:** "Produce a clear summary."
 
 ### See Also
 Cross-references to related skills and reference checklists. Prevents duplication and creates a connected skill graph.
@@ -209,5 +227,6 @@ Before merging a new skill:
 - [ ] Has at least one substantive H2 section
 - [ ] Workflow skills: include "When to Use", a concrete process section, and usually "Common Rationalizations", "Red Flags", "Verification", and "See Also"
 - [ ] Tool skills: include clear tool-selection/procedure/rules guidance; add richer sections only when they improve decisions
+- [ ] If the skill produces a structured artifact (PR body, ADR, ticket, audit report, code-review summary), it includes an `Output Contract` section listing mandatory output sections in order
 - [ ] Under 500 lines (long reference material extracted to supporting files)
 - [ ] No content duplicated from other skills
