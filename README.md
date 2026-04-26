@@ -72,6 +72,7 @@ graph LR
   R_REFAC[\refactoring-patterns\]:::ref
   R_WORK[\work-shaping\]:::ref
   R_MQA[\manual-qa-checklist\]:::ref
+  R_MCPVET[\mcp-server-vetting\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_GRILL --> R_WORK
@@ -154,6 +155,7 @@ graph LR
   S_STYLE -. See Also .-> R_REFAC
   S_SEC -. See Also .-> S_REVIEW
   S_SEC -. See Also .-> R_SEC
+  S_SEC -. See Also .-> R_MCPVET
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
@@ -408,6 +410,7 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md
+│   ├── mcp-server-vetting.md
 │   ├── search-first.md
 │   ├── security-checklist.md
 │   ├── testing-patterns.md
