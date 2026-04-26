@@ -45,4 +45,5 @@ yarn audit
 ## See Also
 
 - `~/.ai-shared/references/security-checklist.md` — quick-reference checklist for review passes
+- `~/.ai-shared/references/mcp-security.md` — MCP server config and tool poisoning checklist
 - `reviewing-code` — security checks in Layer 4 (architecture signals)

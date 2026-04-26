@@ -66,6 +66,7 @@ graph LR
   R_A11Y[\accessibility-checklist\]:::ref
   R_PERF[\performance-checklist\]:::ref
   R_SEC[\security-checklist\]:::ref
+  R_MCPSEC[\mcp-security\]:::ref
   R_SEARCH[\search-first\]:::ref
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
@@ -154,6 +155,7 @@ graph LR
   S_STYLE -. See Also .-> R_REFAC
   S_SEC -. See Also .-> S_REVIEW
   S_SEC -. See Also .-> R_SEC
+  S_SEC -. See Also .-> R_MCPSEC
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
@@ -405,6 +407,7 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
 │   ├── manual-qa-checklist.md
+│   ├── mcp-security.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md
