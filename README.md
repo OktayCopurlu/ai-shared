@@ -43,6 +43,9 @@ graph LR
   S_DOC([documentation]):::skill
   S_JIRA([jira-ticket]):::skill
   S_EVOLVE([skill-evolution]):::skill
+  S_FIGMA([figma-mcp]):::skill
+  S_LINK([linked-context-routing]):::skill
+  S_PWCLI([playwright-cli]):::skill
   S_PW([playwright-mcp]):::skill
   S_CHROME([chrome-devtools-mcp]):::skill
   S_AMP([amplitude-analytics]):::skill
@@ -75,6 +78,7 @@ graph LR
   P_SOLUTION --> A_PROJDOC
   P_START --> P_IMPL
   P_IMPL --> S_STYLE
+  P_IMPL --> S_LINK
   P_IMPL --> S_A11Y
   P_IMPL --> S_UIVAL
   P_IMPL --> R_SEARCH
@@ -106,7 +110,17 @@ graph LR
   S_UIVAL -. See Also .-> S_PW
   S_UIVAL -. See Also .-> S_CHROME
   S_UIVAL -. See Also .-> S_AMP
+  S_UIVAL -. See Also .-> S_FIGMA
   S_UIVAL -. See Also .-> R_PERF
+  S_LINK --> S_ATLAS
+  S_LINK --> S_GDRIVE
+  S_LINK --> S_FIGMA
+  S_LINK -. browser fallback .-> S_PWCLI
+  S_LINK -. richer stateful fallback .-> S_PW
+  S_PWCLI -. See Also .-> S_PW
+  S_PWCLI -. See Also .-> S_CHROME
+  S_PWCLI -. See Also .-> R_ON
+  S_FIGMA -. See Also .-> S_PW
   S_PW -. See Also .-> R_ON
   S_CHROME -. See Also .-> R_ON
   S_A11Y -. See Also .-> S_REVIEW
@@ -142,10 +156,13 @@ graph LR
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
+│   ├── figma-mcp/              # Read Figma designs via MCP before browser fallback
 │   ├── git-workflow/           # Full git & PR pipeline
 │   ├── github-mcp/             # GitHub operations via MCP
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
+│   ├── linked-context-routing/ # Route mixed linked resources to the right integration
+│   ├── playwright-cli/         # Token-efficient browser automation for coding agents
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies

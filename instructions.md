@@ -37,6 +37,7 @@ Skills in `~/.ai-shared/skills/` activate by task context:
 - **Quality**: `reviewing-code` (4-layer) before PRs, `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
-- **Tools**: `atlassian-mcp` (Jira/Confluence), `github-mcp` (PRs/issues), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs)
-- **Browser**: `playwright-mcp` + `chrome-devtools-mcp` (automation & debug), `validating-ui` + `a11y-audit` (UI quality)
+- **Tools**: `atlassian-mcp` (Jira/Confluence), `github-mcp` (PRs/issues), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
+- **Linked Context**: `linked-context-routing` (project pages, tickets, or docs with many outbound SaaS links)
+- **Browser**: `playwright-cli` (default browser automation for coding agents, including attached or named sessions), `playwright-mcp` (extension-backed or richer stateful loops), `chrome-devtools-mcp` (inspection/debug), `validating-ui` + `a11y-audit` (UI quality)
 - **References**: Checklists in `~/.ai-shared/references/` — load on demand, not upfront

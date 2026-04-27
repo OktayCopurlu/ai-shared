@@ -5,23 +5,40 @@ description: 'Web automation via Playwright MCP browser tools. USE FOR: filling 
 
 # Playwright Browser Automation
 
-Use this skill with the Playwright MCP server that exposes `browser_*` tools.
-The server organizes tools into **core** (always available) and **opt-in capability groups** enabled via `--caps`.
+Use this skill with the Playwright MCP server after deciding MCP is the right browser path.
+Exact function names can vary by host surface; examples below use Playwright MCP-style `browser_*` names when that surface is exposed.
+The server organizes tools into **core** tools plus a small set of opt-in capability groups enabled via `--caps`.
+
+## Routing
+
+1. Prefer first-party integrations for structured systems such as Jira, GitHub, Figma, or Google Docs.
+2. If browser work is short and auth/session reuse is not the hard part, `playwright-cli` can be the lighter path.
+3. Use Playwright MCP when authenticated browser reuse via `--extension`, repeated snapshots, or longer stateful interaction matter.
+4. Use `chrome-devtools-mcp` when inspection, console, or network debugging is the main goal.
+
+## Session Modes
+
+- `--extension` connects to an existing Chrome or Edge browser through the Playwright MCP Bridge extension and reuses that browser state.
+- `--user-data-dir <path>` opts into a persistent profile on disk.
+- If `--user-data-dir` is omitted, the server creates a temporary user data directory.
+- `--isolated` keeps the browser profile in memory and does not save it to disk.
+
+## Authenticated Sites
+
+If the target page may require login, paywall access, or workspace membership, prefer `--extension` when a suitable logged-in browser already exists.
+Do not assume persistent auth by default; persistence only exists when `--user-data-dir` or another explicit config provides it.
+If the page is still blocked, verify the attached tab and browser state before calling the page unreadable.
 
 ## Capability Groups
 
 | Flag | Tools enabled | Use case |
 |------|--------------|----------|
 | *(core)* | click, close, console_messages, drag, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_requests, press_key, resize, run_code, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
-| `--caps=storage` | cookie_*, localstorage_*, sessionstorage_*, set_storage_state, storage_state | Auth state, cookie management |
-| `--caps=network` | route, route_list, unroute, network_state_set | Request interception, offline testing |
-| `--caps=config` | get_config | Read server configuration |
 | `--caps=devtools` | highlight, hide_highlight, pick_locator, generate_locator | Element inspection, locator generation |
 | `--caps=vision` | mouse_click_xy, mouse_down, mouse_drag_xy, mouse_move_xy, mouse_up, mouse_wheel | Coordinate-based interaction (canvas, maps) |
 | `--caps=pdf` | pdf_save | Save page as PDF |
-| `--caps=testing` | verify_element_visible, verify_list_visible, verify_text_visible, verify_value | Built-in assertions |
 
-Enable multiple: `--caps=storage,network,testing`
+Enable multiple: `--caps=devtools,vision`
 
 ## Environment-Specific URLs
 
@@ -54,33 +71,19 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Dialogs / alerts / confirms | `browser_handle_dialog` | Use after an action triggers a browser dialog |
 | Debug page behavior | `browser_console_messages` / `browser_network_requests` | Useful when clicks or submits fail silently |
 | Visual verification | `browser_take_screenshot` | Use when snapshot semantics are not enough |
-| Check element presence | `browser_verify_text_visible` | Requires `--caps=testing`; quick assertion without snapshot |
-| Manage cookies / auth state | `browser_cookie_*`, `browser_storage_state` | Requires `--caps=storage` |
-| Intercept requests | `browser_route` | Requires `--caps=network`; mock APIs or block resources |
-| Test offline behavior | `browser_network_state_set` | Requires `--caps=network` |
 | Canvas / coordinate interaction | `browser_mouse_click_xy` | Requires `--caps=vision`; for non-accessible elements |
 | Generate locators | `browser_pick_locator` | Requires `--caps=devtools`; interactive locator discovery |
 | Save page as PDF | `browser_pdf_save` | Requires `--caps=pdf` |
-| Record video | `browser_start_video` / `browser_stop_video` | Record browser session; `browser_video_chapter` adds markers |
-| Trace recording | `browser_start_tracing` / `browser_stop_tracing` | Capture Playwright trace for debugging |
 
 ## Opt-in Tools (enabled via `--caps`)
 
 These tools are **not** in the default tool set. Check your server config before relying on them.
 
-**Recording / tracing**: `browser_start_video`, `browser_stop_video`, `browser_video_chapter`, `browser_start_tracing`, `browser_stop_tracing`, `browser_resume`.
-
-**`--caps=storage`** — cookies & storage: `browser_cookie_{list,get,set,delete,clear}`, `browser_localstorage_*`, `browser_sessionstorage_*`, `browser_storage_state` (export), `browser_set_storage_state` (restore).
-
-**`--caps=network`** — request control: `browser_route` (intercept/fulfill/abort/modify), `browser_route_list`, `browser_unroute`, `browser_network_state_set` (offline toggle).
-
 **`--caps=devtools`** — locator tooling: `browser_highlight` / `browser_hide_highlight`, `browser_pick_locator`, `browser_generate_locator`.
 
 **`--caps=vision`** — coordinate-based mouse: `browser_mouse_click_xy`, `browser_mouse_down`, `browser_mouse_up`, `browser_mouse_move_xy`, `browser_mouse_drag_xy`, `browser_mouse_wheel`. Use for canvas, maps, or anything the accessibility tree can't reach.
 
-**`--caps=testing`** — in-browser assertions: `browser_verify_element_visible`, `browser_verify_list_visible`, `browser_verify_text_visible`, `browser_verify_value`.
-
-**`--caps=pdf`** — `browser_pdf_save`. **`--caps=config`** — `browser_get_config`.
+**`--caps=pdf`** — `browser_pdf_save`.
 
 ## Snapshot Rules
 
@@ -122,14 +125,6 @@ These tools are **not** in the default tool set. Check your server config before
 4. Continue with the actual task
 ```
 
-### Authenticated session via storage state
-
-```
-1. browser_set_storage_state → load saved auth state (requires --caps=storage)
-2. browser_navigate → target page (already authenticated)
-3. browser_snapshot → verify logged-in state
-```
-
 ### Authenticated preview access (HTTP basic auth)
 
 If the target environment is protected by HTTP basic auth (common for staging/preview), embed credentials in the URL:
@@ -139,15 +134,6 @@ browser_navigate → https://<USER>:<PASS>@<preview-host>/<path>
 ```
 
 Follow the project-specific reference for the actual credentials.
-
-### API mocking with route interception
-
-```
-1. browser_route → intercept /api/endpoint, fulfill with mock response (requires --caps=network)
-2. browser_navigate → target page
-3. browser_snapshot → verify page renders with mocked data
-4. browser_unroute → clean up when done
-```
 
 ### Debugging failed interactions
 
@@ -162,7 +148,11 @@ When a click or fill doesn't work:
 
 - Always snapshot before interacting — never guess refs
 - After navigation or DOM changes, take a fresh snapshot
+- If a short command sequence will do and the required session state is already available, use `playwright-cli` instead
+- Do not assume persistent state unless the session config makes it explicit
+- Prefer `--extension` for login-required pages when a suitable logged-in browser already exists
 - Use `browser_wait_for` instead of arbitrary delays
+- If the page is a login wall, verify whether the extension-managed browser state is correct before calling the page blocked
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
 - For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
 - Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)

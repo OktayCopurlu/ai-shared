@@ -7,6 +7,23 @@ description: 'Debug runtime issues via Chrome DevTools MCP server. USE FOR: insp
 
 Use Chrome DevTools MCP when you need to inspect a live Chrome page directly.
 
+## Routing
+
+- Prefer `playwright-cli` for concise action-heavy browser workflows when auth/session reuse is already handled.
+- Prefer `playwright-mcp` when you need longer stateful automation or extension-backed attachment plus page interaction.
+- Use Chrome DevTools MCP when inspection is the primary goal.
+
+## Login-Required Pages
+
+If the target page is private or redirected to sign-in, rely on the extension-managed browser state instead of inventing a separate profile-reuse workflow.
+Use DevTools MCP to verify which tab is live and whether the page is actually authenticated.
+If inspection still shows a login wall, report the blocker precisely or let the user complete login in the extension-managed browser context before continuing.
+
+## Environment Access
+
+If debugging a project-specific preview or staging environment, load the relevant project reference first so you use the correct host, auth pattern, and access method.
+For preview or staging environments, follow the project's documented access pattern instead of guessing credentials or hostnames.
+
 ## Default Route
 
 1. Start with `list_console_messages` for runtime errors.
@@ -27,3 +44,9 @@ Use Chrome DevTools MCP when you need to inspect a live Chrome page directly.
 
 - Do not guess browser state when `evaluate_script`, console output, network data, or snapshots can show the real value.
 - Do not describe DevTools UI workflows when MCP can inspect the page directly.
+
+## See Also
+
+- `playwright-cli` — concise browser automation for coding agents
+- `playwright-mcp` — interact with the page once the correct authenticated tab is available
+- project-specific environment references such as `references/on-frontend-urls.md`
