@@ -98,11 +98,11 @@ Questions only — never directives. Direct senior reviewer attention.
 - Client-side computation of server-derivable data
 - Component prop interface beyond 8 props
 
-**Design pressure erosion (especially in agent-generated code):**
+**Design pressure erosion:**
 - Business logic embedded in framework/ORM classes instead of standalone domain types — the domain model should be sovereign, not shaped by storage or API concerns
 - Same class or type serves as both data model and API contract — conflating layers that change for different reasons ("your data model is not your object model is not your resource model")
 - Missing boundary parsing/validation — raw external data flows into domain logic without being parsed into a stricter domain type at the edge
-- New code takes the path of least resistance (god file, one giant component, nested conditionals) instead of introducing a small new type or module — agents avoid friction by default and will not feel the pain of a bad structure
+- New code takes the path of least resistance (god file, one giant component, nested conditionals) instead of introducing a small new type or module — ask whether the structure is hiding a missing boundary
 - Almost-correct implementation that passes tests but encodes a subtly wrong invariant — "almost right is worse than wrong" because it ships unnoticed and becomes load-bearing
 
 **Output:** Question per signal with file/line. Never state an architectural decision.
