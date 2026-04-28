@@ -63,4 +63,5 @@ A maintenance matrix maps change dependencies: "when X changes, also update Y." 
 - `applying-coding-style` — inline comment and naming standards
 - `jira-ticket` — ticket writing standards (not the same as docs)
 - `git-workflow` — PR descriptions are a form of documentation
+- `~/.ai-shared/references/writing-style.md` — prose quality rules for all agent-written text
 - `~/.ai-shared/references/search-first.md` — the "Before Renaming or Removing" section complements the maintenance matrix

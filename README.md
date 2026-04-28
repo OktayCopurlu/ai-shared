@@ -69,6 +69,7 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
+  R_WRITE[\writing-style\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_SPEC -. See Also .-> P_SOLUTION
@@ -136,6 +137,9 @@ graph LR
   S_DOC -. See Also .-> S_STYLE
   S_DOC -. See Also .-> S_JIRA
   S_DOC -. See Also .-> S_GIT
+  S_DOC -. See Also .-> R_WRITE
+  S_JIRA -. See Also .-> R_WRITE
+  S_GIT -. See Also .-> R_WRITE
   S_EVOLVE -. See Also .-> S_STYLE
   S_EVOLVE -. See Also .-> R_COG
 ```
@@ -209,7 +213,8 @@ graph LR
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
-│   └── testing-patterns.md
+│   ├── testing-patterns.md
+│   └── writing-style.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
 ```
