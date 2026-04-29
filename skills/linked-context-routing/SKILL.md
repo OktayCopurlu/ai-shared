@@ -1,6 +1,6 @@
 ---
 name: linked-context-routing
-description: "Route mixed linked resources to the lightest working integration first. USE FOR: project pages with many outbound links, tickets or docs that reference Figma, Google Docs, Slack, Asana, GitHub, or Confluence, and requests to open or read all linked context. Use when the task starts from a page or ticket that fans out into multiple external URLs."
+description: "Use when the user provides any URL and asks to inspect, read, summarize, or route it, especially private/internal pages or pages that may require auth. Route to first-party integrations before browser fallback."
 ---
 
 # Linked Context Routing
