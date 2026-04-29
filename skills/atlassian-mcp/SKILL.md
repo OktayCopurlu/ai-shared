@@ -9,10 +9,16 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 
 ## Default Route
 
-1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue`.
+1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue` using `issueIdOrKey`.
 2. If the user gives a Confluence URL, extract the site hostname as `cloudId` and fetch the page directly if the URL contains a usable page ID.
 3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with `search`, then use `fetch` on the returned ARI.
 4. Use `searchJiraIssuesUsingJql` or `searchConfluenceUsingCql` only when you need precise filtering that `search` cannot express.
+
+## Jira Issue Reading
+
+- For an exact Jira key like `DSC-2209`, use `getJiraIssue` directly with `issueIdOrKey: "DSC-2209"`.
+- If `search` returns a Jira issue ARI, use `fetch` with that ARI as the fallback route.
+- Do not use Confluence page tools, `getIssueLinkTypes`, or remote-link tools to read a Jira issue body; those are for pages or link metadata.
 
 ## Non-Obvious Rules
 

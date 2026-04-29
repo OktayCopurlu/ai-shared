@@ -86,7 +86,7 @@ When the ticket involves tracking:
    - Event properties/payload match expected values.
    - Events fire on the correct action (click, page view, impression, etc.).
    - Events do NOT fire when they shouldn't (wrong variant, wrong page).
-4. Use `browser_console_messages` or `browser_network_requests` from `playwright-mcp`, or load `chrome-devtools-mcp` for deeper network inspection.
+4. Use `browser_console_messages` or `browser_network_requests` from `playwright-mcp` for deeper network inspection.
 
 #### A/B variant validation
 

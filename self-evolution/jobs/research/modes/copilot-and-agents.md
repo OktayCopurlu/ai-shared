@@ -15,7 +15,7 @@ Use this mode when the user asks about:
 - GitHub Copilot agent mode, coding agent, review agent, workspace features
 - VS Code agent customization: `.instructions.md` behavior, `applyTo`, toolset format changes, SKILL.md conventions
 - MCP protocol and official server releases (github.com/modelcontextprotocol)
-- New MCP servers relevant to our stack: GitHub, Nx, Amplitude, Atlassian, Contentful, Playwright, Chrome DevTools
+- New MCP servers relevant to our stack: GitHub, Nx, Amplitude, Atlassian, Contentful, Playwright
 - Tool restriction models, security controls added to agents
 - Multi-agent composition and invocation patterns
 

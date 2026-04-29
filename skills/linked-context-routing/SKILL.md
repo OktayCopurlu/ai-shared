@@ -22,8 +22,7 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
 4. For domains without a dedicated integration, decide whether browser state is required.
    - Public, static pages → direct fetch/read tools
    - If the current session exposes a dedicated connector or authenticated integration for the domain, use that before generic browser automation
-   - If no connector exists and browser state is required, prefer an explicit authenticated browser path: a named or attached `playwright-cli` session for most coding-agent flows, or `playwright-mcp` when richer stateful inspection is needed
-   - Use `chrome-devtools-mcp` when the browser task is mainly inspection, console analysis, or network debugging
+   - If no connector exists and browser state is required, use an explicit authenticated `playwright-mcp` browser path
    - If browser access still fails or a first-party integration needs user-side prep, ask the user how to recover before marking the link blocked
 5. Track status per link.
    Mark each one as opened, partially read, awaiting user-assisted auth, awaiting user-side prep, blocked by missing tools, or unsupported.
@@ -49,7 +48,7 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
 
 - Start from the source page, not from guessed downstream pages.
 - Route by domain and platform before considering browser fallback.
-- Use the lightest browser path that fits: `playwright-cli` first for most coding-agent browser tasks, especially attached or named sessions; `playwright-mcp` when richer iterative inspection is worth the overhead; and `chrome-devtools-mcp` for inspection.
+- Use `playwright-mcp` as the browser fallback when a link requires browser state, interaction, or inspection.
 - When auth or user-side prep is still recoverable, use an "awaiting user" status instead of calling the link blocked.
 - Report blockers precisely: missing integration, auth gate, unsupported URL shape, or tool/policy limitation.
 - When the user asks to read all links, say which ones were actually opened and which ones were blocked.
@@ -67,6 +66,4 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
 - `atlassian-mcp` — read Jira and Confluence source pages directly
 - `figma-mcp` — open Figma URLs through a Figma integration before browser fallback
 - `google-drive` — read Google Docs and Sheets via OAuth-backed export
-- `playwright-cli` — default browser fallback for coding-agent tasks after routing is complete
-- `playwright-mcp` — richer stateful browser fallback when the task needs it
-- `chrome-devtools-mcp` — inspect the live browser state when fallback behavior is unclear
+- `playwright-mcp` — stateful browser fallback when the task needs it

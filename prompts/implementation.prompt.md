@@ -9,8 +9,8 @@ When the user provides the ticket key or link:
 1. read the full Jira detail via Atlassian MCP
 2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs
    - prefer first-party MCP or a direct integration first for known systems
-   - if no suitable first-party integration exists, choose the lightest workable path: fetch/read tools for public pages, `playwright-cli` for most coding-agent browser flows including attached or named sessions, `playwright-mcp` when richer iterative inspection or longer stateful interaction is worth the overhead, and `chrome-devtools-mcp` when inspection or debugging is the main need
-   - if the page needs login, workspace membership, or browser state, prefer an explicit authenticated browser path such as `playwright-cli attach --extension` or `--cdp`, `playwright-mcp --extension`, or another documented attach flow instead of inventing ad-hoc browser profile handling
+   - if no suitable first-party integration exists, choose the lightest workable path: fetch/read tools for public pages and `playwright-mcp` for browser flows that need interaction, authenticated state, or inspection
+   - if the page needs login, workspace membership, or browser state, prefer an explicit authenticated browser path such as `playwright-mcp --extension` or `--cdp` instead of inventing ad-hoc browser profile handling
    - if the environment blocks the target domain or browser route, stop and report the blocker clearly instead of repeatedly scraping smart-link serialization or asking the user to paste protected content or credentials
    - when linked context is successfully opened, extract the implementation-relevant details before moving on
 3. determine the target repository

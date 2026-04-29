@@ -12,9 +12,7 @@ The server organizes tools into **core** tools plus a small set of opt-in capabi
 ## Routing
 
 1. Prefer first-party integrations for structured systems such as Jira, GitHub, Figma, or Google Docs.
-2. If browser work is short and auth/session reuse is not the hard part, `playwright-cli` can be the lighter path.
-3. Use Playwright MCP when authenticated browser reuse via `--extension`, repeated snapshots, or longer stateful interaction matter.
-4. Use `chrome-devtools-mcp` when inspection, console, or network debugging is the main goal.
+2. Use Playwright MCP when browser interaction, authenticated browser reuse via `--extension`, repeated snapshots, console/network inspection, or longer stateful interaction matter.
 
 ## Session Modes
 
@@ -34,11 +32,8 @@ If the page is still blocked, verify the attached tab and browser state before c
 | Flag | Tools enabled | Use case |
 |------|--------------|----------|
 | *(core)* | click, close, console_messages, drag, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_requests, press_key, resize, run_code, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
-| `--caps=devtools` | highlight, hide_highlight, pick_locator, generate_locator | Element inspection, locator generation |
 | `--caps=vision` | mouse_click_xy, mouse_down, mouse_drag_xy, mouse_move_xy, mouse_up, mouse_wheel | Coordinate-based interaction (canvas, maps) |
 | `--caps=pdf` | pdf_save | Save page as PDF |
-
-Enable multiple: `--caps=devtools,vision`
 
 ## Environment-Specific URLs
 
@@ -72,14 +67,11 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Debug page behavior | `browser_console_messages` / `browser_network_requests` | Useful when clicks or submits fail silently |
 | Visual verification | `browser_take_screenshot` | Use when snapshot semantics are not enough |
 | Canvas / coordinate interaction | `browser_mouse_click_xy` | Requires `--caps=vision`; for non-accessible elements |
-| Generate locators | `browser_pick_locator` | Requires `--caps=devtools`; interactive locator discovery |
 | Save page as PDF | `browser_pdf_save` | Requires `--caps=pdf` |
 
 ## Opt-in Tools (enabled via `--caps`)
 
 These tools are **not** in the default tool set. Check your server config before relying on them.
-
-**`--caps=devtools`** — locator tooling: `browser_highlight` / `browser_hide_highlight`, `browser_pick_locator`, `browser_generate_locator`.
 
 **`--caps=vision`** — coordinate-based mouse: `browser_mouse_click_xy`, `browser_mouse_down`, `browser_mouse_up`, `browser_mouse_move_xy`, `browser_mouse_drag_xy`, `browser_mouse_wheel`. Use for canvas, maps, or anything the accessibility tree can't reach.
 
@@ -148,7 +140,6 @@ When a click or fill doesn't work:
 
 - Always snapshot before interacting — never guess refs
 - After navigation or DOM changes, take a fresh snapshot
-- If a short command sequence will do and the required session state is already available, use `playwright-cli` instead
 - Do not assume persistent state unless the session config makes it explicit
 - Prefer `--extension` for login-required pages when a suitable logged-in browser already exists
 - Use `browser_wait_for` instead of arbitrary delays
@@ -158,10 +149,6 @@ When a click or fill doesn't work:
 - Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
 - Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
-
-## Alternatives
-
-- **Playwright CLI** (`@playwright/cli`, [github.com/microsoft/playwright-cli](https://github.com/microsoft/playwright-cli)) — a CLI-based alternative to Playwright MCP, designed to be more token-efficient for coding agents. Uses text commands instead of MCP tool calls. Consider for batch automation or when MCP overhead is high.
 
 ## See Also
 

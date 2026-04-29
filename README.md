@@ -45,9 +45,7 @@ graph LR
   S_EVOLVE([skill-evolution]):::skill
   S_FIGMA([figma-mcp]):::skill
   S_LINK([linked-context-routing]):::skill
-  S_PWCLI([playwright-cli]):::skill
   S_PW([playwright-mcp]):::skill
-  S_CHROME([chrome-devtools-mcp]):::skill
   S_AMP([amplitude-analytics]):::skill
   S_ATLAS([atlassian-mcp]):::skill
   S_GH([github-mcp]):::skill
@@ -92,7 +90,6 @@ graph LR
   P_REVIEWPR --> S_ATLAS
   P_REVIEWPR --> S_GH
   P_REVIEWPR --> S_PW
-  P_REVIEWPR --> S_CHROME
   P_REVIEWPR -. optional .-> S_A11Y
 
   %% ── Skill → Skill ──────────────────────────────────
@@ -108,21 +105,15 @@ graph LR
   S_TDD -. See Also .-> R_TEST
   S_UIVAL -. See Also .-> S_A11Y
   S_UIVAL -. See Also .-> S_PW
-  S_UIVAL -. See Also .-> S_CHROME
   S_UIVAL -. See Also .-> S_AMP
   S_UIVAL -. See Also .-> S_FIGMA
   S_UIVAL -. See Also .-> R_PERF
   S_LINK --> S_ATLAS
   S_LINK --> S_GDRIVE
   S_LINK --> S_FIGMA
-  S_LINK -. browser fallback .-> S_PWCLI
-  S_LINK -. richer stateful fallback .-> S_PW
-  S_PWCLI -. See Also .-> S_PW
-  S_PWCLI -. See Also .-> S_CHROME
-  S_PWCLI -. See Also .-> R_ON
+  S_LINK -. browser fallback .-> S_PW
   S_FIGMA -. See Also .-> S_PW
   S_PW -. See Also .-> R_ON
-  S_CHROME -. See Also .-> R_ON
   S_A11Y -. See Also .-> S_REVIEW
   S_A11Y -. See Also .-> S_UIVAL
   S_A11Y -. See Also .-> R_A11Y
@@ -152,7 +143,6 @@ graph LR
 │   ├── amplitude-analytics/    # Query Amplitude analytics data
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
 │   ├── applying-coding-style/  # Personal code writing standards
-│   ├── chrome-devtools-mcp/    # Debug runtime issues via DevTools
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
@@ -162,7 +152,6 @@ graph LR
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── linked-context-routing/ # Route mixed linked resources to the right integration
-│   ├── playwright-cli/         # Token-efficient browser automation for coding agents
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies

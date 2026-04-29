@@ -30,7 +30,7 @@ Prune memory notes that have been codified, are stale (30+ days, no recurrence),
 
 ## Tool Drift While Using Skills
 
-When using a tool-adapter skill such as `playwright-mcp`, `chrome-devtools-mcp`, `github-mcp`, or `atlassian-mcp`, watch for runtime drift:
+When using a tool-adapter skill such as `playwright-mcp`, `github-mcp`, or `atlassian-mcp`, watch for runtime drift:
 
 - documented tool names no longer exist
 - documented examples use outdated tool shapes or parameters
