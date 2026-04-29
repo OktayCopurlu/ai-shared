@@ -22,6 +22,19 @@ The user provides one of:
 - A Slack/meeting discussion summary
 - A Figma/design link with no accompanying ticket
 
+## Optional: Grill First
+
+If the input is vague, broad, or full of hidden decisions, run the `grill-me` prompt before producing the spec.
+
+Use the pattern in `~/.ai-shared/references/work-shaping.md`:
+
+- ask one question at a time
+- provide a recommended answer and trade-off for each question
+- walk dependencies in order instead of jumping straight to a plan
+- stop when remaining questions would not materially change the first vertical slice
+
+This is a human-in-loop phase. Do it before the spec, not after implementation has started.
+
 ## Process
 
 ### 1. Gather Context
@@ -58,6 +71,11 @@ Output a structured spec covering:
 **Risks**
 - What could go wrong?
 - What are the unknowns?
+
+**Work Shape**
+- What is the first user-observable vertical slice?
+- Which scope items are likely independent follow-up slices?
+- Which decisions must stay human-reviewed before AFK implementation?
 
 ### 3. Calibrate Depth
 
@@ -106,6 +124,8 @@ Default to inline if the user doesn't specify.
 
 ## See Also
 
+- `grill-me` — for alignment interviews before writing the spec
 - `jira-ticket` — for ticket structure, AC rules, and review mode
 - `solution-design` — for deeper technical design after the spec is clear
 - `refine-ticket` — for reviewing an existing ticket before refinement
+- `~/.ai-shared/references/work-shaping.md` — smart context, human-in-loop decisions, and vertical slices

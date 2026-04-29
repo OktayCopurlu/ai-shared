@@ -38,7 +38,19 @@ If the ticket is a code workflow:
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new
    - if a similar pattern exists elsewhere, reuse the same approach rather than inventing a parallel one
 9. if the UI work touches forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load the `a11y-audit` skill during implementation and apply it while building
-10. read the minimum code context needed and begin implementation
+10. if the ticket is large, cross-layer, or under-specified, apply the Task Shape and Context rules before implementation
+11. read the minimum code context needed and begin implementation
+
+### Task Shape and Context
+
+Use `~/.ai-shared/references/work-shaping.md` when the ticket is large, cross-layer, or under-specified.
+
+- For small, clear, single-slice work, skip shaping and implement directly after required context is reviewed.
+- Keep the active implementation slice small enough to explore, implement, test, and review in one focused pass.
+- If the work is still a layer-by-layer plan, pause implementation and reshape it into vertical slices.
+- Use read-only subagents for broad exploration, then continue with only the concise findings needed for the current slice.
+- Treat unresolved product, design, or architecture choices as human-in-loop blockers, not implementation details to invent.
+- Treat AFK implementation output as a draft until quality gates, cross-check, and human QA/review are complete.
 
 ### Workspace Convention
 
@@ -117,6 +129,8 @@ Cross-check is complete when every AC item and spec-defined behavior is accounte
 After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
 If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
+
+Treat UI validation as evidence gathering, not a replacement for human taste. If the change involves subjective UX, visual polish, product feel, or copy judgement, report what was verified and what still needs human review.
 
 If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
 

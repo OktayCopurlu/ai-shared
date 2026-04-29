@@ -19,6 +19,7 @@ graph LR
   INST[instructions.md]:::core
 
   %% ── Prompts (development lifecycle) ─────────────────
+  P_GRILL[/grill-me/]:::prompt
   P_SPEC[/spec/]:::prompt
   P_REFINE[/refine-ticket/]:::prompt
   P_SOLUTION[/solution-design/]:::prompt
@@ -67,19 +68,25 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
+  R_WORK[\work-shaping\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
+  P_GRILL --> R_WORK
+  P_SPEC -. optional .-> P_GRILL
   P_SPEC -. See Also .-> P_SOLUTION
   P_SPEC -. See Also .-> P_REFINE
   P_SPEC -. See Also .-> S_JIRA
+  P_SPEC --> R_WORK
   P_REFINE --> S_JIRA
   P_SOLUTION --> A_PROJDOC
+  P_SOLUTION --> R_WORK
   P_START --> P_IMPL
   P_IMPL --> S_STYLE
   P_IMPL --> S_LINK
   P_IMPL --> S_A11Y
   P_IMPL --> S_UIVAL
   P_IMPL --> R_SEARCH
+  P_IMPL --> R_WORK
   P_TEST --> S_TDD
   P_TEST --> S_STYLE
   P_TEST --> R_TEST
@@ -179,6 +186,7 @@ graph LR
 │   ├── project-doc-expert.agent.md
 │   └── research.agent.md
 ├── prompts/              # Slash-command prompts (development lifecycle)
+│   ├── grill-me.prompt.md          # Define — alignment interview before spec
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── solution-design.prompt.md   # Plan — technical design
 │   ├── implementation.prompt.md    # Build — implement a ticket
@@ -198,7 +206,8 @@ graph LR
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
-│   └── testing-patterns.md
+│   ├── testing-patterns.md
+│   └── work-shaping.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
 ```
