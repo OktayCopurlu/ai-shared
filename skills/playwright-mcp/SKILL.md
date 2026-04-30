@@ -31,7 +31,7 @@ If the page is still blocked, verify the attached tab and browser state before c
 
 | Flag | Tools enabled | Use case |
 |------|--------------|----------|
-| *(core)* | click, close, console_messages, drag, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_requests, press_key, resize, run_code, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
+| *(core)* | click, close, console_messages, drag, drop, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_requests, press_key, resize, run_code, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
 | `--caps=vision` | mouse_click_xy, mouse_down, mouse_drag_xy, mouse_move_xy, mouse_up, mouse_wheel | Coordinate-based interaction (canvas, maps) |
 | `--caps=pdf` | pdf_save | Save page as PDF |
 
@@ -59,8 +59,9 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Native `<select>` | `browser_select_option` | Prefer over keyboarding when available |
 | Keyboard submission | `browser_press_key` | Useful for Enter, Escape, Tab, arrows |
 | Wait for UI updates | `browser_wait_for` | Prefer waiting for text/state changes over fixed delays |
-| Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code` | Use only when normal form tools cannot reach the editor |
-| Drag and drop | `browser_drag` | For sortable lists and draggable UIs |
+| Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code` | Use only when normal form tools cannot reach the editor; `evaluate` also accepts plain expressions (not just function bodies) |
+| Drag and drop (between elements) | `browser_drag` | For sortable lists and draggable UIs |
+| Drop files/data onto element | `browser_drop` | External file drop; provide `paths` or MIME `data` |
 | File upload | `browser_file_upload` | Works for standard file inputs |
 | Hover-only UI | `browser_hover` | Helpful for menus, tooltips, hidden actions |
 | Dialogs / alerts / confirms | `browser_handle_dialog` | Use after an action triggers a browser dialog |
@@ -146,7 +147,7 @@ When a click or fill doesn't work:
 - If the page is a login wall, verify whether the extension-managed browser state is correct before calling the page blocked
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
 - For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
-- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`)
+- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`); use `responseBody` and `responseHeaders` options when you need to inspect response payloads
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
 - Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
 
