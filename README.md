@@ -404,6 +404,7 @@ When content feels heavy, first decide whether the problem is scope, duplication
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── instruction-anti-patterns.md
 │   ├── manual-qa-checklist.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
