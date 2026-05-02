@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: "End-to-end local git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. USE FOR: creating a branch, writing commits, rebasing, resolving conflicts, opening a PR, or submitting changes for review. NOT FOR: GitHub API operations like listing issues, searching code, or reading PR reviews (github-mcp)."
+description: "End-to-end local git and PR workflow: branching, committing, rebasing, conflict resolution, pushing, creating PRs, and processing review feedback. Use when creating a branch, writing commits, rebasing, resolving conflicts, opening a PR, or submitting changes for review. NOT FOR: GitHub API operations like listing issues, searching code, or reading PR reviews (github-mcp)."
 ---
 
 # Git Workflow

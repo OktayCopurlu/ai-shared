@@ -25,10 +25,12 @@ graph LR
   P_SOLUTION[/solution-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
   P_START[/start-working/]:::prompt
+  P_QA[/manual-qa/]:::prompt
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
   P_REVIEWPR[/review-pr/]:::prompt
+  P_SE_PR[/self-evolution-from-pr-feedback/]:::prompt
   P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
 
@@ -43,6 +45,7 @@ graph LR
   S_SEC([security-hardening]):::skill
   S_DOC([documentation]):::skill
   S_JIRA([jira-ticket]):::skill
+  S_MQA([manual-qa]):::skill
   S_EVOLVE([skill-evolution]):::skill
   S_FIGMA([figma-mcp]):::skill
   S_LINK([linked-context-routing]):::skill
@@ -69,6 +72,7 @@ graph LR
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
   R_WORK[\work-shaping\]:::ref
+  R_MQA[\manual-qa-checklist\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_GRILL --> R_WORK
@@ -85,8 +89,10 @@ graph LR
   P_IMPL --> S_LINK
   P_IMPL --> S_A11Y
   P_IMPL --> S_UIVAL
+  P_IMPL --> S_MQA
   P_IMPL --> R_SEARCH
   P_IMPL --> R_WORK
+  P_QA --> S_MQA
   P_TEST --> S_TDD
   P_TEST --> S_STYLE
   P_TEST --> R_TEST
@@ -94,10 +100,13 @@ graph LR
   P_REVIEW --> S_REVIEW
   P_REVIEWPR --> S_REVIEW
   P_REVIEWPR --> S_UIVAL
+  P_REVIEWPR --> S_MQA
   P_REVIEWPR --> S_ATLAS
   P_REVIEWPR --> S_GH
   P_REVIEWPR --> S_PW
   P_REVIEWPR -. optional .-> S_A11Y
+  P_SE_PR --> S_EVOLVE
+  P_SE_PR --> R_COG
 
   %% ── Skill → Skill ──────────────────────────────────
   S_REVIEW --> S_STYLE
@@ -115,6 +124,10 @@ graph LR
   S_UIVAL -. See Also .-> S_AMP
   S_UIVAL -. See Also .-> S_FIGMA
   S_UIVAL -. See Also .-> R_PERF
+  S_MQA --> S_UIVAL
+  S_MQA --> S_PW
+  S_MQA -. See Also .-> S_A11Y
+  S_MQA --> R_MQA
   S_LINK --> S_ATLAS
   S_LINK --> S_GDRIVE
   S_LINK --> S_FIGMA
@@ -159,6 +172,7 @@ graph LR
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── linked-context-routing/ # Route mixed linked resources to the right integration
+│   ├── manual-qa/              # Plan and execute manual QA from ticket and diff
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
@@ -169,6 +183,10 @@ graph LR
 │   ├── policy.md               # Shared source registry, scoring, dedupe
 │   ├── runner.sh               # Automation runner
 │   └── jobs/
+│       ├── self-evolution-from-pr-feedback/ # Weekly on-frontend PR feedback mining
+│       │   ├── command.md          # Autonomous PR feedback self-evolution workflow
+│       │   ├── job.json            # Monday 10:00 scheduler + model config
+│       │   └── run-log.jsonl       # Run history and dedupe state
 │       └── research/
 │           ├── command.md      # Autonomous research workflow
 │           ├── job.json        # Scheduler + model config
@@ -190,10 +208,12 @@ graph LR
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── solution-design.prompt.md   # Plan — technical design
 │   ├── implementation.prompt.md    # Build — implement a ticket
+│   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── start-working.prompt.md     # Build — full delivery workflow
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── review-pr.prompt.md         # Review — full PR review against ticket
+│   ├── self-evolution-from-pr-feedback.prompt.md # Improve — convert PR feedback into guardrails
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
 │   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
@@ -201,6 +221,7 @@ graph LR
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── manual-qa-checklist.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md

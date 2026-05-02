@@ -44,8 +44,8 @@ The Atlassian MCP tools cannot download attachment files directly. To view image
 
 ## Procedure
 
-1. Load Atlassian MCP tools via `tool_search_tool_regex` with pattern `mcp_atlassian`
-2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID
-3. Call the appropriate tool for the operation
-4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser
-5. If the ticket has attachments with images, download and view them using the method above
+1. Use the Atlassian MCP tools exposed in the current session. If the host groups tools behind activation, activate the Jira, Confluence, or search category that matches the task before calling the exact operation.
+2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID.
+3. Call the appropriate tool for the operation.
+4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly - never try to open the URL in a browser.
+5. If the ticket has attachments with images, download and view them using the method above.

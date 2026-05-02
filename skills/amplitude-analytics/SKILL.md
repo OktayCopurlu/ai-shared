@@ -9,7 +9,8 @@ Always prefer the Amplitude MCP server tools to query and verify tracking data.
 
 ## Procedure
 
-1. Load Amplitude MCP tools via `tool_search_tool_regex` with pattern `amplitude`
-2. Use the appropriate tool to query events, charts, or user data
-3. Cross-reference with tracking code in the codebase (look in `@on-store/utils/tracker/`)
-4. When verifying tracking implementation, compare the event schema in Amplitude with the TypeScript types in the codebase
+1. Use the Amplitude MCP tools exposed in the current session. If the host groups tools behind activation, activate the Amplitude category that matches the task before calling the exact query or retrieval tool.
+2. Start from project/workspace context when the project ID is not already known.
+3. Use the narrowest suitable tool to query events, charts, users, cohorts, experiments, session replays, or datasets.
+4. Cross-reference with tracking code in the codebase (look in `@on-store/utils/tracker/` when working in on-store repos).
+5. When verifying tracking implementation, compare the event schema in Amplitude with the TypeScript types in the codebase.

@@ -23,6 +23,7 @@ COMMAND_FILE="$JOB_DIR/command.md"
 MODEL=$(jq -r '.model' "$JOB_FILE")
 VARIANT=$(jq -r '.variant // empty' "$JOB_FILE")
 TIMEOUT=$(jq -r '.timeout // 900' "$JOB_FILE")
+ALWAYS_ISOLATE=$(jq -r '.always_isolate // false' "$JOB_FILE")
 ROTATION_FILE="$JOB_DIR/rotation.json"
 RUNNER_LOG="$JOB_DIR/logs/runner.log"
 LOCK_DIR="$JOB_DIR/logs/.runner.lock"
@@ -114,8 +115,12 @@ prepare_run_environment() {
 
   if [[ -z "$git_status" ]]; then
     merge_pending_run_log
-    export SELF_EVOLUTION_HISTORY_PATH="$SOURCE_RUN_LOG"
-    return 0
+    if [[ "$ALWAYS_ISOLATE" == "true" ]]; then
+      git_status="always-isolate"
+    else
+      export SELF_EVOLUTION_HISTORY_PATH="$SOURCE_RUN_LOG"
+      return 0
+    fi
   fi
 
   TEMP_WORKTREE=$(mktemp -d "${TMPDIR:-/tmp}/self-evolution-$RUN_ID.XXXXXX")

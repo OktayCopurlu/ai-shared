@@ -69,9 +69,19 @@ Before starting: check the PR's CI status checks.
 
 Always state what was validated, what was skipped, and why.
 
+#### Manual QA
+
+Load the `manual-qa` skill and execute a QA run from the ticket requirements, PR diff, and preview environment.
+
+- Create a temporary QA plan before executing checks.
+- Include primary ticket scenarios and diff-driven regression checks.
+- Include regression checks for changed files that are not directly explained by the ticket.
+- Update the temporary plan with pass/fail/blocked/not-verified results.
+- If CI is failing but the preview is reachable, keep QA to smoke-level checks and report the limitation.
+
 #### UI validation
 
-Load the `validating-ui` skill and run its checklist on the preview environment.
+Load the `validating-ui` skill and run its checklist on the preview environment when visible UI changed and manual QA has not already covered those browser checks.
 
 If the PR visibly affects UI (component changes, layout, styling), also load the `a11y-audit` skill for an accessibility pass on the changed areas.
 
@@ -118,7 +128,7 @@ To switch variants: check for a **URL parameter**, **cookie**, or **localStorage
 [Output from reviewing-code]
 
 ### Functional Validation
-[Output from validating-ui or "Skipped — reason"]
+[Manual QA verdict and UI validation evidence, or "Skipped — reason"]
 
 #### Tracking
 [Event-by-event results or "N/A"]

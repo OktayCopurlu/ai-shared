@@ -1,0 +1,12 @@
+{
+  "label": "com.ai-shared.self-evolution-from-pr-feedback",
+  "description": "Weekly self-evolution from PR feedback - mines Oktay's on-frontend PR feedback and opens at most one ai-shared improvement PR.",
+  "target_dir": "~/.ai-shared",
+  "model": "github-copilot/claude-opus-4.6",
+  "variant": "high",
+  "always_isolate": true,
+  "timeout": 3600,
+  "schedule": [
+    { "weekday": 1, "hour": 10, "minute": 0 }
+  ]
+}

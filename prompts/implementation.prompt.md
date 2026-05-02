@@ -1,5 +1,5 @@
 ---
-description: "Implement a Jira ticket: code changes, quality gates, and UI validation. Use with a ticket key or link."
+description: "Implement a Jira ticket: code changes, quality gates, manual QA, and UI validation. Use with a ticket key or link."
 ---
 
 # Implementation
@@ -124,15 +124,29 @@ After quality gates pass, compare the implementation against the ticket's full c
 
 Cross-check is complete when every AC item and spec-defined behavior is accounted for, and any spec gaps are explicitly recorded.
 
-## UI Validation
+## Manual QA
 
-After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
+After cross-check, choose manual QA depth from the risk in the ticket, linked context, and local diff.
+
+For medium or large changes, user-facing behavior, changed workflows, stateful logic, risky config, or any unclear blast radius: load the `manual-qa` skill and execute a focused manual QA run. Create a temporary QA plan, execute it, update the plan with results, and report the verdict. Include regression checks for changed files that are not directly explained by the ticket.
+
+For small docs-only changes, harmless config metadata, or mechanical refactors with no observable behavior risk: do not manufacture a QA ceremony. Either run a cheap smoke check when there is an obvious one, or mark manual QA as not verified with a clear reason.
+
+If the QA plan includes visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket - load the `validating-ui` skill and execute it as part of manual QA. If the ticket contains a Figma link, use it as the design reference.
+
+If the changes are purely backend, config, or logic-only with no UI surface, run focused manual QA for the observable behavior when risk exists. If there is no practical observable path, mark the relevant checks as not verified with a reason.
+
+### UI Validation
+
+Determine whether the changes have visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
 If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
 
 Treat UI validation as evidence gathering, not a replacement for human taste. If the change involves subjective UX, visual polish, product feel, or copy judgement, report what was verified and what still needs human review.
 
-If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
+If manual QA already executed `validating-ui`, do not duplicate the same browser checks. Reuse the manual QA evidence and only run missing UI checks.
+
+If the changes are purely backend, config, or logic-only with no UI surface: skip UI validation. Manual QA may be focused smoke coverage or explicitly not verified with a reason, based on risk.
 
 ### Failure Policy
 

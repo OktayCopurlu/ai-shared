@@ -384,6 +384,25 @@ for skill_dir in "$AI"/skills/*/; do
   done
 done
 
+# 9f. Stale tool references: catch known unavailable tool names before agents follow them
+stale_tool_refs=(
+  tool_search_tool_regex
+)
+
+for stale_tool in "${stale_tool_refs[@]}"; do
+  for f in "$AI"/skills/*/SKILL.md "$AI"/prompts/*.prompt.md "$AI"/agents/*.agent.md "$AI"/references/*.md "$AI"/self-evolution/jobs/*/command.md; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$AI/}"
+    matches=$(grep -nF "$stale_tool" "$f" 2>/dev/null || true)
+    [[ -n "$matches" ]] || continue
+
+    while IFS= read -r match; do
+      line_number="${match%%:*}"
+      fail "$rel: stale/unavailable tool reference '$stale_tool' at line $line_number"
+    done <<< "$matches"
+  done
+done
+
 green "Skill smoke test done"
 
 # ─── Summary ──────────────────────────────────────────────────────────
