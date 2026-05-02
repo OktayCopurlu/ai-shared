@@ -7,7 +7,7 @@ description: "Frontend UI validation methodology after implementation. USE FOR: 
 
 Defines what to validate in the browser after frontend implementation and how to decide pass or fail.
 
-This skill does not explain how to use browser tools — load `playwright-mcp` or `chrome-devtools-mcp` for that. It does not cover accessibility — load `a11y-audit` for that.
+This skill does not explain how to use browser tools — load `playwright-mcp` for that. It does not cover accessibility — load `a11y-audit` for that.
 
 ## When To Use
 
@@ -69,7 +69,7 @@ Only when the ticket mentions analytics or tracking:
 
 1. Ensure local dev server is running.
 2. Use `playwright-mcp` tools to navigate, interact, and snapshot.
-3. Use `chrome-devtools-mcp` tools when deeper inspection is needed (console, network, DOM state).
+3. For deeper inspection, use `browser_console_messages`, `browser_network_requests`, `browser_snapshot`, and `browser_evaluate`.
 4. If a11y is relevant, load `a11y-audit` separately — do not mix a11y findings into this validation.
 5. If the change is behind a feature flag, experiment, or A/B test, try using cookie overrides to toggle between variants. Test both the enabled and disabled states.
 
@@ -145,5 +145,4 @@ After completing UI validation:
 
 - `a11y-audit` — accessibility validation (separate from UI validation)
 - `playwright-mcp` — browser automation for navigation and interaction
-- `chrome-devtools-mcp` — console, network, DOM inspection
 - `~/.ai-shared/references/performance-checklist.md` — Core Web Vitals and frontend performance checks

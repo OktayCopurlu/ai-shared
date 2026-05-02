@@ -211,9 +211,26 @@ Keep patterns and principles inline when under 50 lines.
 
 Shared reference material goes in `references/` at the project root, not inside skill directories.
 
+## Admission Test
+
+Before codifying new guidance in ai-shared, check whether it is ready to become a durable rule.
+
+Ask:
+- Is this ai-shared-specific, workflow-specific, or tool-specific enough to belong here?
+- If it is specific to one product repo, should it live in that repo's local instructions instead?
+- Would a capable agent already know this without ai-shared? If yes, codify only the workflow/tool/local-convention part that changes behavior.
+- Does it prevent a repeated miss, a known drift issue, or a failure mode that already showed up in real work?
+- Can an agent follow it with observable evidence, not just good intentions?
+- Is this already enforced by lint, tests, type checks, `validate.sh`, or another existing rule?
+- Does it belong in a skill, prompt, reference, or validator instead of always-on instructions?
+
+If the answers are weak, stage the idea first: log it in the relevant run log, keep it as review feedback, or wait for another occurrence. Codify it when the evidence is stronger or the guidance clearly changes future agent behavior.
+
+Product-repo rules should live closest to that repo by default. Put them in ai-shared only when they are needed by shared prompts, tools, or recurring cross-repo workflows, and keep them scoped to the smallest skill, prompt, reference, or validator that needs them.
+
 ## Writing Principles
 
-1. **Process over knowledge.** Skills are operating guides, not reference dumps. Use the amount of structure the skill type actually needs.
+1. **Process over knowledge.** Skills are operating guides, not reference dumps. Do not turn general agent competence into a skill; capture only the workflow, tool, or local convention the agent would otherwise miss.
 2. **Specific over general.** "Run `npm test`" beats "verify the tests."
 3. **Evidence over assumption.** Every verification checkbox requires proof.
 4. **Anti-rationalization.** Every skip-worthy step needs a counter-argument.

@@ -2,7 +2,7 @@
 name: research
 description: Researches developer tools, platform updates, release notes, and workflow changes. Optimizes for practical recommendations over broad summaries.
 
-tools: [execute, read, edit, search, web, agent, todo]
+tools: [Bash, Read, Edit, Grep, Glob, WebFetch, WebSearch, Task, TodoRead, TodoWrite]
 ---
 
 # Research Agent

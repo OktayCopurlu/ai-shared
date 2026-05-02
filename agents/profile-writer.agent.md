@@ -1,7 +1,7 @@
 ---
 name: profile-writer
 description: "Writes and updates professional profiles for Oktay Copurlu across platforms like Askethos, LinkedIn, CV, portfolio, and cover letters. Use when: 'write my profile', 'update my bio', 'draft my LinkedIn summary', 'write a CV', 'help with my Askethos profile', 'write an about me', or 'tailor my resume'."
-tools: [web]
+tools: [WebFetch, WebSearch]
 ---
 
 # Profile Writer — Oktay Copurlu

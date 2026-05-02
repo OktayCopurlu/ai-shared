@@ -9,10 +9,16 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 
 ## Default Route
 
-1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue`.
+1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue` using `issueIdOrKey`.
 2. If the user gives a Confluence URL, extract the site hostname as `cloudId` and fetch the page directly if the URL contains a usable page ID.
 3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with `search`, then use `fetch` on the returned ARI.
 4. Use `searchJiraIssuesUsingJql` or `searchConfluenceUsingCql` only when you need precise filtering that `search` cannot express.
+
+## Jira Issue Reading
+
+- For an exact Jira key like `DSC-2209`, use `getJiraIssue` directly with `issueIdOrKey: "DSC-2209"`.
+- If `search` returns a Jira issue ARI, use `fetch` with that ARI as the fallback route.
+- Do not use Confluence page tools, `getIssueLinkTypes`, or remote-link tools to read a Jira issue body; those are for pages or link metadata.
 
 ## Non-Obvious Rules
 
@@ -38,8 +44,8 @@ The Atlassian MCP tools cannot download attachment files directly. To view image
 
 ## Procedure
 
-1. Load Atlassian MCP tools via `tool_search_tool_regex` with pattern `mcp_atlassian`
-2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID
-3. Call the appropriate tool for the operation
-4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly — never try to open the URL in a browser
-5. If the ticket has attachments with images, download and view them using the method above
+1. Use the Atlassian MCP tools exposed in the current session. If the host groups tools behind activation, activate the Jira, Confluence, or search category that matches the task before calling the exact operation.
+2. If needed, use `getAccessibleAtlassianResources` to get the cloud ID.
+3. Call the appropriate tool for the operation.
+4. When the user references a Jira ticket ID (e.g., DSC-1986), fetch it directly - never try to open the URL in a browser.
+5. If the ticket has attachments with images, download and view them using the method above.

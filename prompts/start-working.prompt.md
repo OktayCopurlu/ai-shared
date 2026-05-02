@@ -1,5 +1,5 @@
 ---
-description: "Run the full FE delivery workflow: Jira intake, routing, implementation, quality gates, and UI validation."
+description: "Run the full FE delivery workflow: Jira intake, routing, implementation, quality gates, manual QA, and UI validation."
 ---
 
 # FE Delivery Workflow

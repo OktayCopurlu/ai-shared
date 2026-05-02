@@ -2,9 +2,11 @@
 
 This folder is the single source of truth for all AI agent configuration — skills, prompts, agents, and global instructions. Other tools (Copilot, Codex, OpenCode) consume this via symlinks.
 
-## Dependency Graph
+## Core Dependency Graph
 
-How components connect — prompts trigger skills, skills reference each other, references serve as shared checklists.
+How durable components connect — prompts trigger skills, skills reference each other, references serve as shared checklists.
+
+This graph is a relationship map, not the exhaustive inventory. Keep it focused on stable, reusable flows and update the `Structure` and `Content Layers` sections for file-level additions or scope changes. Add a node here only when a file introduces a new relationship that future maintainers need to understand.
 
 ```mermaid
 graph LR
@@ -19,15 +21,19 @@ graph LR
   INST[instructions.md]:::core
 
   %% ── Prompts (development lifecycle) ─────────────────
+  P_GRILL[/grill-me/]:::prompt
   P_SPEC[/spec/]:::prompt
   P_REFINE[/refine-ticket/]:::prompt
   P_SOLUTION[/solution-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
   P_START[/start-working/]:::prompt
+  P_INV[/investigation/]:::prompt
+  P_QA[/manual-qa/]:::prompt
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
   P_REVIEWPR[/review-pr/]:::prompt
+  P_SE_PR[/self-evolution-from-pr-feedback/]:::prompt
   P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
 
@@ -42,23 +48,18 @@ graph LR
   S_SEC([security-hardening]):::skill
   S_DOC([documentation]):::skill
   S_JIRA([jira-ticket]):::skill
+  S_MQA([manual-qa]):::skill
   S_EVOLVE([skill-evolution]):::skill
   S_FIGMA([figma-mcp]):::skill
   S_LINK([linked-context-routing]):::skill
-  S_PWCLI([playwright-cli]):::skill
   S_PW([playwright-mcp]):::skill
-  S_CHROME([chrome-devtools-mcp]):::skill
   S_AMP([amplitude-analytics]):::skill
   S_ATLAS([atlassian-mcp]):::skill
   S_GH([github-mcp]):::skill
   S_CTF([contentful]):::skill
   S_GDRIVE([google-drive]):::skill
-  %% ── Agents ──────────────────────────────────────────
-  A_DEVIL{{devils-advocate}}:::agent
-  A_GOAL{{goal-setter}}:::agent
-  A_PROFILE{{profile-writer}}:::agent
+  %% ── Agents referenced by prompts ────────────────────
   A_PROJDOC{{project-doc-expert}}:::agent
-  A_RESEARCH{{research}}:::agent
 
   %% ── References ──────────────────────────────────────
   R_TEST[\testing-patterns\]:::ref
@@ -69,31 +70,53 @@ graph LR
   R_COG[\cognitive-debt\]:::ref
   R_ON[\on-frontend-urls\]:::ref
   R_REFAC[\refactoring-patterns\]:::ref
+  R_WORK[\work-shaping\]:::ref
+  R_MQA[\manual-qa-checklist\]:::ref
 
   %% ── Prompt → Skill / Agent / Reference ─────────────
+  P_GRILL --> R_WORK
+  P_SPEC -. optional .-> P_GRILL
   P_SPEC -. See Also .-> P_SOLUTION
   P_SPEC -. See Also .-> P_REFINE
   P_SPEC -. See Also .-> S_JIRA
+  P_SPEC --> R_WORK
   P_REFINE --> S_JIRA
+  P_REFINE --> S_ATLAS
   P_SOLUTION --> A_PROJDOC
+  P_SOLUTION --> S_ATLAS
+  P_SOLUTION --> R_WORK
   P_START --> P_IMPL
+  P_START -. analysis-only .-> P_INV
+  P_INV --> R_SEARCH
   P_IMPL --> S_STYLE
+  P_IMPL --> S_ATLAS
   P_IMPL --> S_LINK
   P_IMPL --> S_A11Y
   P_IMPL --> S_UIVAL
+  P_IMPL --> S_MQA
   P_IMPL --> R_SEARCH
+  P_IMPL --> R_WORK
+  P_QA --> S_MQA
   P_TEST --> S_TDD
   P_TEST --> S_STYLE
   P_TEST --> R_TEST
   P_PR --> S_GIT
+  P_PR --> S_EVOLVE
   P_REVIEW --> S_REVIEW
+  P_REVIEW --> S_GH
+  P_REVIEW --> S_EVOLVE
   P_REVIEWPR --> S_REVIEW
   P_REVIEWPR --> S_UIVAL
+  P_REVIEWPR --> S_MQA
   P_REVIEWPR --> S_ATLAS
   P_REVIEWPR --> S_GH
   P_REVIEWPR --> S_PW
-  P_REVIEWPR --> S_CHROME
   P_REVIEWPR -. optional .-> S_A11Y
+  P_SE_PR --> S_EVOLVE
+  P_SE_PR --> S_GH
+  P_SE_PR --> R_COG
+  P_SPRINT --> S_ATLAS
+  P_UPDATE --> S_ATLAS
 
   %% ── Skill → Skill ──────────────────────────────────
   S_REVIEW --> S_STYLE
@@ -108,21 +131,19 @@ graph LR
   S_TDD -. See Also .-> R_TEST
   S_UIVAL -. See Also .-> S_A11Y
   S_UIVAL -. See Also .-> S_PW
-  S_UIVAL -. See Also .-> S_CHROME
   S_UIVAL -. See Also .-> S_AMP
   S_UIVAL -. See Also .-> S_FIGMA
   S_UIVAL -. See Also .-> R_PERF
+  S_MQA --> S_UIVAL
+  S_MQA --> S_PW
+  S_MQA -. See Also .-> S_A11Y
+  S_MQA --> R_MQA
   S_LINK --> S_ATLAS
   S_LINK --> S_GDRIVE
   S_LINK --> S_FIGMA
-  S_LINK -. browser fallback .-> S_PWCLI
-  S_LINK -. richer stateful fallback .-> S_PW
-  S_PWCLI -. See Also .-> S_PW
-  S_PWCLI -. See Also .-> S_CHROME
-  S_PWCLI -. See Also .-> R_ON
+  S_LINK -. browser fallback .-> S_PW
+  S_LINK -. environment URLs .-> R_ON
   S_FIGMA -. See Also .-> S_PW
-  S_PW -. See Also .-> R_ON
-  S_CHROME -. See Also .-> R_ON
   S_A11Y -. See Also .-> S_REVIEW
   S_A11Y -. See Also .-> S_UIVAL
   S_A11Y -. See Also .-> R_A11Y
@@ -142,6 +163,174 @@ graph LR
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
 
+## Frequent Flow Trees
+
+These trees show the practical dependency chain for the prompts and skills used most often. Solid edges are part of the normal path; dashed edges are conditional branches based on ticket/PR shape, UI impact, or review mode.
+
+### `/implementation`
+
+```mermaid
+flowchart TD
+  classDef prompt fill:#6366f1,stroke:#4f46e5,color:#fff
+  classDef skill fill:#10b981,stroke:#059669,color:#fff
+  classDef ref fill:#94a3b8,stroke:#64748b,color:#fff
+  classDef action fill:#e5e7eb,stroke:#9ca3af,color:#111827
+
+  Impl["prompt: /implementation"]:::prompt
+  Jira["read Jira ticket"]:::action
+  Context["open linked context"]:::action
+  Code["implement code changes"]:::action
+  Gates["quality gates"]:::action
+  CrossCheck["cross-check AC + full contract"]:::action
+  QA["manual/browser QA"]:::action
+
+  Impl --> Jira --> Atlas["skill: atlassian-mcp"]:::skill
+  Impl --> Context --> Link["skill: linked-context-routing"]:::skill
+  Link --> Figma["skill: figma-mcp"]:::skill
+  Link --> GDrive["skill: google-drive"]:::skill
+  Link --> Pw["skill: playwright-mcp"]:::skill
+  Link --> OnUrls["ref: on-frontend-urls.md"]:::ref
+  Impl --> Code --> Style["skill: applying-coding-style"]:::skill
+  Code -. UI discovery .-> Search["ref: search-first.md"]:::ref
+  Code -. forms/dialogs/menus/focus .-> A11y["skill: a11y-audit"]:::skill
+  Code -. large or underspecified .-> Work["ref: work-shaping.md"]:::ref
+  Impl --> Gates --> Style
+  Impl --> CrossCheck
+  CrossCheck -. spec gap .-> PRNote["surface in PR description"]:::action
+  Impl -. medium/risky/user-facing .-> QA --> MQA["skill: manual-qa"]:::skill
+  MQA --> MQARef["ref: manual-qa-checklist.md"]:::ref
+  MQA --> Pw
+  QA -. visible UI impact .-> UIVal["skill: validating-ui"]:::skill
+  UIVal --> A11y
+  UIVal --> Pw
+  UIVal --> Amp["skill: amplitude-analytics"]:::skill
+  UIVal --> Figma
+  UIVal --> Perf["ref: performance-checklist.md"]:::ref
+```
+
+### `/review-pr`
+
+```mermaid
+flowchart TD
+  classDef prompt fill:#6366f1,stroke:#4f46e5,color:#fff
+  classDef skill fill:#10b981,stroke:#059669,color:#fff
+  classDef ref fill:#94a3b8,stroke:#64748b,color:#fff
+  classDef action fill:#e5e7eb,stroke:#9ca3af,color:#111827
+
+  ReviewPr["prompt: /review-pr"]:::prompt
+  Context["context gathering"]:::action
+  Coverage["AC coverage check"]:::action
+  CodeReview["code review"]:::action
+  Validation["functional validation"]:::action
+  Verdict["review verdict"]:::action
+
+  ReviewPr --> Context --> GH["skill: github-mcp"]:::skill
+  Context --> Atlas["skill: atlassian-mcp"]:::skill
+  Context --> Preview["preview URL + CI state"]:::action
+  ReviewPr --> Coverage
+  ReviewPr --> CodeReview --> Reviewing["skill: reviewing-code"]:::skill
+  Reviewing --> Style["skill: applying-coding-style"]:::skill
+  Reviewing --> TestRef["ref: testing-patterns.md"]:::ref
+  Reviewing --> SecRef["ref: security-checklist.md"]:::ref
+  Reviewing --> A11yRef["ref: accessibility-checklist.md"]:::ref
+  Reviewing --> PerfRef["ref: performance-checklist.md"]:::ref
+  Reviewing --> CogRef["ref: cognitive-debt.md"]:::ref
+  ReviewPr --> Validation --> MQA["skill: manual-qa"]:::skill
+  MQA --> MQARef["ref: manual-qa-checklist.md"]:::ref
+  Validation -. visible UI change .-> UIVal["skill: validating-ui"]:::skill
+  UIVal --> A11y["skill: a11y-audit"]:::skill
+  UIVal --> Pw["skill: playwright-mcp"]:::skill
+  UIVal --> Amp["skill: amplitude-analytics"]:::skill
+  UIVal --> Figma["skill: figma-mcp"]:::skill
+  Validation -. tracking or A/B .-> Pw
+  ReviewPr --> Verdict
+```
+
+### `reviewing-code`
+
+```mermaid
+flowchart TD
+  classDef skill fill:#10b981,stroke:#059669,color:#fff
+  classDef ref fill:#94a3b8,stroke:#64748b,color:#fff
+  classDef action fill:#e5e7eb,stroke:#9ca3af,color:#111827
+
+  Reviewing["skill: reviewing-code"]:::skill
+  Mode["choose review-only or self-review"]:::action
+  L1["layer 1: surface correctness"]:::action
+  L2["layer 2: test coverage gaps"]:::action
+  L3["layer 3: bounded refactors"]:::action
+  L4["layer 4: architecture signals"]:::action
+  Output["findings first, ordered by severity"]:::action
+
+  Reviewing --> Mode
+  Reviewing --> L1 --> Style["skill: applying-coding-style"]:::skill
+  Reviewing --> L2 --> TestRef["ref: testing-patterns.md"]:::ref
+  L2 -. self-review gap fix .-> TDD["skill: test-driven-development"]:::skill
+  Reviewing --> L3
+  Reviewing --> L4
+  L4 --> A11yRef["ref: accessibility-checklist.md"]:::ref
+  L4 --> PerfRef["ref: performance-checklist.md"]:::ref
+  Reviewing -. bug found .-> Debug["skill: debugging"]:::skill
+  Reviewing --> SecRef["ref: security-checklist.md"]:::ref
+  Reviewing --> CogRef["ref: cognitive-debt.md"]:::ref
+  Reviewing --> Output
+```
+
+### `/address-review`
+
+```mermaid
+flowchart TD
+  classDef prompt fill:#6366f1,stroke:#4f46e5,color:#fff
+  classDef skill fill:#10b981,stroke:#059669,color:#fff
+  classDef action fill:#e5e7eb,stroke:#9ca3af,color:#111827
+
+  Address["prompt: /address-review"]:::prompt
+  Fetch["fetch Copilot review comments"]:::action
+  Triage["evaluate each comment in code context"]:::action
+  FixOrDismiss["fix valid comments or dismiss invalid ones"]:::action
+  ExtraReview["additional full PR review pass"]:::action
+  Gates["quality gates if code changed"]:::action
+  Push["commit + push triage updates"]:::action
+  Reviewers["assign human reviewers"]:::action
+  Evolution["capture reusable learning"]:::action
+
+  Address --> Fetch --> GH["skill: github-mcp"]:::skill
+  Address --> Triage
+  Triage --> FixOrDismiss
+  Address --> ExtraReview --> Reviewing["skill: reviewing-code"]:::skill
+  Reviewing --> Style["skill: applying-coding-style"]:::skill
+  Address --> Gates
+  Address --> Push
+  Address --> Reviewers --> GH
+  Address --> Evolution --> SkillEvolution["skill: skill-evolution"]:::skill
+```
+
+## Content Layers
+
+The physical folders are organized by primitive (`skills`, `prompts`, `agents`, `references`). The content itself has different scopes. Keep those scopes explicit so the shared core does not quietly fill with one-off workflows.
+
+| Layer | What belongs here | Current examples | Maintenance rule |
+| --- | --- | --- | --- |
+| Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
+| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `prompts/sprint-review.prompt.md`, `prompts/start-working.prompt.md`, `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
+| Personal | Oktay-specific career, writing, preference, or taste guidance. Useful locally, but not automatically reusable by another engineer. | `agents/goal-setter.agent.md`, `agents/profile-writer.agent.md`, `skills/applying-coding-style/` | Keep factual source material separate from reusable process rules when it grows. Review for stale personal facts. |
+| Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
+
+## Content Hygiene
+
+Use this when adding or simplifying content, not just when adding/removing files.
+
+| Content smell | Prefer |
+| --- | --- |
+| Same instruction repeated in multiple prompts | Move the rule into a skill or reference and link to it. |
+| Long prompt that teaches reusable behavior | Extract the behavior into a skill; keep the prompt as orchestration. |
+| Hardcoded team/project IDs without scope | Mark the file as team-specific and include the source of truth/date. |
+| Personal facts mixed with generic writing process | Split stable process rules from personal source material. |
+| Mermaid graph updated for every tiny file | Keep the graph high-level; update the structure table for inventory. |
+| Always-on global rule for a rare task | Move it to an on-demand skill, prompt, or reference. |
+
+When content feels heavy, first decide whether the problem is scope, duplication, or staleness. Delete only after the rule, workflow, or source of truth has a better home or is no longer used.
+
 ## Structure
 
 ```
@@ -152,7 +341,6 @@ graph LR
 │   ├── amplitude-analytics/    # Query Amplitude analytics data
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
 │   ├── applying-coding-style/  # Personal code writing standards
-│   ├── chrome-devtools-mcp/    # Debug runtime issues via DevTools
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
 │   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
@@ -162,7 +350,7 @@ graph LR
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── linked-context-routing/ # Route mixed linked resources to the right integration
-│   ├── playwright-cli/         # Token-efficient browser automation for coding agents
+│   ├── manual-qa/              # Plan and execute manual QA from ticket and diff
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
@@ -173,6 +361,10 @@ graph LR
 │   ├── policy.md               # Shared source registry, scoring, dedupe
 │   ├── runner.sh               # Automation runner
 │   └── jobs/
+│       ├── self-evolution-from-pr-feedback/ # Weekly on-frontend PR feedback mining
+│       │   ├── command.md          # Autonomous PR feedback self-evolution workflow
+│       │   ├── job.json            # Monday 10:00 scheduler + model config
+│       │   └── run-log.jsonl       # Run history and dedupe state
 │       └── research/
 │           ├── command.md      # Autonomous research workflow
 │           ├── job.json        # Scheduler + model config
@@ -190,13 +382,17 @@ graph LR
 │   ├── project-doc-expert.agent.md
 │   └── research.agent.md
 ├── prompts/              # Slash-command prompts (development lifecycle)
+│   ├── grill-me.prompt.md          # Define — alignment interview before spec
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── solution-design.prompt.md   # Plan — technical design
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── start-working.prompt.md     # Build — full delivery workflow
+│   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
+│   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── review-pr.prompt.md         # Review — full PR review against ticket
+│   ├── self-evolution-from-pr-feedback.prompt.md # Improve — convert PR feedback into guardrails
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
 │   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
@@ -204,12 +400,14 @@ graph LR
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
 │   ├── cognitive-debt.md
+│   ├── manual-qa-checklist.md
 │   ├── on-frontend-urls.md
 │   ├── performance-checklist.md
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
-│   └── testing-patterns.md
+│   ├── testing-patterns.md
+│   └── work-shaping.md
 ├── docs/                 # Contributor documentation
 │   └── skill-anatomy.md         # Format spec for writing skills
 ```

@@ -100,12 +100,21 @@ if [[ -d "$AI/self-evolution/jobs" ]]; then
     while IFS= read -r entry; do
       hour=$(echo "$entry" | jq -r '.hour')
       minute=$(echo "$entry" | jq -r '.minute')
+      weekday=$(echo "$entry" | jq -r '.weekday // empty')
+
+      weekday_xml=""
+      if [[ -n "$weekday" ]]; then
+        weekday_xml="
+            <key>Weekday</key>
+            <integer>$weekday</integer>"
+      fi
+
       schedule_xml+="
         <dict>
             <key>Hour</key>
             <integer>$hour</integer>
             <key>Minute</key>
-            <integer>$minute</integer>
+            <integer>$minute</integer>$weekday_xml
         </dict>"
     done < <(jq -c '.schedule[]' "$job_file")
 

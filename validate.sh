@@ -337,6 +337,24 @@ for f in "$AI"/prompts/*.prompt.md; do
   fi
 done
 
+# Keep README's prompt inventory from drifting as prompt files are added/removed.
+readme_file="$AI/README.md"
+if [[ -f "$readme_file" ]]; then
+  for f in "$AI"/prompts/*.prompt.md; do
+    [[ -f "$f" ]] || continue
+    name=$(basename "$f")
+    if ! grep -qF "$name" "$readme_file"; then
+      warn "README.md: prompt '$name' is missing from Structure inventory"
+    fi
+  done
+
+  grep -oE '[a-zA-Z0-9_-]+\.prompt\.md' "$readme_file" 2>/dev/null | sort -u | while read -r prompt_name; do
+    if [[ ! -f "$AI/prompts/$prompt_name" ]]; then
+      warn "README.md: prompt '$prompt_name' is listed but file is missing"
+    fi
+  done
+fi
+
 green "Prompt file check done"
 
 # ─── 7. Reference files: must not be empty ─────────────────────────────
@@ -472,6 +490,25 @@ for skill_dir in "$AI"/skills/*/; do
     if ! grep -q "$support_name" "$skill_file"; then
       warn "skills/$name/$support_name: supporting file not referenced in SKILL.md"
     fi
+  done
+done
+
+# 9f. Stale tool references: catch known unavailable tool names before agents follow them
+stale_tool_refs=(
+  tool_search_tool_regex
+)
+
+for stale_tool in "${stale_tool_refs[@]}"; do
+  for f in "$AI"/skills/*/SKILL.md "$AI"/prompts/*.prompt.md "$AI"/agents/*.agent.md "$AI"/references/*.md "$AI"/self-evolution/jobs/*/command.md; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$AI/}"
+    matches=$(grep -nF "$stale_tool" "$f" 2>/dev/null || true)
+    [[ -n "$matches" ]] || continue
+
+    while IFS= read -r match; do
+      line_number="${match%%:*}"
+      fail "$rel: stale/unavailable tool reference '$stale_tool' at line $line_number"
+    done <<< "$matches"
   done
 done
 

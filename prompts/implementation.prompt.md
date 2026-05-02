@@ -1,5 +1,5 @@
 ---
-description: "Implement a Jira ticket: code changes, quality gates, and UI validation. Use with a ticket key or link."
+description: "Implement a Jira ticket: code changes, quality gates, manual QA, and UI validation. Use with a ticket key or link."
 ---
 
 # Implementation
@@ -9,8 +9,8 @@ When the user provides the ticket key or link:
 1. read the full Jira detail via Atlassian MCP
 2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs
    - prefer first-party MCP or a direct integration first for known systems
-   - if no suitable first-party integration exists, choose the lightest workable path: fetch/read tools for public pages, `playwright-cli` for most coding-agent browser flows including attached or named sessions, `playwright-mcp` when richer iterative inspection or longer stateful interaction is worth the overhead, and `chrome-devtools-mcp` when inspection or debugging is the main need
-   - if the page needs login, workspace membership, or browser state, prefer an explicit authenticated browser path such as `playwright-cli attach --extension` or `--cdp`, `playwright-mcp --extension`, or another documented attach flow instead of inventing ad-hoc browser profile handling
+   - if no suitable first-party integration exists, choose the lightest workable path: fetch/read tools for public pages and `playwright-mcp` for browser flows that need interaction, authenticated state, or inspection
+   - if the page needs login, workspace membership, or browser state, prefer an explicit authenticated browser path such as `playwright-mcp --extension` or `--cdp` instead of inventing ad-hoc browser profile handling
    - if the environment blocks the target domain or browser route, stop and report the blocker clearly instead of repeatedly scraping smart-link serialization or asking the user to paste protected content or credentials
    - when linked context is successfully opened, extract the implementation-relevant details before moving on
 3. determine the target repository
@@ -38,7 +38,19 @@ If the ticket is a code workflow:
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new
    - if a similar pattern exists elsewhere, reuse the same approach rather than inventing a parallel one
 9. if the UI work touches forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load the `a11y-audit` skill during implementation and apply it while building
-10. read the minimum code context needed and begin implementation
+10. if the ticket is large, cross-layer, or under-specified, apply the Task Shape and Context rules before implementation
+11. read the minimum code context needed and begin implementation
+
+### Task Shape and Context
+
+Use `~/.ai-shared/references/work-shaping.md` when the ticket is large, cross-layer, or under-specified.
+
+- For small, clear, single-slice work, skip shaping and implement directly after required context is reviewed.
+- Keep the active implementation slice small enough to explore, implement, test, and review in one focused pass.
+- If the work is still a layer-by-layer plan, pause implementation and reshape it into vertical slices.
+- Use read-only subagents for broad exploration, then continue with only the concise findings needed for the current slice.
+- Treat unresolved product, design, or architecture choices as human-in-loop blockers, not implementation details to invent.
+- Treat AFK implementation output as a draft until quality gates, cross-check, and human QA/review are complete.
 
 ### Workspace Convention
 
@@ -112,13 +124,29 @@ After quality gates pass, compare the implementation against the ticket's full c
 
 Cross-check is complete when every AC item and spec-defined behavior is accounted for, and any spec gaps are explicitly recorded.
 
-## UI Validation
+## Manual QA
 
-After cross-check, determine whether the changes have visible UI impact — e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
+After cross-check, choose manual QA depth from the risk in the ticket, linked context, and local diff.
+
+For medium or large changes, user-facing behavior, changed workflows, stateful logic, risky config, or any unclear blast radius: load the `manual-qa` skill and execute a focused manual QA run. Create a temporary QA plan, execute it, update the plan with results, and report the verdict. Include regression checks for changed files that are not directly explained by the ticket.
+
+For small docs-only changes, harmless config metadata, or mechanical refactors with no observable behavior risk: do not manufacture a QA ceremony. Either run a cheap smoke check when there is an obvious one, or mark manual QA as not verified with a clear reason.
+
+If the QA plan includes visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket - load the `validating-ui` skill and execute it as part of manual QA. If the ticket contains a Figma link, use it as the design reference.
+
+If the changes are purely backend, config, or logic-only with no UI surface, run focused manual QA for the observable behavior when risk exists. If there is no practical observable path, mark the relevant checks as not verified with a reason.
+
+### UI Validation
+
+Determine whether the changes have visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
 
 If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
 
-If the changes are purely backend, config, or logic-only with no UI surface: skip this step.
+Treat UI validation as evidence gathering, not a replacement for human taste. If the change involves subjective UX, visual polish, product feel, or copy judgement, report what was verified and what still needs human review.
+
+If manual QA already executed `validating-ui`, do not duplicate the same browser checks. Reuse the manual QA evidence and only run missing UI checks.
+
+If the changes are purely backend, config, or logic-only with no UI surface: skip UI validation. Manual QA may be focused smoke coverage or explicitly not verified with a reason, based on risk.
 
 ### Failure Policy
 

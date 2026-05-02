@@ -25,6 +25,8 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 ## Quality Bar
 
 - Correctness and maintainability over speed.
+- Keep always-on context small; prefer scoped skills, prompts, and references over expanding global instructions.
+- Shape large work into fresh-context, observable slices before implementation.
 - Quick second pass after completing work — mention better approach if one becomes apparent.
 - New files, functions, env vars, routes, configs, helpers allowed when needed.
 - If a skill is materially stale relative to the connected tools, treat that as `skill-evolution` input: finish the user task, then capture or codify the drift instead of silently normalizing it away.
@@ -34,10 +36,10 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 Skills in `~/.ai-shared/skills/` activate by task context:
 
 - **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first), `debugging` (breakage)
-- **Quality**: `reviewing-code` (4-layer) before PRs, `security-hardening` (input/auth/deps)
+- **Quality**: `reviewing-code` (4-layer) before PRs, `manual-qa` (ticket/diff QA execution), `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
 - **Tools**: `atlassian-mcp` (Jira/Confluence), `github-mcp` (PRs/issues), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
 - **Linked Context**: `linked-context-routing` (project pages, tickets, or docs with many outbound SaaS links)
-- **Browser**: `playwright-cli` (default browser automation for coding agents, including attached or named sessions), `playwright-mcp` (extension-backed or richer stateful loops), `chrome-devtools-mcp` (inspection/debug), `validating-ui` + `a11y-audit` (UI quality)
+- **Browser**: `playwright-mcp` (browser automation, authenticated reuse, console/network inspection), `validating-ui` + `a11y-audit` (UI quality)
 - **References**: Checklists in `~/.ai-shared/references/` — load on demand, not upfront
