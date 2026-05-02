@@ -100,6 +100,26 @@ Questions only — never directives. Direct senior reviewer attention.
 
 **Output:** Question per signal with file/line. Never state an architectural decision.
 
+## Verification Pass
+
+After running all 4 layers, re-read each finding against the actual diff before emitting output.
+
+For each finding, ask:
+
+1. **Is there upstream handling I missed?** Check whether the diff, a framework default, or earlier code in the same PR already addresses the issue. If yes, drop the finding.
+2. **Is the severity accurate?** A missing null check in a cold admin path is not a Blocker. Downgrade findings where impact is overstated.
+3. **Is the fix minimal?** If the suggested fix introduces scope creep or touches code outside the diff, tighten it.
+4. **Did I miss something deeper?** On the second read, look for subtle issues the layer scan missed: incorrect abstractions, non-obvious race conditions, or security assumptions that only become visible in aggregate.
+
+Rules for this pass:
+
+- Drop findings that fail question 1
+- Downgrade findings that fail question 2
+- Rewrite fixes that fail question 3
+- Add new findings from question 4, but only if they are high-confidence
+
+Do not skip this pass. A review with false positives trains the author to ignore all findings.
+
 ## Output Format
 
 Use the **structured format** for self-review and standalone reviews:
@@ -196,6 +216,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 |---|---|
 | "The tests pass, so it's fine" | Tests don't catch naming issues, dead code, architecture drift, or security holes. |
 | "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling accumulate silently. |
+| "I'll just report everything and let the author sort it out" | False positives train authors to ignore reviews. One wrong finding undermines three correct ones. |
 
 ## Red Flags
 
