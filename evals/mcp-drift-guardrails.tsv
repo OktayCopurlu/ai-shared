@@ -1,0 +1,7 @@
+# id|skill|required_regex|why
+amplitude-current-surface|amplitude-analytics|current session.*Amplitude MCP tools|prevents stale loader names
+atlassian-current-surface|atlassian-mcp|tool names exposed in the current session|prevents exact-name drift
+github-current-surface|github-mcp|tool names exposed in the current session|prevents exact-name drift
+playwright-host-surface|playwright-mcp|Exact function names can vary by host surface|prevents host-specific browser tool drift
+figma-current-surface|figma-mcp|tool names actually exposed in the session|prevents Figma MCP surface drift
+contentful-current-session|contentful|MCP tools are available in your current session|prevents Contentful MCP surface drift

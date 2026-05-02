@@ -365,16 +365,20 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │       │   ├── command.md          # Autonomous PR feedback self-evolution workflow
 │       │   ├── job.json            # Monday 10:00 scheduler + model config
 │       │   └── run-log.jsonl       # Run history and dedupe state
-│       └── research/
-│           ├── command.md      # Autonomous research workflow
-│           ├── job.json        # Scheduler + model config
-│           ├── rotation.json   # Day-by-day focus rotation
-│           ├── run-log.jsonl   # Run history and dedupe state
-│           └── modes/          # Internal research playbooks, not top-level skills
-│               ├── copilot-and-agents.md
-│               ├── release-watch.md
-│               ├── research-digest.md
-│               └── tool-evaluator.md
+│       ├── research/
+│       │   ├── command.md      # Autonomous research workflow
+│       │   ├── job.json        # Scheduler + model config
+│       │   ├── rotation.json   # Day-by-day focus rotation
+│       │   ├── run-log.jsonl   # Run history and dedupe state
+│       │   └── modes/          # Internal research playbooks, not top-level skills
+│       │       ├── copilot-and-agents.md
+│       │       ├── release-watch.md
+│       │       ├── research-digest.md
+│       │       └── tool-evaluator.md
+│       └── research-pr-triage/
+│           ├── command.md      # Conservative open research PR cleanup
+│           ├── job.json        # Daily 15:00 scheduler + model config
+│           └── run-log.jsonl   # PR triage decisions
 ├── agents/               # Custom agent modes
 │   ├── devils-advocate.agent.md
 │   ├── goal-setter.agent.md

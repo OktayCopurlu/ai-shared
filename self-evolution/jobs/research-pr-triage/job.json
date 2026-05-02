@@ -1,0 +1,11 @@
+{
+  "label": "com.ai-shared.research-pr-triage",
+  "description": "Daily conservative triage for open research PRs in ai-shared; closes only clearly low-value PRs with an explanatory note and never merges.",
+  "target_dir": "~/.ai-shared",
+  "model": "github-copilot/gpt-5.5",
+  "variant": "xhigh",
+  "timeout": 3600,
+  "schedule": [
+    { "hour": 15, "minute": 0 }
+  ]
+}

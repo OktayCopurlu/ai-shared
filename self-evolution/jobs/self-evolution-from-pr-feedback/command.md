@@ -42,9 +42,16 @@ Default source:
 - GitHub repo: `onrunning/on-frontend`
 - PR author: `OktayCopurlu`
 - Include PRs updated during the window, plus any PRs with comments/reviews created during the window
-- Read PR review comments, review summaries, requested changes, issue comments, and Copilot comments created during the window
+- Read human-authored PR review comments, review summaries, requested changes, and issue comments created during the window
 
 Prefer `gh` CLI and GitHub API/GraphQL data. Do not use browser scraping unless the API path is unavailable.
+
+Author filtering is mandatory before clustering feedback:
+
+- Keep only comments, review comments, reviews, review summaries, and requested changes authored by human GitHub users.
+- Exclude GitHub Copilot feedback and any bot/app-authored feedback, including author logins such as `github-copilot[bot]`, `copilot-pull-request-reviewer[bot]`, logins ending in `[bot]`, GitHub Apps, and API author types like `Bot` or `App`.
+- If author metadata is missing or ambiguous, exclude that item from evidence rather than guessing.
+- Do not count excluded automated feedback toward recurrence, scoring, PR evidence, or run-log findings.
 
 If GitHub auth, org access, or API limits block collection, do not guess. Append one run-log entry with `prs_opened: 0`, explain the blocker, and exit.
 
@@ -79,6 +86,7 @@ Ignore:
 - feedback already covered by existing ai-shared rules unless the rule failed to activate
 - generic guidance a competent coding agent would already know without repo-specific context
 - purely subjective style disagreements without repeat evidence
+- GitHub Copilot comments, bot comments, and app-authored review feedback
 
 ## Recurrence and Staging
 

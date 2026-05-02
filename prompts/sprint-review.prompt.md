@@ -36,11 +36,11 @@ Default delivery is email (Step 8). Only switch if the user explicitly asks.
 
 ### Step 2 — Load Atlassian MCP
 
-Verify `mcp_atlassian` tools are available. If not, tell the user to start the Atlassian MCP server and stop.
+Load the `atlassian-mcp` skill and use the Atlassian tools exposed in the current session. If Jira or Confluence tools are unavailable, tell the user to start the Atlassian MCP server and stop.
 
 ### Step 3 — Fetch tickets
 
-Use `mcp_atlassian_atl_searchJiraIssuesUsingJql`. Prefer sprint-ID based JQL after resolving the user's sprint reference. Avoid date-based queries.
+Use the Jira JQL search tool exposed in the current session. Prefer sprint-ID based JQL after resolving the user's sprint reference. Avoid date-based queries.
 
 **Resolve a sprint reference before querying**:
 
@@ -96,7 +96,7 @@ Use sprint goals only as reasoning context for Step 5. Do not render a "Sprint G
 **Primary source — Confluence "2026 Discovery Sprint Reviews"**:
 
 - Page ID: `4102389814` · Space: `OT`
-- Use `mcp_atlassian_atl_getConfluencePage` with `contentFormat: "markdown"`
+- Use the Confluence page fetch tool exposed in the current session with Markdown output when available
 - Find the section `## Discovery team sprint review sprint {N}` matching the target sprint
 - Extract the **Sprint goals** subsection (goal lines with ✅/❌ markers)
 

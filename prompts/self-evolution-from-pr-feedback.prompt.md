@@ -15,19 +15,26 @@ Default feedback source when the user does not specify another source:
 - GitHub repo: `onrunning/on-frontend`
 - PR author: `OktayCopurlu`
 - Time window: previous Monday 10:00 local time through the most recent Monday 10:00 local time; if run manually before a Monday 10:00 boundary, use the last completed Monday-to-Monday window
-- Read PR review comments, issue comments, Copilot comments, and requested changes
+- Read human-authored PR review comments, issue comments, review summaries, and requested changes
 - Prefer the `github-mcp` skill and GitHub API data over browser scraping
+
+Human-only feedback rule:
+
+- Keep only feedback whose author is a human GitHub user.
+- Exclude GitHub Copilot feedback and any bot/app-authored feedback, including author logins such as `github-copilot[bot]`, `copilot-pull-request-reviewer[bot]`, logins ending in `[bot]`, GitHub Apps, and API author types like `Bot` or `App`.
+- If author metadata is unavailable or ambiguous, do not use that feedback as evidence for a durable ai-shared change.
+- Do not count excluded automated feedback toward recurrence, scoring, PR evidence, or run-log findings.
 
 Supplementary sources:
 
-- recent PR review comments or user feedback
+- recent human PR review comments or user feedback
 - repeated agent mistakes from the current session
 - stale skill/tool behavior discovered during work
 - relevant entries from `self-evolution/jobs/research/run-log.jsonl`
 
 ## Workflow
 
-1. Collect feedback evidence from the default source unless the user supplied a narrower source.
+1. Collect human feedback evidence from the default source unless the user supplied a narrower source.
 2. Identify friction points and group them by failure mode:
    - stale tool or MCP guidance
    - missing validator guardrail
@@ -60,6 +67,7 @@ Supplementary sources:
 - Do not keep a stale tool inventory just because it is convenient; prefer selection rules and representative examples.
 - Do not open more than one improvement thread in a single self-evolution-from-pr-feedback pass.
 - Do not write comments, replies, labels, or status changes on delivery PRs while collecting feedback. Treat PRs as read-only evidence.
+- Do not use GitHub Copilot comments, bot comments, or app-authored review feedback as source evidence.
 
 ## Output
 

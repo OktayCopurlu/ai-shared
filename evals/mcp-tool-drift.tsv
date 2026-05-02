@@ -1,0 +1,12 @@
+# id|scope|current_surface_bad_pattern|message
+# These are not permanent tool-name bans. They catch hardcoded references that are stale for the current exposed tool surface. Remove or narrow a row when the tool surface changes and the reference becomes valid again.
+removed-tool-search-skills|skills|tool_search_tool_regex|Current surface does not expose this loader. Use current exposed tool names or activation helpers instead.
+removed-tool-search-prompts|prompts|tool_search_tool_regex|Current surface does not expose this loader. Use current exposed tool names or activation helpers instead.
+removed-tool-search-agents|agents|tool_search_tool_regex|Current surface does not expose this loader. Use current exposed tool names or activation helpers instead.
+removed-tool-search-references|references|tool_search_tool_regex|Current surface does not expose this loader. Use current exposed tool names or activation helpers instead.
+removed-tool-search-jobs|self-evolution/jobs|tool_search_tool_regex|Current surface does not expose this loader. Use current exposed tool names or activation helpers instead.
+old-atlassian-loader-skills|skills|mcp_atlassian|Current surface does not use the retired tool_search loader regex. Use the current Atlassian MCP surface instead.
+old-atlassian-loader-prompts|prompts|mcp_atlassian|Current surface does not use the retired tool_search loader regex. Use the current Atlassian MCP surface instead.
+old-atlassian-loader-agents|agents|mcp_atlassian|Current surface does not use the retired tool_search loader regex. Use the current Atlassian MCP surface instead.
+old-atlassian-loader-references|references|mcp_atlassian|Current surface does not use the retired tool_search loader regex. Use the current Atlassian MCP surface instead.
+old-atlassian-loader-jobs|self-evolution/jobs|mcp_atlassian|Current surface does not use the retired tool_search loader regex. Use the current Atlassian MCP surface instead.

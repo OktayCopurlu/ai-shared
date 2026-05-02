@@ -7,12 +7,16 @@ description: 'Interact with Jira tickets and Confluence wiki pages via the Atlas
 
 Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking the user to paste content.
 
+## Tool Drift Guardrails
+
+Use the Atlassian tool names exposed in the current session instead of assuming one exact MCP function surface. Names below are intent labels from common Atlassian MCP surfaces; if the host exposes namespaced or renamed tools, map the same Jira fetch, Confluence fetch, search, JQL/CQL, transition, and account lookup intents to the current tools.
+
 ## Default Route
 
-1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with `getJiraIssue` using `issueIdOrKey`.
+1. If the user gives an exact Jira key (for example `DSC-1986`), fetch it directly with the Jira issue fetch tool using `issueIdOrKey` when that parameter is exposed.
 2. If the user gives a Confluence URL, extract the site hostname as `cloudId` and fetch the page directly if the URL contains a usable page ID.
-3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with `search`, then use `fetch` on the returned ARI.
-4. Use `searchJiraIssuesUsingJql` or `searchConfluenceUsingCql` only when you need precise filtering that `search` cannot express.
+3. If the user needs discovery and you do not know whether the answer is in Jira or Confluence, start with the generic Atlassian search tool, then fetch the returned resource.
+4. Use JQL or CQL search tools only when you need precise filtering that generic search cannot express.
 
 ## Jira Issue Reading
 
@@ -25,8 +29,8 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 - Prefer Markdown output when you need readable text. Use ADF only when rich formatting matters.
 - When the user provides an Atlassian URL such as `https://site.atlassian.net/...`, try `site.atlassian.net` as `cloudId` before calling `getAccessibleAtlassianResources`.
 - Keep JQL/CQL searches small by default with `maxResults: 10` or `limit: 10`.
-- Before transitioning a Jira issue, call `getTransitionsForJiraIssue` to get a valid transition ID.
-- Before assigning a Jira issue by display name, call `lookupJiraAccountId`.
+- Before transitioning a Jira issue, call the transition-list tool to get a valid transition ID.
+- Before assigning a Jira issue by display name, call the account lookup tool.
 - Confluence tiny-link IDs from `/wiki/x/<id>` can be passed directly as `pageId`.
 
 ## Guardrails
@@ -38,7 +42,7 @@ Prefer Atlassian MCP tools over opening Atlassian URLs in a browser or asking th
 
 The Atlassian MCP tools cannot download attachment files directly. To view images:
 
-1. Fetch the ticket with `getJiraIssue` — the `attachment` field has the download URL in `content`
+1. Fetch the ticket with the Jira issue fetch tool — the `attachment` field has the download URL in `content`
 2. Download via `curl` with basic auth using `$JIRA_USER_EMAIL` and `$JIRA_API_TOKEN` from `~/.zshrc`
 3. Use `view_image` to inspect the downloaded file
 

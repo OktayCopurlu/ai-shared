@@ -1,0 +1,10 @@
+# id|skill|request|description_regex
+pr-review|reviewing-code|review this PR for missing tests|reviewing PRs.*review this.*check this PR
+github-pr-api|github-mcp|fetch PR comments from GitHub|GitHub.*pull requests.*reviews.*GitHub API operations
+jira-link|atlassian-mcp|read DSC-1986 and summarize it|Jira tickets.*Confluence.*Jira ticket
+figma-design|figma-mcp|open this Figma design and extract specs|Figma designs.*Figma URL.*read a design
+google-sheet|google-drive|read this Google Sheet|Google Sheets.*Google Sheets/Docs link.*spreadsheet data
+amplitude-event|amplitude-analytics|check whether this Amplitude event fired|Amplitude.*tracking events.*event payloads
+contentful-entry|contentful|read this Contentful entry|Contentful CMS.*CMS entries.*READ-ONLY
+ui-validation|validating-ui|validate the UI changes in browser before PR|Frontend UI validation.*UI impact.*browser-level validation
+browser-automation|playwright-mcp|click through this wizard on a website|Web automation.*clicking buttons.*website

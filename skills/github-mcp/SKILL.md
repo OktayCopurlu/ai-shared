@@ -13,6 +13,8 @@ description: 'Interact with GitHub via the GitHub MCP server API. USE FOR: readi
 
 ## Gotchas
 
+- **Tool-name drift**: Use the GitHub tool names exposed in the current session. The names below are representative examples from recent GitHub MCP surfaces, not a reason to invent a missing tool name.
+
 - **Granular toolsets**: The server v1.0.0+ organizes tools into toolsets (`repos`, `issues`, `pull_requests`, `actions`, `code_security`, etc.). If you're missing expected tools, the server config may restrict to specific toolsets.
 - **Scope filtering**: With classic PATs (`ghp_`), tools are auto-hidden when the token lacks required scopes. Fine-grained PATs show all tools but enforce permissions at API level. If a tool is missing, check token scopes.
 - **Resolve review threads**: Use `resolve_review_thread` / `unresolve_review_thread` to manage PR review thread state — available since v0.33.0.
@@ -23,5 +25,5 @@ description: 'Interact with GitHub via the GitHub MCP server API. USE FOR: readi
 ## Procedure
 
 1. Prefer MCP tools over `gh` CLI — they integrate with OAuth and don't require separate CLI authentication.
-2. When reviewing PRs, use `resolve_review_thread` after addressing feedback to keep thread state clean.
-3. For code search across repos, prefer MCP `search_code` over `gh search code` — it returns richer context.
+2. When reviewing PRs, use the review-thread resolution tool after addressing feedback when that tool is exposed.
+3. For code search across repos, prefer the MCP code-search tool over `gh search code` when available — it returns richer context.

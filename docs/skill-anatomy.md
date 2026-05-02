@@ -88,6 +88,28 @@ Lifecycle sequence:
 
 Keep deprecated files out of `instructions.md` Skill Awareness. Descriptions are part of the every-session discovery surface, so a deprecated file must be obvious and quiet there.
 
+## Behavioral Evals
+
+Structural validation is not enough. When a skill's activation language or required workflow steps change, add or update deterministic eval rows under `~/.ai-shared/evals/` and run `zsh validate.sh`.
+
+- `skill-routing.tsv`: user-request examples that must remain discoverable from a skill's frontmatter description.
+- `step-adherence.tsv`: required instructions that prevent agents from skipping important workflow steps.
+- `mcp-tool-drift.tsv`: current-surface bad references that previously broke tool routing, not permanent tool-name bans; remove or narrow rows when the exposed tool surface changes.
+- `mcp-drift-guardrails.tsv`: tool-adapter skills that must explicitly say how to handle current-session tool-name drift.
+
+Keep each row narrow: one request or one required step per row. These evals do not simulate a full model, but they catch regressions in the text surfaces agents actually use for routing and self-monitoring.
+
+For tool-adapter skills, prefer current-session tool selection guidance over exhaustive MCP tool inventories. If a concrete tool name is useful as an example, make it clear that the name is representative and must be mapped to the tool surface exposed in the current session.
+
+### MCP Drift Pattern
+
+Keep MCP drift guidance centralized here and lightweight in each tool-adapter skill:
+
+- Add a short local guardrail in the affected skill that tells agents to use the current session's exposed tools and map by intent.
+- Add or update `mcp-drift-guardrails.tsv` so the skill keeps that current-session guardrail.
+- Add stale exact strings to `mcp-tool-drift.tsv` only when they are known-bad for the current exposed surface.
+- Prefer updating this pattern over copying long tool-surface explanations into every skill.
+
 ### Workflow Skill Template
 
 ```markdown
@@ -284,5 +306,7 @@ Before merging a new skill:
 - [ ] Tool skills: include clear tool-selection/procedure/rules guidance; add richer sections only when they improve decisions
 - [ ] If the skill produces a structured artifact (PR body, ADR, ticket, audit report, code-review summary), it includes an `Output Contract` section listing mandatory output sections in order
 - [ ] If this replaces an existing skill, prompt, or agent, the old file is either updated in the same PR with lifecycle frontmatter or intentionally left active with a stated reason
+- [ ] Routing or required-step changes have matching rows in `~/.ai-shared/evals/skill-routing.tsv` or `~/.ai-shared/evals/step-adherence.tsv`
+- [ ] MCP/tool-adapter changes follow the MCP Drift Pattern above when exact tool names can vary
 - [ ] Under 500 lines (long reference material extracted to supporting files)
 - [ ] No content duplicated from other skills

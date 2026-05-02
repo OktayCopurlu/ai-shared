@@ -7,6 +7,10 @@ description: 'Query and verify analytics data from Amplitude via the Amplitude M
 
 Always prefer the Amplitude MCP server tools to query and verify tracking data.
 
+## Tool Drift Guardrails
+
+Use the current session's Amplitude MCP tools instead of assuming one loader or function name. If the exposed names or capability groups differ from older examples, map the requested intent to the available Amplitude query, chart, event, property, or user tool before falling back.
+
 ## Procedure
 
 1. Use the Amplitude MCP tools exposed in the current session. If the host groups tools behind activation, activate the Amplitude category that matches the task before calling the exact query or retrieval tool.

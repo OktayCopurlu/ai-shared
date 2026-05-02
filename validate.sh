@@ -38,6 +38,18 @@ iso_date_epoch() {
   date -j -f "%Y-%m-%d" "$value" +%s 2>/dev/null || true
 }
 
+check_eval_file() {
+  local file="$1" label="$2"
+  if [[ ! -f "$file" ]]; then
+    fail "$label: missing eval file: ${file#$AI/}"
+    return 1
+  elif [[ ! -s "$file" ]]; then
+    fail "$label: empty eval file: ${file#$AI/}"
+    return 1
+  fi
+  return 0
+}
+
 # ─── 1. Broken symlinks ───────────────────────────────────────────────
 
 echo "\n── Symlink health ──"
@@ -493,26 +505,115 @@ for skill_dir in "$AI"/skills/*/; do
   done
 done
 
-# 9f. Stale tool references: catch known unavailable tool names before agents follow them
-stale_tool_refs=(
-  tool_search_tool_regex
-)
-
-for stale_tool in "${stale_tool_refs[@]}"; do
-  for f in "$AI"/skills/*/SKILL.md "$AI"/prompts/*.prompt.md "$AI"/agents/*.agent.md "$AI"/references/*.md "$AI"/self-evolution/jobs/*/command.md; do
-    [[ -f "$f" ]] || continue
-    rel="${f#$AI/}"
-    matches=$(grep -nF "$stale_tool" "$f" 2>/dev/null || true)
-    [[ -n "$matches" ]] || continue
-
-    while IFS= read -r match; do
-      line_number="${match%%:*}"
-      fail "$rel: stale/unavailable tool reference '$stale_tool' at line $line_number"
-    done <<< "$matches"
-  done
-done
-
 green "Skill smoke test done"
+
+# ─── 10. Behavioral skill evals ───────────────────────────────────────
+
+echo "\n── Behavioral skill evals ──"
+
+routing_eval_file="$AI/evals/skill-routing.tsv"
+if check_eval_file "$routing_eval_file" "Skill routing evals"; then
+  while IFS='|' read -r id skill request desc_regex; do
+    [[ -z "$id" || "$id" == \#* ]] && continue
+    rel="skills/$skill/SKILL.md"
+    skill_file="$AI/$rel"
+
+    if [[ -z "$skill" || -z "$request" || -z "$desc_regex" ]]; then
+      fail "evals/skill-routing.tsv: malformed eval '$id'"
+      continue
+    fi
+    if [[ ! -f "$skill_file" ]]; then
+      fail "evals/skill-routing.tsv:$id: unknown skill '$skill'"
+      continue
+    fi
+
+    desc=$(frontmatter_field "$skill_file" description)
+    if ! print -r -- "$desc" | grep -qiE "$desc_regex"; then
+      fail "evals/skill-routing.tsv:$id: request '$request' is not covered by $rel description"
+    fi
+  done < "$routing_eval_file"
+fi
+
+step_eval_file="$AI/evals/step-adherence.tsv"
+if check_eval_file "$step_eval_file" "Step adherence evals"; then
+  while IFS='|' read -r id skill request body_regex; do
+    [[ -z "$id" || "$id" == \#* ]] && continue
+    rel="skills/$skill/SKILL.md"
+    skill_file="$AI/$rel"
+
+    if [[ -z "$skill" || -z "$request" || -z "$body_regex" ]]; then
+      fail "evals/step-adherence.tsv: malformed eval '$id'"
+      continue
+    fi
+    if [[ ! -f "$skill_file" ]]; then
+      fail "evals/step-adherence.tsv:$id: unknown skill '$skill'"
+      continue
+    fi
+
+    if ! grep -qiE "$body_regex" "$skill_file"; then
+      fail "evals/step-adherence.tsv:$id: $rel does not preserve required step for request '$request'"
+    fi
+  done < "$step_eval_file"
+fi
+
+green "Behavioral skill evals done"
+
+# ─── 11. MCP tool drift checks ────────────────────────────────────────
+
+echo "\n── MCP tool drift ──"
+
+current_surface_drift_file="$AI/evals/mcp-tool-drift.tsv"
+if check_eval_file "$current_surface_drift_file" "MCP current-surface drift evals"; then
+  while IFS='|' read -r id scope current_surface_bad_pattern message; do
+    [[ -z "$id" || "$id" == \#* ]] && continue
+    scope_path="$AI/$scope"
+
+    if [[ -z "$scope" || -z "$current_surface_bad_pattern" || -z "$message" ]]; then
+      fail "evals/mcp-tool-drift.tsv: malformed eval '$id'"
+      continue
+    fi
+    if [[ ! -e "$scope_path" ]]; then
+      fail "evals/mcp-tool-drift.tsv:$id: unknown scope '$scope'"
+      continue
+    fi
+
+    if [[ -d "$scope_path" ]]; then
+      matches=$(find "$scope_path" -type f -name '*.md' -exec grep -HnF -- "$current_surface_bad_pattern" {} + 2>/dev/null || true)
+    else
+      matches=$(grep -HnF -- "$current_surface_bad_pattern" "$scope_path" 2>/dev/null || true)
+    fi
+    if [[ -n "$matches" ]]; then
+      while IFS= read -r match; do
+        [[ -z "$match" ]] && continue
+        fail "evals/mcp-tool-drift.tsv:$id: ${match#$AI/} ($message)"
+      done <<< "$matches"
+    fi
+  done < "$current_surface_drift_file"
+fi
+
+drift_guard_eval_file="$AI/evals/mcp-drift-guardrails.tsv"
+if check_eval_file "$drift_guard_eval_file" "MCP drift guardrail evals"; then
+  while IFS='|' read -r id skill required_regex why; do
+    [[ -z "$id" || "$id" == \#* ]] && continue
+    rel="skills/$skill/SKILL.md"
+    skill_file="$AI/$rel"
+
+    if [[ -z "$skill" || -z "$required_regex" || -z "$why" ]]; then
+      fail "evals/mcp-drift-guardrails.tsv: malformed eval '$id'"
+      continue
+    fi
+    if [[ ! -f "$skill_file" ]]; then
+      fail "evals/mcp-drift-guardrails.tsv:$id: unknown skill '$skill'"
+      continue
+    fi
+
+    if ! grep -qiE "$required_regex" "$skill_file"; then
+      fail "evals/mcp-drift-guardrails.tsv:$id: $rel lacks drift guardrail ($why)"
+    fi
+  done < "$drift_guard_eval_file"
+fi
+
+green "MCP tool drift check done"
 
 # ─── Summary ──────────────────────────────────────────────────────────
 
