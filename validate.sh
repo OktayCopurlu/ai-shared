@@ -15,6 +15,29 @@ green()  { printf "\033[32m✓ %s\033[0m\n" "$1"; }
 fail() { red "$1"; errors=$((errors + 1)); }
 warn() { yellow "$1"; warnings=$((warnings + 1)); }
 
+frontmatter_field() {
+  local file="$1" field="$2" value
+  value=$(awk -v key="$field" '
+    NR == 1 && $0 == "---" { in_fm=1; next }
+    in_fm && $0 == "---" { exit }
+    in_fm && index($0, key ":") == 1 {
+      sub("^[^:]+:[[:space:]]*", "")
+      print
+      exit
+    }
+  ' "$file")
+  value="${value#\"}"
+  value="${value%\"}"
+  value="${value#\'}"
+  value="${value%\'}"
+  print -r -- "$value"
+}
+
+iso_date_epoch() {
+  local value="$1"
+  date -j -f "%Y-%m-%d" "$value" +%s 2>/dev/null || true
+}
+
 # ─── 1. Broken symlinks ───────────────────────────────────────────────
 
 echo "\n── Symlink health ──"
@@ -159,7 +182,69 @@ done
 
 green "Name == directory check done"
 
-# ─── 3c. Minimum skill structure ──────────────────────────────────────
+# ─── 3c. Deprecation lifecycle ───────────────────────────────────────
+
+echo "\n── Deprecation lifecycle ──"
+
+for f in "$AI"/skills/*/SKILL.md "$AI"/agents/*.agent.md "$AI"/prompts/*.prompt.md; do
+  [[ -f "$f" ]] || continue
+  rel="${f#$AI/}"
+  deprecated=$(frontmatter_field "$f" deprecated)
+  superseded_by=$(frontmatter_field "$f" superseded_by)
+  deprecation_reason=$(frontmatter_field "$f" deprecation_reason)
+  deprecated_at=$(frontmatter_field "$f" deprecated_at)
+  remove_after=$(frontmatter_field "$f" remove_after)
+
+  if [[ "$deprecated" == "true" ]]; then
+    desc=$(frontmatter_field "$f" description)
+
+    if [[ "$desc" != DEPRECATED* && "$desc" != Deprecated* ]]; then
+      fail "$rel: deprecated file description must start with 'DEPRECATED'"
+    fi
+    if print -r -- "$desc" | grep -qiE 'USE FOR:|ALWAYS use'; then
+      fail "$rel: deprecated file description must not contain active trigger phrases"
+    fi
+    if [[ -z "$superseded_by" && -z "$deprecation_reason" ]]; then
+      fail "$rel: deprecated file must include superseded_by or deprecation_reason"
+    fi
+    if [[ -n "$superseded_by" ]]; then
+      if [[ ! -d "$AI/skills/$superseded_by" && ! -f "$AI/agents/$superseded_by.agent.md" && ! -f "$AI/prompts/$superseded_by.prompt.md" ]]; then
+        fail "$rel: superseded_by '$superseded_by' does not match an existing skill, agent, or prompt"
+      fi
+    fi
+    if [[ -z "$deprecated_at" ]]; then
+      fail "$rel: deprecated file must include deprecated_at: YYYY-MM-DD"
+    elif [[ ! "$deprecated_at" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ || -z "$(iso_date_epoch "$deprecated_at")" ]]; then
+      fail "$rel: deprecated_at must use YYYY-MM-DD format"
+    fi
+    if [[ -z "$remove_after" ]]; then
+      fail "$rel: deprecated file must include remove_after: YYYY-MM-DD"
+    elif [[ ! "$remove_after" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+      fail "$rel: remove_after must use YYYY-MM-DD format"
+    else
+      remove_epoch=$(iso_date_epoch "$remove_after")
+      now_epoch=$(date +%s)
+      if [[ -z "$remove_epoch" ]]; then
+        fail "$rel: remove_after must use a valid calendar date"
+      elif [[ "$remove_epoch" -lt "$now_epoch" ]]; then
+        warn "$rel: remove_after date has passed ($remove_after)"
+      fi
+    fi
+
+    if [[ "$rel" == skills/* && -f "$AI/instructions.md" ]]; then
+      skill_name=$(basename "$(dirname "$f")")
+      if grep -q "\`$skill_name\`" "$AI/instructions.md"; then
+        warn "$rel: deprecated skill still appears in instructions.md Skill Awareness"
+      fi
+    fi
+  elif [[ -n "$superseded_by" || -n "$deprecation_reason" || -n "$deprecated_at" || -n "$remove_after" ]]; then
+    fail "$rel: lifecycle fields require deprecated: true"
+  fi
+done
+
+green "Deprecation lifecycle check done"
+
+# ─── 3d. Minimum skill structure ──────────────────────────────────────
 
 echo "\n── Minimum skill structure ──"
 
@@ -339,6 +424,8 @@ done
 for f in "$AI"/skills/*/SKILL.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
+  deprecated=$(frontmatter_field "$f" deprecated)
+  [[ "$deprecated" == "true" ]] && continue
   desc=$(sed -n '/^---$/,/^---$/{ /^description:/{ s/^description: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
   if [[ -n "$desc" ]] && ! echo "$desc" | grep -qiE 'use for|use when'; then
     warn "$rel: description missing trigger phrase (one of: 'USE FOR:', 'Use for', 'Use when')"
@@ -361,6 +448,10 @@ if [[ -f "$instructions_file" ]]; then
   for skill_dir in "$AI"/skills/*/; do
     [[ -d "$skill_dir" ]] || continue
     name=$(basename "$skill_dir")
+    skill_file="$skill_dir/SKILL.md"
+    [[ -f "$skill_file" ]] || continue
+    deprecated=$(frontmatter_field "$skill_file" deprecated)
+    [[ "$deprecated" == "true" ]] && continue
     if ! grep -q "$name" "$instructions_file"; then
       warn "Skill '$name' not referenced in instructions.md Skill Awareness section"
     fi
