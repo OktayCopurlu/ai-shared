@@ -119,8 +119,8 @@ graph LR
   S_LINK --> S_GDRIVE
   S_LINK --> S_FIGMA
   S_LINK -. browser fallback .-> S_PW
+  S_LINK -. environment URLs .-> R_ON
   S_FIGMA -. See Also .-> S_PW
-  S_PW -. See Also .-> R_ON
   S_A11Y -. See Also .-> S_REVIEW
   S_A11Y -. See Also .-> S_UIVAL
   S_A11Y -. See Also .-> R_A11Y
