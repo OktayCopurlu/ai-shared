@@ -43,6 +43,7 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 - **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
+- **Align experiment exposure predicates with eligibility**: For experiment or analytics exposure tracking, derive the tracking condition from the same eligibility/rendering state that defines the user exposure. Do not track from a nearby proxy such as "data exists" unless control-group exposure intentionally differs and the reason is captured in the code or ticket.
 
 ## Change Discipline
 
