@@ -39,6 +39,30 @@ description: "Brief statement of what the skill does. USE FOR: specific triggers
 
 **Why this matters:** Agents discover skills by reading descriptions. The description is injected into the system prompt, so it must tell the agent both what the skill provides and when to activate it. Do not summarize the workflow in the description — the agent will follow the summary instead of reading the full skill.
 
+### Lifecycle Frontmatter (Optional)
+
+Use lifecycle fields when a skill, prompt, or agent is being retired but should remain available during migration.
+
+```yaml
+---
+name: old-skill
+description: "DEPRECATED. Superseded by `new-skill`; kept only for migration. Do not activate for new work."
+deprecated: true
+superseded_by: new-skill
+deprecated_at: 2026-05-02
+remove_after: 2026-08-02
+---
+```
+
+Rules:
+- `deprecated: true` means the file is kept only for migration and must not be activated for new work.
+- `description` must start with `DEPRECATED` and must not contain active trigger phrases such as `USE FOR:` or `ALWAYS use`.
+- `superseded_by` should name the replacement when one exists. Use `deprecation_reason` only when there is no direct replacement.
+- `deprecated_at` records when the migration window starts.
+- `remove_after` records when the file should be deleted or moved out of the active surface; use a date, not an open-ended promise.
+
+Do not delete a skill, prompt, or agent in the same PR that introduces the replacement unless the old file is clearly unused. Deprecate first, remove after the migration window, and keep each step independently reviewable.
+
 ## Minimum Required Structure
 
 Every skill must include:
@@ -49,6 +73,20 @@ Every skill must include:
 - Clear activation guidance in the description and/or body
 
 The validator enforces this minimum. It does not require every skill to use the same section set.
+
+## Deprecation Lifecycle
+
+Deprecation is for reducing discovery noise without surprising downstream users. Use it when a skill, prompt, or agent is superseded, too narrow to keep, stale relative to current tools, or merged into a better workflow.
+
+Lifecycle sequence:
+
+1. **Replace** — add or update the better file first.
+2. **Deprecate** — mark the old file with lifecycle frontmatter and remove active trigger language from `description`.
+3. **Route** — update related `See Also`, README graph entries, and global Skill Awareness so new work points to the replacement.
+4. **Validate** — run `zsh validate.sh` and `npx -y agnix .`.
+5. **Remove** — after `remove_after`, delete the deprecated file in a separate PR if no references remain.
+
+Keep deprecated files out of `instructions.md` Skill Awareness. Descriptions are part of the every-session discovery surface, so a deprecated file must be obvious and quiet there.
 
 ### Workflow Skill Template
 
@@ -228,5 +266,6 @@ Before merging a new skill:
 - [ ] Workflow skills: include "When to Use", a concrete process section, and usually "Common Rationalizations", "Red Flags", "Verification", and "See Also"
 - [ ] Tool skills: include clear tool-selection/procedure/rules guidance; add richer sections only when they improve decisions
 - [ ] If the skill produces a structured artifact (PR body, ADR, ticket, audit report, code-review summary), it includes an `Output Contract` section listing mandatory output sections in order
+- [ ] If this replaces an existing skill, prompt, or agent, the old file is either updated in the same PR with lifecycle frontmatter or intentionally left active with a stated reason
 - [ ] Under 500 lines (long reference material extracted to supporting files)
 - [ ] No content duplicated from other skills
