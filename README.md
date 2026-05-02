@@ -2,9 +2,11 @@
 
 This folder is the single source of truth for all AI agent configuration — skills, prompts, agents, and global instructions. Other tools (Copilot, Codex, OpenCode) consume this via symlinks.
 
-## Dependency Graph
+## Core Dependency Graph
 
-How components connect — prompts trigger skills, skills reference each other, references serve as shared checklists.
+How durable components connect — prompts trigger skills, skills reference each other, references serve as shared checklists.
+
+This graph is a relationship map, not the exhaustive inventory. Keep it focused on stable, reusable flows and update the `Structure` and `Content Layers` sections for file-level additions or scope changes. Add a node here only when a file introduces a new relationship that future maintainers need to understand.
 
 ```mermaid
 graph LR
@@ -25,6 +27,7 @@ graph LR
   P_SOLUTION[/solution-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
   P_START[/start-working/]:::prompt
+  P_INV[/investigation/]:::prompt
   P_QA[/manual-qa/]:::prompt
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
@@ -85,6 +88,8 @@ graph LR
   P_SOLUTION --> A_PROJDOC
   P_SOLUTION --> R_WORK
   P_START --> P_IMPL
+  P_START -. analysis-only .-> P_INV
+  P_INV --> R_SEARCH
   P_IMPL --> S_STYLE
   P_IMPL --> S_LINK
   P_IMPL --> S_A11Y
@@ -153,6 +158,32 @@ graph LR
 
 **Legend:** <span style="color:#ef4444">■</span> Core · <span style="color:#6366f1">■</span> Prompts · <span style="color:#10b981">■</span> Skills · <span style="color:#f59e0b">■</span> Agents · <span style="color:#94a3b8">■</span> References — solid arrows = loads/uses, dashed arrows = See Also
 
+## Content Layers
+
+The physical folders are organized by primitive (`skills`, `prompts`, `agents`, `references`). The content itself has different scopes. Keep those scopes explicit so the shared core does not quietly fill with one-off workflows.
+
+| Layer | What belongs here | Current examples | Maintenance rule |
+| --- | --- | --- | --- |
+| Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
+| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `prompts/sprint-review.prompt.md`, `prompts/start-working.prompt.md`, `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
+| Personal | Oktay-specific career, writing, preference, or taste guidance. Useful locally, but not automatically reusable by another engineer. | `agents/goal-setter.agent.md`, `agents/profile-writer.agent.md`, `skills/applying-coding-style/` | Keep factual source material separate from reusable process rules when it grows. Review for stale personal facts. |
+| Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
+
+## Content Hygiene
+
+Use this when adding or simplifying content, not just when adding/removing files.
+
+| Content smell | Prefer |
+| --- | --- |
+| Same instruction repeated in multiple prompts | Move the rule into a skill or reference and link to it. |
+| Long prompt that teaches reusable behavior | Extract the behavior into a skill; keep the prompt as orchestration. |
+| Hardcoded team/project IDs without scope | Mark the file as team-specific and include the source of truth/date. |
+| Personal facts mixed with generic writing process | Split stable process rules from personal source material. |
+| Mermaid graph updated for every tiny file | Keep the graph high-level; update the structure table for inventory. |
+| Always-on global rule for a rare task | Move it to an on-demand skill, prompt, or reference. |
+
+When content feels heavy, first decide whether the problem is scope, duplication, or staleness. Delete only after the rule, workflow, or source of truth has a better home or is no longer used.
+
 ## Structure
 
 ```
@@ -208,8 +239,9 @@ graph LR
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── solution-design.prompt.md   # Plan — technical design
 │   ├── implementation.prompt.md    # Build — implement a ticket
-│   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── start-working.prompt.md     # Build — full delivery workflow
+│   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
+│   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── review-pr.prompt.md         # Review — full PR review against ticket
