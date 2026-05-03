@@ -10,6 +10,15 @@ Research before coding. The cost of searching is minutes; the cost of duplicatin
 - [ ] Check if the project already uses an equivalent dependency before adding one
 - [ ] Read the test file if it exists — tests document expected behavior better than comments
 
+## Name the Reference Implementation
+
+When a similar feature already exists, don't just note that it exists — identify it by exact file path and treat it as a working template.
+
+- [ ] Record the reference file path (e.g. `src/features/foo/FooList.vue`) before starting
+- [ ] When prompting an AI agent, name the reference by path and frame it as a template: "implement X the same way as `<path>`, adapting for Y"
+- [ ] List the concrete differences up front (different data shape, extra state, new prop) so the adaptation is bounded
+- [ ] If the reference lives in another repository, clone it to a scratch location outside the working tree (e.g. `/tmp`) so reference files can't be accidentally committed
+
 ## Before Modifying Existing Code
 
 - [ ] Read the full relevant section of the file, not just the target line
