@@ -70,3 +70,5 @@ Run each candidate line or section through these filters. Flag findings before e
 - `skills/skill-evolution/SKILL.md` before codifying or reshaping ai-shared content
 - `self-evolution/jobs/research/command.md` before research automation opens an ai-shared content PR
 - `self-evolution/jobs/research-pr-triage/command.md` when deciding whether an open research PR should stay open for human review
+
+Keep this list limited to ai-shared maintenance flows.
