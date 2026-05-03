@@ -71,6 +71,7 @@ For each eligible PR, inspect all of this before deciding:
 4. Current version of the changed target files on `main` from the local checkout when the files already exist.
 5. Other open PRs when duplicate or superseded work is suspected.
 6. Relevant recent run-log entries when the PR claims a finding was already reported.
+7. `docs/context-audit.md` when the PR changes ai-shared skills, prompts, references, agents, docs, or instruction workflows.
 
 Do not decide from the title alone.
 
@@ -141,6 +142,7 @@ Before closing any PR, answer these questions privately:
 4. Could a small part of the PR be valuable even if the whole PR is weak?
 5. Would a human reviewer reasonably object to closing this without review?
 6. Is the closure reason based on evidence from the diff and repo, not just taste?
+7. Does `docs/context-audit.md` suggest a narrower home, rewrite, or salvage path instead of closing?
 
 If any answer weakens the close case, keep the PR open.
 

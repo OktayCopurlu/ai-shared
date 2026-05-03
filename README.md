@@ -413,7 +413,8 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── testing-patterns.md
 │   └── work-shaping.md
 ├── docs/                 # Contributor documentation
-│   └── skill-anatomy.md         # Format spec for writing skills
+│   ├── context-audit.md        # ai-shared-only content hygiene guide
+│   └── skill-anatomy.md        # Format spec for writing skills
 ```
 
 ## Symlinks
