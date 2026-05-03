@@ -104,6 +104,7 @@ Allowed targets:
 - `agents/<name>.agent.md`
 - `references/<name>.md`
 - `prompts/<name>.prompt.md`
+- `docs/*.md` when documenting ai-shared-only maintenance guidance
 - `README.md` when a genuinely new top-level file is added
 - `self-evolution/policy.md` when improving source policy only
 
@@ -149,6 +150,7 @@ Before implementing, argue against your own candidate. Ask these questions and a
 If any answer is a clear yes, downgrade the candidate to watchlist regardless of score. Do not open the PR.
 
 Before opening a PR:
+- if the PR adds or substantially changes ai-shared skills, prompts, references, agents, docs, or instruction workflows, check it against `docs/context-audit.md`
 - run `zsh validate.sh`
 - fix what you reasonably can
 - symlink-related validation failures are expected if setup has not been run

@@ -82,6 +82,7 @@ When the change comes from runtime drift discovered while using a skill:
 
 These are things general LLM knowledge will not warn you about — they are specific to this repo:
 
+- **Run the context audit for ai-shared content changes.** Before adding or substantially updating a skill, prompt, reference, agent, or instruction workflow, use `~/.ai-shared/docs/context-audit.md` to check for bloat, overlap, contradictions, stale links, and repo-only guidance that should not become a global skill.
 - **Description trigger phrase must satisfy two linters.** `validate.sh` accepts `use for` or `use when` (case-insensitive substring); agnix requires `Use when`. Use `Use when …` to satisfy both.
 - **Folder name must equal the `name:` field.** Mismatch silently breaks loading. After any rename, run `./setup.sh` to refresh per-skill symlinks (Codex needs one symlink per skill).
 - **Validate before declaring done.** Run all three from repo root, in order:
@@ -124,5 +125,6 @@ If a tool-adapter skill drifted during the task and the fix looks reusable, sugg
 ## See Also
 
 - `~/.ai-shared/docs/skill-anatomy.md` — format reference for creating new skills
+- `~/.ai-shared/docs/context-audit.md` — ai-shared-only guide for content hygiene and global discovery cost
 - `applying-coding-style` — personal preferences go here, not in new skills
 - `~/.ai-shared/references/cognitive-debt.md` — when agent-generated code needs walkthrough before evolving
