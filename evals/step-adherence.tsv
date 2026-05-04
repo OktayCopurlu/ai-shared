@@ -4,5 +4,7 @@ review-findings-first|reviewing-code|review this PR|start with findings ordered 
 git-self-review-before-pr|git-workflow|create a PR|reviewing-code.*run all 4 layers
 linked-context-route-each|linked-context-routing|read all links in this project page|Route each URL to the narrowest capable path
 ui-validation-viewports|validating-ui|validate this UI change|Always test both desktop and mobile viewports
+ui-validation-figma-fallback|validating-ui|validate this UI change with a private Figma design link|Figma MCP.*browser fallback.*extension-backed Playwright MCP
 playwright-snapshot-first|playwright-mcp|fill this web form|Always snapshot before interacting
+figma-extension-fallback|figma-mcp|open a private Figma link|extension-backed Playwright MCP.*--extension
 skill-drift-codify|skill-evolution|this skill's MCP tools drifted|Prefer updating selection heuristics.*representative examples over maintaining exhaustive tool inventories

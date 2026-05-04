@@ -44,6 +44,8 @@ Only when a Figma reference exists in the ticket:
 - Check spacing, sizing, typography, and color against the design.
 - Note meaningful deviations — do not chase pixel-perfect alignment on dynamic content.
 - If the design shows multiple states (empty, loading, populated, error), verify each one that is reachable at both viewports.
+- If Figma MCP or another design-context integration fails, do not stop at the MCP failure. Use `figma-mcp` browser fallback with extension-backed Playwright MCP, such as `playwright-mcp --extension`, when the design may require logged-in browser state.
+- Only skip design comparison when both the Figma integration route and browser fallback are unavailable, blocked, or unreadable. Record both outcomes.
 
 ### 4. Runtime Health
 
@@ -106,6 +108,8 @@ After running the checklist, state one of:
 - Do not validate UI before quality gates pass — fix lint/type/test errors first.
 - Always test both desktop and mobile viewports. If skipping one, state the reason explicitly in the verdict.
 - Do not claim design match without actually comparing to Figma.
+- Do not report "Figma comparison was not verified because Figma MCP failed" unless browser fallback was also attempted or unavailable and that outcome is stated.
+- Most Figma links that are not clearly public may depend on the user's already logged-in browser state, even when the user has not explicitly mentioned login. Do not count a generic browser login wall as a completed fallback. Attempt extension-backed Playwright MCP or state that it is unavailable.
 - Do not mix accessibility findings into this validation — use `a11y-audit` for that.
 - If the page cannot be loaded locally, say so and list what was not verified.
 
@@ -136,6 +140,8 @@ After completing UI validation:
 - [ ] Page loads without errors or blank screen
 - [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
 - [ ] Design comparison done against Figma (if reference exists)
+- [ ] If Figma MCP failed, browser fallback was attempted or explicitly unavailable before design comparison was marked unverified
+- [ ] If logged-in browser state was expected, extension-backed Playwright MCP (`--extension`) was attempted or explicitly unavailable
 - [ ] No new console errors or warnings
 - [ ] Regression check on adjacent UI completed
 - [ ] Tracking verified (if applicable)

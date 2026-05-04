@@ -58,6 +58,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Do NOT include a "Key Changes" section unless the PR is large or spans multiple areas
 - Do NOT include file-by-file changelogs or implementation inventories in small PRs — reviewers need intent and verification, not a duplicate of the diff
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
+- Do NOT write lint/type/test command pass summaries in the PR body as Verification. Local check results belong in the agent's final handoff when useful, not in reviewer-facing PR evidence
 - For component library changes, include a Storybook preview URL when available
 - For UI changes on an existing route, include at least one concrete baseline-vs-preview comparison link and say what reviewers should compare
 - In Test Instructions, prefer concrete links and page paths over generic directions like "open Storybook" or "navigate to a PDP"
@@ -65,7 +66,7 @@ Automates the full flow from local changes to a reviewed pull request.
 
 #### Verification evidence
 
-The Verification section is optional. Include it only when the PR changes UI or fixes a bug; otherwise omit it. CI passing is necessary but not sufficient for those change types — it shows nothing broke, not that the new behavior actually works. Use only these evidence prompts:
+The Verification section is optional. Include it only when the PR changes UI or fixes a bug; otherwise omit it. CI passing is necessary but not sufficient for those change types — it shows nothing broke, not that the new behavior actually works. Do not use lint/type/test command output, CI status, or "passed" summaries as Verification content. Use only these evidence prompts:
 
 - **UI change** — attach a before/after screenshot, or a short screen capture for interactions; say which viewport
 - **Bug fix** — show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test
@@ -123,6 +124,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - PR includes secrets, debug logs, or `console.log` statements
 - Review comments resolved without corresponding commits
 - PR description promises behavior the code doesn't deliver
+- Verification section lists lint/type/test commands or "passed" summaries instead of UI evidence, reproduction evidence, or a regression test link
 - UI-change or bug-fix PR body omits author-side verification evidence — "CI is green" is not proof the new behavior works, only that nothing obvious broke
 
 ## Verification
@@ -137,7 +139,8 @@ Before marking the PR workflow complete:
 - [ ] Commit messages are imperative and descriptive
 - [ ] Test instructions use concrete repo-valid links and comparisons where applicable
 - [ ] PR body has Description, Test Instructions, optional Verification, and optional Note
-- [ ] For UI changes and bug fixes, Verification contains UI evidence or bug-fix reproduction evidence
+- [ ] For non-UI/non-bug changes, PR body omits the Verification section
+- [ ] For UI changes and bug fixes, Verification contains UI evidence or bug-fix reproduction evidence, not local command output
 - [ ] PR is assigned and review is requested
 
 ## See Also
@@ -158,7 +161,7 @@ One or two sentences: what changed and why.
 
 ### Verification (optional; UI changes and bug fixes only)
 
-Omit this section for other change types. For UI changes, attach a before/after screenshot or short screen capture and say which viewport. For bug fixes, show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test.
+Omit this section for other change types. Do not write lint/type/test command summaries here. For UI changes, attach a before/after screenshot or short screen capture and say which viewport. For bug fixes, show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test.
 
 ### Test Instructions
 

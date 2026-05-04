@@ -25,6 +25,7 @@ The server organizes tools into **core** tools plus a small set of opt-in capabi
 
 If the target page may require login, paywall access, or workspace membership, prefer `--extension` when a suitable logged-in browser already exists.
 Do not assume persistent auth by default; persistence only exists when `--user-data-dir` or another explicit config provides it.
+Most private, internal, or workspace-scoped links may depend on the user's already logged-in browser state, even when the user has not explicitly mentioned login. Treat extension-backed browser reuse as a requirement before calling those pages blocked. A generic VS Code browser page or temporary Playwright profile is not equivalent.
 If the page is still blocked, verify the attached tab and browser state before calling the page unreadable.
 
 ## Capability Groups
@@ -143,6 +144,7 @@ When a click or fill doesn't work:
 - After navigation or DOM changes, take a fresh snapshot
 - Do not assume persistent state unless the session config makes it explicit
 - Prefer `--extension` for login-required pages when a suitable logged-in browser already exists
+- For private, internal, workspace-scoped, or auth-gated links, use or request an extension-backed Playwright MCP session before falling back to generic browser tools
 - Use `browser_wait_for` instead of arbitrary delays
 - If the page is a login wall, verify whether the extension-managed browser state is correct before calling the page blocked
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
