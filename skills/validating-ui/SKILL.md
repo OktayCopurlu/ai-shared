@@ -44,6 +44,8 @@ Only when a Figma reference exists in the ticket:
 - Check spacing, sizing, typography, and color against the design.
 - Note meaningful deviations — do not chase pixel-perfect alignment on dynamic content.
 - If the design shows multiple states (empty, loading, populated, error), verify each one that is reachable at both viewports.
+- If the ticket or Figma has multiple platform variants, select the web-specific design node before judging spacing or typography.
+- If visual polish, copy, or design intent remains subjective after comparison, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
 
 ### 4. Runtime Health
 
@@ -106,6 +108,8 @@ After running the checklist, state one of:
 - Do not validate UI before quality gates pass — fix lint/type/test errors first.
 - Always test both desktop and mobile viewports. If skipping one, state the reason explicitly in the verdict.
 - Do not claim design match without actually comparing to Figma.
+- Do not use an app/native/mobile-platform design node as the source of truth for web UI unless the ticket explicitly says to.
+- Do not treat agent-side UI validation as designer or UX approval. Report the concrete evidence and any design handoff still needed.
 - Do not mix accessibility findings into this validation — use `a11y-audit` for that.
 - If the page cannot be loaded locally, say so and list what was not verified.
 
@@ -115,6 +119,7 @@ After running the checklist, state one of:
 |---|---|
 | "It looks fine on desktop, mobile is probably fine too" | Most layout bugs are viewport-specific. Both viewports are mandatory unless explicitly scoped. |
 | "I compared it to the design mentally" | Comparing from memory is unreliable. Open Figma and the browser side by side. |
+| "I checked Storybook, so design is approved" | Storybook/browser evidence helps reviewers, but subjective UX approval still needs the designer or UX owner when intent is ambiguous. |
 | "The tests pass, so the UI is correct" | Tests verify logic, not pixels. Visual regressions, layout shifts, and styling issues don't show up in unit tests. |
 | "Console warnings are not errors" | Hydration warnings, deprecation notices, and React/Vue warnings often indicate real bugs. Investigate each one. |
 | "I'll check regression later" | Adjacent UI sharing the same container or data source can break silently. Check it now. |
@@ -124,8 +129,10 @@ After running the checklist, state one of:
 
 - Verdict says "Pass" but only one viewport was tested
 - Design comparison claimed without a Figma link in the ticket
+- Design feedback comes from a different platform node than the implemented web surface
 - Console errors dismissed as "pre-existing" without verification
 - No regression check on adjacent UI
+- Subjective UX or visual-polish questions are marked fully verified without designer handoff evidence
 - Validation done before quality gates passed
 - Tracking verification skipped when the ticket mentions analytics
 
@@ -136,6 +143,8 @@ After completing UI validation:
 - [ ] Page loads without errors or blank screen
 - [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
 - [ ] Design comparison done against Figma (if reference exists)
+- [ ] Web-specific design node was used when multiple platform variants exist
+- [ ] Designer/UX handoff evidence was prepared when subjective visual approval is still needed
 - [ ] No new console errors or warnings
 - [ ] Regression check on adjacent UI completed
 - [ ] Tracking verified (if applicable)
