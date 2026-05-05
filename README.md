@@ -470,25 +470,11 @@ See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the full format spec with
 
 ## Secrets
 
-This repo is **public**. Never commit credentials, tokens, or passwords directly in skill/agent/prompt files.
+This repo is **public**. Never commit private credentials, tokens, or passwords in checked-in configuration or documentation files.
 
-Secrets are stored in a local `.secrets` file in `~/.ai-shared/.secrets`, which is gitignored. This is the shared AI config repo, not the target project workspace. Skills should reference this path explicitly so agents do not look for secrets in the app repo they are currently editing.
+When writing or updating skills, prompts, references, or docs that need credentials:
 
-**After cloning, create your own `.secrets` file:**
-
-```bash
-cp .secrets.example .secrets
-# Edit .secrets with your actual values
-```
-
-Format (`KEY=VALUE`, one per line):
-
-```
-STAGING_USER=...
-STAGING_PASS=...
-```
-
-When writing or updating skills that need credentials, reference `~/.ai-shared/.secrets` with variable names — never hardcode values.
+- keep PR descriptions, project docs, review comments, screenshots, and final summaries free of credential-embedded URLs
 
 ## Validation
 

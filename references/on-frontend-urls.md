@@ -10,25 +10,18 @@ Scope: Use this reference only when working in the `on-frontend` repo or another
 
 - **Local dev**: `http://localhost:5050`
 - **Production**: `https://www.on.com`
-- **Shop preview**: `https://on-shop-<PR_NUMBER>.on.com`
-- **Storybook preview**: `https://on-ui-<PR_NUMBER>.on.com/?path=/story/<story-id>`
-- **Staging / Preview auth**: Use HTTP basic auth credentials from `~/.ai-shared/.secrets` when a browser or script prompts for them
+- **Shop preview for PRs/docs**: `https://on-shop-<PR_NUMBER>.on.com`
+- **Storybook preview for PRs/docs**: `https://on-ui-<PR_NUMBER>.on.com/?path=/story/<story-id>`
+- **Shop preview for agent/browser automation**: `https://on:trend@on-shop-<PR_NUMBER>.on.com`
+- **Storybook preview for agent/browser automation**: `https://on:trend@on-ui-<PR_NUMBER>.on.com/?path=/story/<story-id>`
 
 ## Preview Authentication
 
 For staging or preview URLs that require auth:
 
-- read `STAGING_USER` and `STAGING_PASS` from `~/.ai-shared/.secrets`
 - do not look for credentials in the target project repo
-- prefer the clean `https://on-shop-<PR_NUMBER>.on.com/...` and `https://on-ui-<PR_NUMBER>.on.com/...` forms in PR descriptions and docs
-- if automation or a browser session needs embedded credentials, prepend them directly in the URL
-
-Format:
-
-```text
-https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR_NUMBER>.on.com/...
-https://<STAGING_USER>:<STAGING_PASS>@on-ui-<PR_NUMBER>.on.com/?path=/story/<story-id>
-```
+- use clean preview URLs in PR descriptions, project docs, review notes, and final user-facing summaries
+- use the `on:trend@...` URL form only when navigating a browser or script to a preview URL
 
 ## Examples
 
@@ -38,11 +31,12 @@ https://<STAGING_USER>:<STAGING_PASS>@on-ui-<PR_NUMBER>.on.com/?path=/story/<sto
 - Preview page: `https://on-shop-9096.on.com/en-ch/products/cloudspike-citius-2-m-3mf1030/mens/bloom-lime-shoes-3MF10304849`
 - Storybook root: `https://on-ui-9096.on.com/`
 - Storybook story: `https://on-ui-9096.on.com/?path=/story/components-atoms-boxchip--withmedia`
-- Authenticated preview page for automation: `https://<STAGING_USER>:<STAGING_PASS>@on-shop-9096.on.com/en-ch/products/...`
+- Authenticated preview page for agent/browser automation: `https://on:trend@on-shop-9096.on.com/en-ch/products/...`
+- Authenticated Storybook story for agent/browser automation: `https://on:trend@on-ui-9096.on.com/?path=/story/components-atoms-boxchip--withmedia`
 
 ## Rules
 
-- Treat `~/.ai-shared/.secrets` as the source of truth even when the current workspace is another repo
-- Never hardcode credentials in skills, prompts, or checked-in project files
+- Never put credential-embedded URLs in PR descriptions, project docs, review comments, screenshots, or final summaries
+- Do not generalize the `on:trend` preview auth pattern to other repos, hosts, or credentials
 - Prefer `on.com` preview hosts; treat older `on-running.com` examples as stale unless the current PR or workflow proves otherwise
 - If the current repo or PR shows a different host pattern, trust the current repo evidence over this reference

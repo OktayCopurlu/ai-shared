@@ -2,6 +2,5 @@
 *.log
 *.tmp
 *.swp
-.secrets
 .playwright-mcp/
 self-evolution/jobs/*/logs/
