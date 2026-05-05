@@ -1,5 +1,7 @@
 # id|skill|request|description_regex
 pr-review|reviewing-code|review this PR for missing tests|reviewing PRs.*review this.*check this PR
+function-review|reviewing-code|review this function and tell me if it is needed|individual functions/components/templates/props/composables/SCSS snippets.*purpose, necessity, and better shape.*review this function
+code-unit-review|reviewing-code|review this component template props and scss in detail|individual functions/components/templates/props/composables/SCSS snippets.*review this component/template/style
 github-pr-api|github-mcp|fetch PR comments from GitHub|GitHub.*pull requests.*reviews.*GitHub API operations
 jira-link|atlassian-mcp|read DSC-1986 and summarize it|Jira tickets.*Confluence.*Jira ticket
 figma-design|figma-mcp|open this Figma design and extract specs|Figma designs.*Figma URL.*read a design

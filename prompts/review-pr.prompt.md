@@ -58,7 +58,11 @@ Load the `reviewing-code` skill and run it on the PR diff.
 
 - Use `review-only` mode.
 - Scale depth based on diff size from step 1.
-- All 4 layers: surface correctness, test coverage gaps, bounded refactors, architecture signals.
+- All 4 layers: surface correctness, test coverage gaps, code-unit shape/bounded refactors, architecture signals.
+- In the final report, summarize code review with tables:
+   - a findings table ordered by severity
+   - a code-unit checks table covering meaningful changed functions, templates, props/contracts, composables/hooks, components, SCSS blocks/selectors, and utilities
+- For code units that are good, mark them as checked with a concise note; for concerns, state the concrete better shape or fix.
 
 ### 4. Functional Validation
 
@@ -125,16 +129,56 @@ To switch variants: check for a **URL parameter**, **cookie**, or **localStorage
 **Uncovered items:** [list or "none"]
 
 ### Code Review
-[Output from reviewing-code]
+
+#### Findings
+| Severity | Area | Finding | Fix / Next step |
+|---|---|---|---|
+| 🔴 Bug / 🟡 Risk / 🧪 Test gap / 🔧 Refactor / ❓ Architecture / ✅ None | `file:line` or area | What is wrong, missing, or good | Concrete fix, question, or N/A |
+
+#### Code Unit Checks
+| Unit | Type | Status | Notes |
+|---|---|---|---|
+| `ComponentName` template | template | ✅ Good / ⚠️ Could improve / ❌ Issue | Checked markup flow, branching, semantics, and whether the shape is needed. |
+| `props` / `Props` | props/contract | ✅ Good / ⚠️ Could improve / ❌ Issue | Checked consumer-facing API, required/optional fields, and unnecessary exposure. |
+| `useThing` | composable/function | ✅ Good / ⚠️ Could improve / ❌ Issue | Checked state ownership, side effects, return shape, and callers. |
+| `.class-name` | SCSS | ✅ Good / ⚠️ Could improve / ❌ Issue | Checked selector scope, nesting, tokens, responsive states, and overrides. |
+
+#### Test Coverage
+| Area | Status | Evidence / Gap |
+|---|---|---|
+| Changed behavior | ✅ Covered / 🧪 Gap / N/A | Test file or missing scenario |
+
+#### Architecture Signals
+| Signal | Question | Evidence |
+|---|---|---|
+| None / signal name | Question for reviewer, or N/A | File/area |
 
 ### Functional Validation
-[Manual QA verdict and UI validation evidence, or "Skipped — reason"]
+
+#### Manual QA
+| Check | Status | Evidence |
+|---|---|---|
+| Primary flow / regression / viewport / keyboard / error state | ✅ Pass / ❌ Fail / ⚠️ Partial / 🚫 Blocked / Not verified | URL, viewport, observed behavior, command output, or blocker |
+
+#### UI / Runtime Notes
+| Area | Status | Evidence |
+|---|---|---|
+| Desktop / mobile / console / network / accessibility | ✅ Pass / ❌ Fail / ⚠️ Partial / N/A | Concrete observation or blocker |
+
+#### Not Verified
+| Item | Reason | Impact |
+|---|---|---|
+| Item or `none` | Why it was not verified | Risk or N/A |
 
 #### Tracking
-[Event-by-event results or "N/A"]
+| Event / Check | Status | Evidence |
+|---|---|---|
+| Event name or N/A | ✅ Pass / ❌ Fail / ⚠️ Partial / N/A | Payload, network/console evidence, or reason skipped |
 
 #### A/B Variants
-[Variant-by-variant results or "N/A"]
+| Variant | Status | Evidence |
+|---|---|---|
+| Control / treatment / N/A | ✅ Pass / ❌ Fail / ⚠️ Partial / Not verified / N/A | How it was forced or why it could not be forced |
 
 ### Verdict: Pass | Pass with notes | Fail
 [Summary of blocking issues, if any]
@@ -145,5 +189,7 @@ To switch variants: check for a **URL parameter**, **cookie**, or **localStorage
 - Do not skip the wiki page if one is linked — it often contains the detailed spec that the AC only summarizes.
 - Do not claim "all ACs covered" without file/line evidence per AC.
 - Do not silently skip functional validation — state what was not verified and why.
+- Do not collapse Code Review or Functional Validation into prose when multiple checks were performed — use the report tables, then add short narrative only for important context.
+- Do not omit good code-unit checks from UI PRs; the report should show that templates, props, composables/functions, and SCSS were inspected when they changed.
 - Do not claim "events fire correctly" without showing payload evidence from console or network.
 - When the preview is not available, still complete steps 1–3 and note step 4 as skipped.

@@ -53,13 +53,13 @@ If `get_design_context`, metadata, or another Figma integration fails because th
 
 Final reports must distinguish each route attempted:
 
-- `Figma MCP failed: <reason>`
+- `Figma MCP failed: {reason}`
 - `Extension-backed browser fallback succeeded`
-- `Extension-backed browser fallback unavailable: <reason>`
-- `Browser fallback failed: <reason>`
-- `Generic browser fallback attempted: <outcome>` when used only as a public-page fallback or diagnostic
+- `Extension-backed browser fallback unavailable: {reason}`
+- `Browser fallback failed: {reason}`
+- `Generic browser fallback attempted: {outcome}` when used only as a public-page fallback or diagnostic
 
-Do not write final wording that makes MCP failure sound sufficient by itself, such as "Figma comparison was not verified because Figma MCP failed." Use wording such as "Figma MCP failed; browser fallback was attempted and <outcome>."
+Do not write final wording that makes MCP failure sound sufficient by itself, such as "Figma comparison was not verified because Figma MCP failed." Use wording such as "Figma MCP failed; browser fallback was attempted and {outcome}."
 
 ## Verification
 

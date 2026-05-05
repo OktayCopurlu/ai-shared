@@ -51,7 +51,7 @@ Do not use this as a replacement for automated tests, type checks, lint, or `val
    - Use `Pass`, `Fail`, `Blocked`, or `Not verified`.
    - Record concrete evidence: URL, viewport, input data, observed output, console/network result, command output, or blocker.
 7. Report the final QA result.
-   - Summarize primary scenarios, regression checks, failures, blockers, and not-verified items.
+   - Summarize primary scenarios, regression checks, failures, blockers, and not-verified items in compact tables.
    - Include the temporary plan path for traceability.
    - If anything failed because of the implementation, fix it and rerun the affected QA checks.
 
@@ -68,6 +68,8 @@ Always add regression checks when the diff touches:
 
 ## Output Format
 
+Use tables for executed checks, regression checks, blockers, and not-verified items. Avoid prose-only QA summaries except for a one-sentence verdict or a short note explaining a blocker.
+
 ```md
 ## Manual QA
 
@@ -78,6 +80,11 @@ Always add regression checks when the diff touches:
 
 ### Verdict: Pass | Pass with notes | Fail | Blocked
 
+### Summary
+| Area | Status | Evidence |
+|---|---|---|
+| Primary flow | Pass/Fail/Blocked/Not verified | Concrete observation, URL, command, viewport, or blocker |
+
 ### Executed Checks
 | Check | Status | Evidence |
 |---|---|---|
@@ -87,7 +94,8 @@ Always add regression checks when the diff touches:
 |---|---|---|
 
 ### Not Verified
-- <item> - <reason>
+| Item | Reason | Impact |
+|---|---|---|
 ```
 
 ## Common Rationalizations
@@ -102,6 +110,7 @@ Always add regression checks when the diff touches:
 ## Red Flags
 
 - Final answer contains only a plan with no executed checks.
+- Final answer reports QA as prose only when multiple checks were run.
 - QA ignores changed files outside the ticket scope.
 - UI-affecting changes skip browser evidence.
 - Regression checks are generic rather than tied to actual changed files.

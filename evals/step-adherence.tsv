@@ -1,6 +1,8 @@
 # id|skill|request|body_regex
 review-all-layers|reviewing-code|review this PR|Always run all 4 layers
 review-findings-first|reviewing-code|review this PR|start with findings ordered by severity
+review-code-unit-table|reviewing-code|review this component template props and scss|findings table and a code-unit checks table
+manual-qa-report-table|manual-qa|run manual QA for this PR|Use tables for executed checks, regression checks, blockers, and not-verified items
 git-self-review-before-pr|git-workflow|create a PR|reviewing-code.*run all 4 layers
 linked-context-route-each|linked-context-routing|read all links in this project page|Route each URL to the narrowest capable path
 ui-validation-viewports|validating-ui|validate this UI change|Always test both desktop and mobile viewports
