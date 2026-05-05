@@ -33,6 +33,15 @@ When a similar feature already exists, don't just note that it exists — identi
 - [ ] Decide the cut-over strategy: rename in place, deprecate with a shim, or coordinated swap
 - [ ] Update docs, examples, and changelog in the same change — never leave them for a follow-up
 
+## Before Changing a Public Contract
+
+Use this for exported APIs, CLI flags, config keys, route payloads, generated artifacts, metadata files, package entry points, and user-visible output names. These are contracts even when they are not named "API" in the code.
+
+- [ ] Identify the consumers: source, tests, docs, configs, examples, CI, generated files, package metadata, and likely external users
+- [ ] Prefer additive optional fields, new hooks, or compatibility shims over changing an existing signature or behavior in place
+- [ ] If the change is intentionally breaking, update migration notes, examples, docs, and changelog/release notes in the same PR
+- [ ] Run the narrowest validation that exercises the contract from the consumer side, not only the implementation unit
+
 ## Before Adding a Dependency
 
 - [ ] Search the codebase for similar functionality already available
