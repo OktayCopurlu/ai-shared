@@ -45,29 +45,32 @@ Automates the full flow from local changes to a reviewed pull request.
 ### 4. Create PR
 
 - Use available GitHub MCP tools to create the pull request
-- Title format: `Brief description` (e.g., `Add product franchise chips to PDP purchase pod`) — the ticket ID is prepended automatically from the branch name
+- Title format: follow the current repository convention. For repos where automation derives or prepends the Jira key from the branch name, use `Brief description` and do not duplicate the ticket key. Include the ticket key only when the repository convention requires it and automation will not add it.
 - Assign the PR to `OktayCopurlu` using the appropriate GitHub MCP issue or pull request management tool
 - Before drafting or updating the PR body, read the Jira ticket when available and read the current PR body when it already exists; use those sources plus current repo evidence to keep real links and preserve valid generated or user-added instructions
 - Keep the Preview and Jira ticket links in the format described in step 5
 - For preview or Storybook links, use the current repo's real host and path format from one of these sources: the existing PR body, a recent PR in the same repo, repo docs/workflows, or a repo-specific URL reference. Do not hardcode one repo's URL pattern into this shared skill
 - Body structure (top to bottom):
   1. **Description** — One or two sentences: what changed and why
-  2. **Verification** (optional) — Include only for UI changes and bug fixes. See "Verification evidence" below
-  3. **Test Instructions** — Bullet list: preview links, design links, and brief notes on what reviewers should verify
+  2. **Verification** (optional) — Include only reviewer-visible evidence for UI changes and bug fixes. See "Verification evidence" below
+  3. **Test Instructions** — Bullet list with concrete preview links, baseline/control comparisons, design links, and brief notes on what reviewers should verify
   4. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
 - Do NOT include a "Key Changes" section unless the PR is large or spans multiple areas
 - Do NOT include file-by-file changelogs or implementation inventories in small PRs — reviewers need intent and verification, not a duplicate of the diff
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
+- Do NOT include CI, lint, typecheck, build, unit-test, or spec command results in the PR body. Those belong in GitHub checks or the final handoff to the user, not in reviewer-facing PR copy
+- Do NOT mention unrelated local quality-gate failures in the PR body unless they materially block review. If they do, put one concise blocker in **Note**, not **Verification**
 - For component library changes, include a Storybook preview URL when available
 - For UI changes on an existing route, include at least one concrete baseline-vs-preview comparison link and say what reviewers should compare
-- In Test Instructions, prefer concrete links and page paths over generic directions like "open Storybook" or "navigate to a PDP"
+- For feature-flagged or experiment-gated UI, include the full preview URL for the changed route plus clear control-vs-treatment verification steps. Use production as the baseline when a control variant is not practical on preview
+- In Test Instructions, prefer concrete full URLs over bare paths, and prefer direct page links over generic directions like "open Storybook" or "navigate to a PDP"
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
 
 #### Verification evidence
 
-The Verification section is optional. Include it only when the PR changes UI or fixes a bug; otherwise omit it. CI passing is necessary but not sufficient for those change types — it shows nothing broke, not that the new behavior actually works. Use only these evidence prompts:
+The Verification section is optional. Include it only when the PR changes UI or fixes a bug and you have reviewer-visible evidence. Otherwise omit it. CI passing is necessary but not sufficient for those change types — it shows nothing broke, not that the new behavior actually works. Do not fill Verification with quality-gate command output such as lint, typecheck, build, unit-test, or spec results.
 
-- **UI change** — attach a before/after screenshot, or a short screen capture for interactions; say which viewport
+- **UI change** — attach a before/after screenshot, or a short screen capture for interactions; say which viewport. If no media is available, summarize actual browser validation with viewport(s), preview URL, changed behavior, control/baseline behavior, and console/runtime health when checked
 - **Bug fix** — show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test
 
 ### 5. Preview & Jira Links
@@ -93,6 +96,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - Confirm branch name matches the ticket key before creating the PR
 - Do not invent testing steps not supported by the actual changes
 - Do not ask reviewers to run tests locally — CI handles test execution
+- Do not use the PR body as a CI transcript; never list passing lint/typecheck/test/spec commands as Verification
 - Do not mark review comments as resolved without a corresponding fix
 - Do not include secrets, tokens, or internal debug artifacts in the PR body
 - Always run lint before committing — never skip this step
@@ -124,6 +128,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - Review comments resolved without corresponding commits
 - PR description promises behavior the code doesn't deliver
 - UI-change or bug-fix PR body omits author-side verification evidence — "CI is green" is not proof the new behavior works, only that nothing obvious broke
+- Verification section lists lint, typecheck, build, unit-test, or spec command output instead of reviewer-visible evidence
 
 ## Verification
 
@@ -136,8 +141,10 @@ Before marking the PR workflow complete:
 - [ ] Only ticket-relevant files are staged
 - [ ] Commit messages are imperative and descriptive
 - [ ] Test instructions use concrete repo-valid links and comparisons where applicable
+- [ ] Test instructions include full preview URLs for changed routes, not only bare paths
 - [ ] PR body has Description, Test Instructions, optional Verification, and optional Note
 - [ ] For UI changes and bug fixes, Verification contains UI evidence or bug-fix reproduction evidence
+- [ ] PR body excludes CI command summaries and unrelated quality-gate noise
 - [ ] PR is assigned and review is requested
 
 ## See Also
@@ -158,12 +165,14 @@ One or two sentences: what changed and why.
 
 ### Verification (optional; UI changes and bug fixes only)
 
-Omit this section for other change types. For UI changes, attach a before/after screenshot or short screen capture and say which viewport. For bug fixes, show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test.
+Omit this section for other change types. For UI changes, attach a before/after screenshot or short screen capture and say which viewport, or summarize actual browser validation with viewport(s), changed behavior, control/baseline behavior, and console/runtime health when checked. For bug fixes, show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test. Do not list lint, typecheck, build, unit-test, or spec command results here.
 
 ### Test Instructions
 
 - Storybook preview: [Story name](<storybook-preview-url>)
-- Regression compare: [baseline page](<baseline-url>) vs [preview page](<preview-page-url>)
+- Preview: [changed page](<full-preview-page-url>)
+- Regression compare: [baseline page](<baseline-url>) vs [preview page](<full-preview-page-url>)
+- Experiment compare: confirm both control and treatment on the preview page, or use production as the baseline when control cannot be forced on preview
 - Verify the change matches [mobile design](real-mobile-figma-link) and [desktop design](real-desktop-figma-link)
 - Confirm unaffected behavior stays the same
 
