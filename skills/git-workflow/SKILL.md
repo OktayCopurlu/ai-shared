@@ -23,6 +23,7 @@ Automates the full flow from local changes to a reviewed pull request.
 
 - Read the `applying-coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
 - Read the `reviewing-code` skill and run all 4 layers against the changed files — fix Layer 1 issues inline, report Layer 2–4 findings to the user before proceeding
+- Treat the self-review as the last chance to catch broad scope drift. If the diff includes out-of-scope changes, split them into a separate ticket or clearly remove them before PR creation
 - If the workspace or package exposes a fix command (for example `yarn lint:fix` or `yarn nx run <package>:lint:fix`), prefer that first
 - If no suitable repo/package fix command exists, run the formatter directly on changed files (for example `prettier --write`)
 - When CI/local lint reports `prettier/prettier` errors, use the repo fix command or formatter instead of hand-editing whitespace-only fixes
@@ -51,7 +52,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - Keep the Preview and Jira ticket links in the format described in step 5
 - For preview or Storybook links, use the current repo's real host and path format from one of these sources: the existing PR body, a recent PR in the same repo, repo docs/workflows, or a repo-specific URL reference. Do not hardcode one repo's URL pattern into this shared skill
 - Body structure (top to bottom):
-  1. **Description** — One or two sentences: what changed and why
+  1. **Description** — One or two sentences: what changed, why it changed, and any important technical or architectural decision reviewers need to know
   2. **Verification** (optional) — Include only reviewer-visible evidence for UI changes and bug fixes. See "Verification evidence" below
   3. **Test Instructions** — Bullet list with concrete preview links, baseline/control comparisons, design links, and brief notes on what reviewers should verify
   4. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
@@ -64,6 +65,8 @@ Automates the full flow from local changes to a reviewed pull request.
 - For UI changes on an existing route, include at least one concrete baseline-vs-preview comparison link and say what reviewers should compare
 - For feature-flagged or experiment-gated UI, include the full preview URL for the changed route plus clear control-vs-treatment verification steps. Use production as the baseline when a control variant is not practical on preview
 - In Test Instructions, prefer concrete full URLs over bare paths, and prefer direct page links over generic directions like "open Storybook" or "navigate to a PDP"
+- Test Instructions must cover meaningful edge cases and adjacent areas affected by the diff, not only the happy path. Update them when review feedback changes scope or behavior
+- If a PR is urgent or time-sensitive, say so explicitly in **Note** with the reason and deadline/context
 - Keep the PR body concise and reviewer-friendly — should fit on one screen
 
 #### Verification evidence
@@ -86,6 +89,8 @@ The Verification section is optional. Include it only when the PR changes UI or 
 
 ### 6. Request Review
 
+- Before requesting human review, confirm the PR is genuinely ready: not draft, scoped to one concern, has useful context and test instructions, and has no known implementation-blocking CI failure
+- If review was requested while the PR is not ready, communicate that clearly in the PR and avoid assigning human reviewers until it is ready again
 - Use available GitHub MCP tools to request Copilot review and fetch review comments
 - To address review feedback, use the `/address-review` prompt
 
@@ -97,6 +102,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - Do not invent testing steps not supported by the actual changes
 - Do not ask reviewers to run tests locally — CI handles test execution
 - Do not use the PR body as a CI transcript; never list passing lint/typecheck/test/spec commands as Verification
+- Do not request human review for a PR that is still draft-quality, missing testing instructions, or known to be blocked by implementation-related CI failures
 - Do not mark review comments as resolved without a corresponding fix
 - Do not include secrets, tokens, or internal debug artifacts in the PR body
 - Always run lint before committing — never skip this step
@@ -114,6 +120,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 | "This file is tangentially related, I'll include it" | Unrelated changes make PRs harder to review and riskier to revert. One PR = one concern. |
 | "The commit message doesn't matter, the PR title matters" | Commit messages are permanent history. Imperative, descriptive messages make `git log` useful. |
 | "I'll skip the `reviewing-code` skill, Copilot review will catch it" | Copilot review is a second opinion, not a replacement. Self-review catches 80% of issues before anyone else sees the code. |
+| "Reviewers can infer the why from the diff" | Reviewers need context for product intent and technical trade-offs. Put the why in the PR description. |
 | "The pre-commit hook is annoying, I'll bypass it" | Hooks exist for a reason. `--no-verify` erodes team guardrails — fix the root cause instead. |
 | "I'll address review comments in a follow-up PR" | Unresolved comments become tech debt. Address valid feedback before merge. |
 | "Adding `Co-Authored-By: Claude` credits the tool honestly" | Multiple OSS projects (pydantic-ai, dd-sdk-ios, vllm) explicitly ban AI co-author trailers and attribution lines. The submitter is the author and must defend every line. Strip these before committing. |
@@ -122,8 +129,10 @@ The Verification section is optional. Include it only when the PR changes UI or 
 
 - PR body is empty or says only "fixes bug"
 - Staged files include unrelated formatting or generated noise
+- PR mixes unrelated scope that should be a separate ticket
 - Branch name doesn't match the ticket key
 - Pre-commit checks skipped with `--no-verify`
+- Review requested while PR is not ready, missing test instructions, or has known implementation-blocking CI failures
 - PR includes secrets, debug logs, or `console.log` statements
 - Review comments resolved without corresponding commits
 - PR description promises behavior the code doesn't deliver
@@ -140,7 +149,9 @@ Before marking the PR workflow complete:
 - [ ] Lint, type checks, and tests pass for changed files
 - [ ] Only ticket-relevant files are staged
 - [ ] Commit messages are imperative and descriptive
+- [ ] PR description explains why the change exists and any important technical decision
 - [ ] Test instructions use concrete repo-valid links and comparisons where applicable
+- [ ] Test instructions cover meaningful edge cases and affected adjacent behavior
 - [ ] Test instructions include full preview URLs for changed routes, not only bare paths
 - [ ] PR body has Description, Test Instructions, optional Verification, and optional Note
 - [ ] For UI changes and bug fixes, Verification contains UI evidence or bug-fix reproduction evidence
@@ -161,7 +172,7 @@ Before marking the PR workflow complete:
 
 ### Description
 
-One or two sentences: what changed and why.
+One or two sentences: what changed, why it changed, and any important technical or architectural decision reviewers need to know.
 
 ### Verification (optional; UI changes and bug fixes only)
 
@@ -174,6 +185,7 @@ Omit this section for other change types. For UI changes, attach a before/after 
 - Regression compare: [baseline page](<baseline-url>) vs [preview page](<full-preview-page-url>)
 - Experiment compare: confirm both control and treatment on the preview page, or use production as the baseline when control cannot be forced on preview
 - Verify the change matches [mobile design](real-mobile-figma-link) and [desktop design](real-desktop-figma-link)
+- Verify meaningful edge cases and adjacent areas affected by the diff
 - Confirm unaffected behavior stays the same
 
 ### Note

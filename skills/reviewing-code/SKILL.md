@@ -180,6 +180,18 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 **Auto-Clarity exception:** Drop terse format for security findings (CVE-class bugs need full explanation), architectural disagreements (need rationale), and onboarding contexts (author is new, needs the "why"). Write a normal paragraph, then resume terse.
 
+## PR Etiquette
+
+When reviewing a PR for another person, optimize for timely, actionable feedback.
+
+- Raise blocking concerns as early as possible. If a concern appears late after approvals or several review rounds, state why it only became visible now
+- Treat urgency as part of the review context. If the PR is time-sensitive, prioritize blockers and avoid optional polish unless it is clearly labeled as `nit:`
+- In GitHub review comments, label non-blocking feedback with the existing `🔵 nit:` severity prefix; in prose summaries, `nit:` or `nitpick:` is fine
+- Make every comment actionable: identify the concrete issue, the reason it matters, and the smallest practical fix or question
+- Keep tone collaborative. Avoid harsh or opinionated phrasing, and use open questions when the right answer depends on product or architectural context
+- Use GitHub code suggestions when a direct replacement is obvious and safe
+- If a written thread becomes unclear or contentious, suggest a quick sync instead of extending the comment chain
+
 ## Rules
 
 - Always run all 4 layers. Do not skip a layer because an earlier one had findings.
@@ -189,6 +201,8 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - Load `applying-coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
 - When called from the `/address-review` prompt, run after triaging Copilot comments as an additional pass.
+- If a finding is non-blocking, label it with `🔵 nit:` in GitHub review comments, or `nit:`/`nitpick:` in prose. Do not let personal preference masquerade as a required change.
+- If the PR context exposes CI status, include CI readiness in the review verdict but do not repeat individual CI logs.
 
 ## Common Rationalizations
 
@@ -200,6 +214,9 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 ## Red Flags
 
 - "LGTM" without evidence of actual review
+- Last-minute blocking opinions with no explanation for why the blocker was not raised earlier
+- Non-blocking style preferences written as required changes
+- Review comments that identify a problem but give no action, rationale, or question
 - Layer 4 signals consistently ignored across multiple PRs
 - Reviewing only the files you're familiar with and skipping the rest
 

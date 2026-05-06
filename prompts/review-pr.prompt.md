@@ -57,8 +57,9 @@ Output as a table:
 Load the `reviewing-code` skill and run it on the PR diff.
 
 - Use `review-only` mode.
-- Scale depth based on diff size from step 1.
+- Scale depth based on the diff size gathered during context.
 - All 4 layers: surface correctness, test coverage gaps, bounded refactors, architecture signals.
+- When proposing GitHub review comments, follow `reviewing-code` PR etiquette: actionable comments, `🔵 nit:` for non-blocking feedback, and the why behind suggestions.
 
 ### 4. Functional Validation
 
@@ -144,6 +145,8 @@ To switch variants: check for a **URL parameter**, **cookie**, or **localStorage
 
 - Do not skip the wiki page if one is linked — it often contains the detailed spec that the AC only summarizes.
 - Do not claim "all ACs covered" without file/line evidence per AC.
+- Do not write unlabelled preference comments. Use `🔵 nit:` for non-blocking GitHub review comments, and explain why for required changes.
+- Do not raise late blocking opinions without explaining what new information made the blocker visible.
 - Do not silently skip functional validation — state what was not verified and why.
 - Do not claim "events fire correctly" without showing payload evidence from console or network.
 - When the preview is not available, still complete steps 1–3 and note step 4 as skipped.

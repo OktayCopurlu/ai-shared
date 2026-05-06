@@ -22,15 +22,17 @@ If the ticket branch name is needed, derive it from the PR's head branch using `
 ## Required Order
 
 1. Fetch the Copilot review comments from the PR.
-2. Read each comment and the code it refers to.
-3. Evaluate whether the comment makes sense in context.
-4. Address comments that make sense.
-5. Dismiss or note comments that do not make sense.
-6. Run the `reviewing-code` skill (all 4 layers) on the full PR diff as an additional pass — report any findings not already covered by Copilot comments.
-7. Run quality gates if any code was changed.
-8. Push the updates.
-9. Assign human reviewers.
-10. Update the PR to a review-ready state.
+2. Fetch review threads from both Files and Conversation views when the API/tool surface exposes them; GitHub can hide or bury threads after file changes.
+3. Read each comment and the code it refers to.
+4. Evaluate whether the comment makes sense in context.
+5. Address comments that make sense.
+6. Dismiss or note comments that do not make sense.
+7. Run the `reviewing-code` skill (all 4 layers) on the full PR diff as an additional pass — report any findings not already covered by Copilot comments.
+8. If review changes alter behavior, scope, setup, or reachable edge cases, update the PR test instructions before asking for another review.
+9. Run quality gates if any code was changed.
+10. Push the updates.
+11. Update the PR to a review-ready state.
+12. Assign human reviewers.
 
 ## Comment Evaluation
 
@@ -68,7 +70,7 @@ For comments that make sense:
 3. Do not bundle unrelated improvements into a review-triage fix.
 4. If a comment reveals a deeper issue beyond its scope, note it but do not fix it here.
 
-Reply to addressed comments with a short note confirming the fix was made. Do not write lengthy justifications.
+Reply to addressed comments with a short note confirming the fix was made. Include the why only when the comment required a trade-off or architectural decision. Do not write lengthy justifications.
 
 ## Dismissing Comments
 
@@ -77,6 +79,8 @@ For comments that do not make sense:
 1. Reply with a brief, respectful explanation of why the suggestion does not apply.
 2. Reference the specific context that makes the suggestion invalid (e.g. "This follows the existing pattern in X" or "The ticket intent requires Y").
 3. Do not ignore comments silently — every comment gets either a fix or a dismissal reply.
+
+For prose follow-up notes, label non-blocking items as `nit:`/`nitpick:`. GitHub review comments should keep the `reviewing-code` `🔵 nit:` severity prefix. Do not treat personal preference as required work.
 
 ## Quality Gates After Fixes
 
@@ -108,12 +112,15 @@ Do not force-push.
 
 After all comments are addressed or dismissed:
 
-1. Identify the appropriate human reviewers for the PR.
-2. Use the repository's default reviewer assignment if configured.
-3. If no default exists, assign based on code ownership or team conventions.
-4. Request review from the assigned reviewers.
+1. Confirm the PR is review-ready: not draft-quality, all known valid comments handled, PR description/testing instructions still match the final scope, and no known implementation-blocking CI failures remain.
+2. Identify the appropriate human reviewers for the PR.
+3. Use the repository's default reviewer assignment if configured.
+4. If no default exists, assign based on code ownership or team conventions.
+5. Request review from the assigned reviewers.
 
 Do not assign reviewers before triage is complete — the PR should be clean when they see it.
+
+If the PR is not ready but review was already requested, communicate that directly in the PR and avoid adding more reviewers until it is ready.
 
 ## Compound
 
@@ -129,3 +136,5 @@ Skip this step only when nothing non-obvious was learned.
 
 - do not ask the user live questions during execution
 - do not start new feature work during triage
+- do not ignore or lose review threads just because they disappeared from the Files tab
+- do not assign human reviewers before valid feedback is handled and PR instructions are current
