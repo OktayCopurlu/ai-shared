@@ -31,7 +31,11 @@ If the page is still blocked, verify the attached tab and browser state before c
 
 | Flag | Tools enabled | Use case |
 |------|--------------|----------|
-| *(core)* | click, close, console_messages, drag, drop, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_requests, press_key, resize, run_code, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
+| *(core)* | click, close, console_messages, drag, drop, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_request, network_requests, press_key, resize, run_code_unsafe, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
+| `--caps=config` | get_config | Inspect resolved server config |
+| `--caps=network` | network_state_set, route, route_list, unroute | Mock, block, or simulate network behavior |
+| `--caps=storage` | cookie_*, localstorage_*, sessionstorage_*, set_storage_state, storage_state | Inspect or modify browser storage |
+| `--caps=devtools` | annotate, highlight, hide_highlight, resume, start_tracing, stop_tracing, start_video, stop_video, video_chapter | Dashboard annotation, tracing, debugger control, video receipts |
 | `--caps=vision` | mouse_click_xy, mouse_down, mouse_drag_xy, mouse_move_xy, mouse_up, mouse_wheel | Coordinate-based interaction (canvas, maps) |
 | `--caps=pdf` | pdf_save | Save page as PDF |
 
@@ -59,14 +63,15 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Native `<select>` | `browser_select_option` | Prefer over keyboarding when available |
 | Keyboard submission | `browser_press_key` | Useful for Enter, Escape, Tab, arrows |
 | Wait for UI updates | `browser_wait_for` | Prefer waiting for text/state changes over fixed delays |
-| Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code` | Use only when normal form tools cannot reach the editor; `evaluate` also accepts plain expressions (not just function bodies) |
+| Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code_unsafe` | Use only when normal form tools cannot reach the editor; `run_code_unsafe` executes in the server process and is RCE-equivalent |
 | Drag and drop (between elements) | `browser_drag` | For sortable lists and draggable UIs |
 | Drop files/data onto element | `browser_drop` | External file drop; provide `paths` or MIME `data` |
 | File upload | `browser_file_upload` | Works for standard file inputs |
 | Hover-only UI | `browser_hover` | Helpful for menus, tooltips, hidden actions |
 | Dialogs / alerts / confirms | `browser_handle_dialog` | Use after an action triggers a browser dialog |
-| Debug page behavior | `browser_console_messages` / `browser_network_requests` | Useful when clicks or submits fail silently |
+| Debug page behavior | `browser_console_messages` / `browser_network_requests` / `browser_network_request` | Use `network_requests` for the numbered list, then `network_request` with an index for headers or bodies |
 | Visual verification | `browser_take_screenshot` | Use when snapshot semantics are not enough |
+| Video receipt / trace | `browser_start_video`, `browser_video_chapter`, `browser_stop_video`, `browser_start_tracing`, `browser_stop_tracing` | Requires `--caps=devtools`; useful for reviewer-visible UI verification |
 | Canvas / coordinate interaction | `browser_mouse_click_xy` | Requires `--caps=vision`; for non-accessible elements |
 | Save page as PDF | `browser_pdf_save` | Requires `--caps=pdf` |
 
@@ -77,6 +82,14 @@ These tools are **not** in the default tool set. Check your server config before
 **`--caps=vision`** — coordinate-based mouse: `browser_mouse_click_xy`, `browser_mouse_down`, `browser_mouse_up`, `browser_mouse_move_xy`, `browser_mouse_drag_xy`, `browser_mouse_wheel`. Use for canvas, maps, or anything the accessibility tree can't reach.
 
 **`--caps=pdf`** — `browser_pdf_save`.
+
+**`--caps=config`** — `browser_get_config`. Use when server behavior looks surprising and you need the merged CLI/env/config-file settings.
+
+**`--caps=network`** — `browser_network_state_set`, `browser_route`, `browser_route_list`, `browser_unroute`. Use for offline simulation or API mocking. Do not confuse these with the core read-only request inspection tools.
+
+**`--caps=storage`** — cookie, localStorage, sessionStorage, and storage-state tools. Use for auth/session setup only when normal login or `--storage-state` is not the better route.
+
+**`--caps=devtools`** — annotation, highlight, debugger resume, tracing, and video tools. Use video chapters for reviewer-visible UI receipts when screenshots are not enough.
 
 ## Snapshot Rules
 
@@ -132,10 +145,11 @@ Follow the project-specific reference for the actual credentials.
 
 When a click or fill doesn't work:
 1. `browser_console_messages` — check for JS errors blocking interaction
-2. `browser_network_requests` — check if an API call failed
-3. `browser_snapshot` — check if the element is still in the DOM
-4. Try `browser_wait_for` — the element may not be ready yet
-5. Try `browser_evaluate` — interact via JS as a fallback
+2. `browser_network_requests` — list requests and find the failing request index
+3. `browser_network_request` — inspect that request's headers, body, or response details
+4. `browser_snapshot` — check if the element is still in the DOM
+5. Try `browser_wait_for` — the element may not be ready yet
+6. Try `browser_evaluate` — interact via JS as a fallback
 
 ## Rules
 
@@ -147,9 +161,10 @@ When a click or fill doesn't work:
 - If the page is a login wall, verify whether the extension-managed browser state is correct before calling the page blocked
 - If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
 - For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
-- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`); use `responseBody` and `responseHeaders` options when you need to inspect response payloads
+- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`), then call `browser_network_request` with the returned index for full request or response details
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
-- Use `browser_run_code` for complex multi-step Playwright operations that would be verbose with individual tool calls
+- Use `browser_take_screenshot` with `filename` when you want an artifact file; recent servers omit the base64 payload from the response in that case to save context
+- Use `browser_run_code_unsafe` only for complex multi-step Playwright operations that would be verbose with individual tool calls; it is unsafe because it can execute arbitrary JavaScript in the Playwright server process
 
 ## See Also
 
