@@ -57,12 +57,25 @@ describe('ComponentName', () => {
 | 5 | State transitions | Loading → success, loading → error |
 | 6 | Edge cases | Only when a bug proves the gap matters |
 
+## Accessibility Contracts
+
+When testing rendered UI, prefer queries that prove the user-facing accessibility contract instead of DOM structure.
+
+- Find interactive elements by role and accessible name: `getByRole('button', { name: 'Submit' })`.
+- Find form controls by label: `getByLabelText('Email')` or Playwright's `getByLabel('Email')`.
+- Use text queries for non-interactive content and `alt` queries for meaningful images.
+- Use test IDs only when role, label, text, or alt text cannot express the behavior under test.
+- For custom widgets, assert the promised keyboard and focus behavior: Tab reachability, Enter/Space activation for buttons, arrow-key movement for menus/listboxes, and focus return after dialogs close.
+- If a role or label query is impossible, treat that as an accessibility smell before adding a test ID.
+
 ## Anti-Patterns
 
 | Pattern | Problem | Fix |
 |---------|---------|-----|
 | Snapshot-only tests | Don't verify behavior. Break on any change. | Add behavioral assertions alongside or instead. |
 | Testing implementation | Asserting on internal state, method calls, or DOM structure | Test observable output — what the user sees or what the function returns. |
+| CSS/XPath selectors for UI behavior | Ties tests to invisible DOM structure and misses broken accessible names. | Query by role/name, label, text, or alt text first. |
+| Test ID as first choice | Test passes even when users or assistive tech cannot find the control. | Use a test ID only after semantic queries cannot express the contract. |
 | Mocking everything | Tests pass but prove nothing — they test the mocks. | Mock only external boundaries (APIs, timers). Keep internal logic real. |
 | Asserting on mock returns | `expect(mockFn()).toBe(mockReturnValue)` proves nothing. | Assert on the behavior triggered by the mock, not the mock itself. |
 | Shared mutable state | Tests depend on execution order. Flaky. | Isolate state per test. Use factory functions. |
