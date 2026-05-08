@@ -131,6 +131,23 @@ These tools are **not** in the default tool set. Check your server config before
 4. Continue with the actual task
 ```
 
+### Experiment or feature-flag variant switch
+
+Use this only after the review or QA flow has identified a real flag/experiment key and supported override mechanism.
+
+```
+1. Confirm the exact key, group/value names, and storage or URL mechanism from source/docs/runtime state
+2. Navigate to the target page and snapshot the current variant
+3. Apply the confirmed override with the narrowest available tool:
+   - URL parameter: navigate to the URL with that parameter
+   - cookie/localStorage/sessionStorage: use storage-cap tools when enabled, or `browser_evaluate` when the host surface exposes it
+   - SDK/debug API: use the documented API only if visible in runtime state or source
+4. Reload the page
+5. Verify the active variant through UI, exposure/tracking payload, network response, or runtime state
+```
+
+Do not brute-force likely cookie names. If the only switch is the AB Flag Override extension or an admin-only/server-side assignment, report the exact manual switch needed and resume after the user confirms it.
+
 ### Authenticated preview access (HTTP basic auth)
 
 If the target environment is protected by HTTP basic auth (common for staging/preview), embed credentials in the URL:

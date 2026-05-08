@@ -30,6 +30,18 @@ https://<STAGING_USER>:<STAGING_PASS>@on-shop-<PR_NUMBER>.on.com/...
 https://<STAGING_USER>:<STAGING_PASS>@on-ui-<PR_NUMBER>.on.com/?path=/story/<story-id>
 ```
 
+## A/B And Feature Flag Overrides
+
+For on-frontend preview validation, do not guess cookies from an experiment name.
+
+Before forcing a variant:
+
+1. find the exact experiment or feature flag key in the ticket, PR, diff, linked docs, or nearby source code
+2. identify the real override mechanism used by that code path: URL parameter, cookie, localStorage, sessionStorage, SDK debug API, preview endpoint, or AB Flag Override extension
+3. apply only confirmed key/value pairs, then reload and verify the variant through UI, exposure/tracking payload, network response, or runtime state
+
+The AB Flag Override Chrome extension UI is a user-side control and is not reliably operable through browser automation. If that is the only available switch, ask the user to set the exact key and group manually, then continue validation after confirmation.
+
 ## Examples
 
 - `https://www.on.com/en-ch/shop/mens/low` → `http://localhost:5050/en-ch/shop/mens/low`
