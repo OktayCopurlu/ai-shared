@@ -55,7 +55,7 @@ Automates the full flow from local changes to a reviewed pull request.
   2. **Verification** (optional) — Include only for UI changes and bug fixes. See "Verification evidence" below
   3. **Test Instructions** — Bullet list: preview links, design links, and brief notes on what reviewers should verify
   4. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
-- Do NOT include a "Key Changes" section unless the PR is large or spans multiple areas
+- Do NOT add extra standalone sections such as "Key Changes" or "Risks" by default; use the four-section body contract, and only preserve extra sections already present or documented by the current repo
 - Do NOT include file-by-file changelogs or implementation inventories in small PRs — reviewers need intent and verification, not a duplicate of the diff
 - Do NOT include test commands in review instructions — CI runs tests automatically, reviewers do not need to run them locally
 - For component library changes, include a Storybook preview URL when available
