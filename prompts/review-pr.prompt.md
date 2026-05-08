@@ -24,6 +24,7 @@ Collect all inputs before reviewing anything.
 3. If the ticket or PR links to Confluence wiki pages (tracking specs, solution designs, etc.), read them via `atlassian-mcp`. Extract relevant requirements.
 4. Find the preview environment URL: check PR deployment status, status checks, and PR comments (in that order). If multiple deployments exist, prefer the one matching the PR's head branch.
 5. Get the diff size (`gh pr diff <N> --stat | tail -1`) to scale review depth.
+6. If the PR or ticket mentions an A/B test, experiment, feature flag, or variant, extract the exact flag/experiment key and expected groups from the ticket, PR description, diff, or linked docs. If the override mechanism is not documented, search the changed code and nearby experiment/flag helpers before browser validation.
 
 **Present before continuing:**
 - Ticket AC list (numbered), or "unavailable — no linked ticket"
@@ -106,7 +107,15 @@ When the ticket involves A/B testing:
 2. Verify the **treatment** variant renders the new behavior.
 3. Verify tracking events include the correct variant/group property.
 
-To switch variants: check for a **URL parameter**, **cookie**, or **localStorage** override first — these are automatable. The "AB Flag Override" Chrome extension UI is not accessible to browser automation tools. If only the extension can switch variants, ask the user to switch manually, then continue validation after confirmation.
+To switch variants:
+
+1. First identify the source-of-truth assignment path: experiment key, group names, SDK/helper, and whether assignment is server-side or client-side.
+2. Check the source code, linked docs, preview tooling, and runtime storage for supported QA overrides: URL parameter, cookie, localStorage, sessionStorage, experiment SDK debug API, or preview flag endpoint.
+3. Use only an override mechanism that is documented or visible in source/runtime state. Do not invent cookie or storage keys from the experiment name.
+4. After applying an override, reload and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored key alone is not proof.
+5. If the browser tool surface lacks dedicated storage helpers, use `playwright-mcp` evaluation to set the confirmed cookie/storage value, then reload and verify.
+6. If allocation is server-side or only controllable through the "AB Flag Override" Chrome extension/admin UI, do not keep trying weaker storage guesses. Ask the user to switch the exact key/group manually, then continue validation after confirmation.
+7. If CI is failing and validation is limited to smoke, still report which variant was reachable and which variant was not verified because it could not be forced.
 
 ## Output Format
 
