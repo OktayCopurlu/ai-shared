@@ -59,6 +59,7 @@ These rules apply to ALL code I write or modify. They override generic conventio
 ## Change Discipline
 
 - **Scope**: Modify only the code explicitly required to complete the task. Avoid refactoring unrelated code, even within the same file, unless explicitly instructed. Note improvements for later — don't fix them mid-task.
+- **Styling-only requests**: When asked to restyle, polish, or make a visual-only change, edit presentation only: classes, styles, tokens, markup needed for semantics, and the minimum imports those changes require. Do not touch data fetching, state, routing, business logic, component contracts, or tests except to fix breakage caused by the presentation edit.
 - **Test between changes**: Don't write 100+ lines without running tests. Make a change, verify it works (tests pass, build succeeds), then move on. Bugs compound when changes pile up untested.
 - **Keep it compilable**: After every meaningful change, the project must build and existing tests must pass. Never leave the codebase in a broken state between edits.
 
@@ -93,6 +94,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 | "The comment explains what the code does" | Rename the variable or extract a function instead. |
 | "I'll clean up the naming later" | Later never comes. Name it right now. |
 | "This helper might be useful elsewhere" | Inline it. Extract only when the third caller appears. |
+| "I'm already editing the component, so I can simplify the logic too" | Styling-only tasks are intentionally narrow. Logic changes create review noise and can alter behavior under the cover of visual polish. |
 
 ## Red Flags
 
@@ -102,6 +104,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - Commented-out code surviving review
 - Boolean variables without `is`/`has`/`should`/`can` prefix
 - Tests with no `describe` grouping or asserting on mock internals
+- Visual-only diffs that also rewrite state, data fetching, routing, or component props
 
 ## See Also
 
