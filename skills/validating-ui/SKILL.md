@@ -32,6 +32,7 @@ Run these checks in order. Stop early if a critical failure is found.
 - The changed UI renders as expected at each viewport.
 - Text content, images, and layout match what the ticket describes.
 - Interactive states work: hover, focus, active, disabled, loading, empty, error.
+- For multi-step flows or wizards, exercise forward and backward navigation. Verify previous selections/input are restored unless the ticket explicitly resets them, and confirm focus remains visible and is not clipped after each step transition.
 - No layout shifts, overlapping elements, or clipped content in the affected area.
 - Layout transitions between breakpoints do not break (no overlapping, collapsing, or hidden content).
 
