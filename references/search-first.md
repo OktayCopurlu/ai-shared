@@ -27,6 +27,14 @@ When a similar feature already exists, don't just note that it exists — identi
 - [ ] Search docs, READMEs, and examples for references to the symbol — stale docs are worse than none
 - [ ] Check recent git history: `git log --oneline -10 -- <file>`
 
+## Before Editing Generated Or Vendored Files
+
+- [ ] Check for headers like `DO NOT EDIT`, `generated`, `vendored`, `compiled`, or source-of-truth comments
+- [ ] Search docs, scripts, package commands, and nearby files for the generator or upstream source
+- [ ] Edit the source input instead of the generated output whenever the source is in this repo
+- [ ] If the source is upstream or vendored, update from upstream or document the required upstream change instead of patching the copy
+- [ ] Commit regenerated outputs only when the repo convention requires them, and review the generated diff before reporting completion
+
 ## Before Renaming or Removing a Public API
 
 - [ ] Map every caller: source, tests, docs, configs, examples, and cross-repo consumers
