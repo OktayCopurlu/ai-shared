@@ -113,9 +113,10 @@ To switch variants:
 2. Check the source code, linked docs, preview tooling, and runtime storage for supported QA overrides: URL parameter, cookie, localStorage, sessionStorage, experiment SDK debug API, or preview flag endpoint.
 3. Use only an override mechanism that is documented or visible in source/runtime state. Do not invent cookie or storage keys from the experiment name.
 4. After applying an override, reload and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored key alone is not proof.
-5. If the browser tool surface lacks dedicated storage helpers, use `playwright-mcp` evaluation to set the confirmed cookie/storage value, then reload and verify.
-6. If allocation is server-side or only controllable through the "AB Flag Override" Chrome extension/admin UI, do not keep trying weaker storage guesses. Ask the user to switch the exact key/group manually, then continue validation after confirmation.
-7. If CI is failing and validation is limited to smoke, still report which variant was reachable and which variant was not verified because it could not be forced.
+5. If the browser tool surface lacks dedicated storage helpers, use `playwright-mcp` evaluation to set the confirmed cookie/storage value on the current origin, then reload and verify.
+6. For localhost-only validation, if allocation is server-side or only controllable through the "AB Flag Override" Chrome extension/admin UI, a temporary local hard-code or stub of the confirmed experiment/flag value is acceptable for screenshots and UI checks. Remove it before finishing and label the evidence as local hard-code validation.
+7. If no automation or localhost hard-code path is suitable, do not keep trying weaker storage guesses. Ask the user to switch the exact key/group manually, then continue validation after confirmation.
+8. If CI is failing and validation is limited to smoke, still report which variant was reachable and which variant was not verified because it could not be forced.
 
 ## Output Format
 

@@ -82,8 +82,10 @@ Use this when a UI change is gated by a feature flag, experiment, or A/B test.
 1. Identify the exact flag or experiment key, expected group names, assignment SDK/helper, and whether assignment is server-side or client-side. Use the ticket, PR description, diff, linked docs, and nearby source code.
 2. Look for supported QA override mechanisms before changing browser state: URL parameters, cookies, localStorage, sessionStorage, SDK debug APIs, preview flag endpoints, or documented browser extensions.
 3. Apply only a confirmed override. Do not guess cookie or storage keys from the experiment name.
-4. Reload after applying the override and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored value alone is not enough evidence.
-5. If the only available switch is an extension or admin UI that automation cannot operate, mark that variant as awaiting user-assisted override and include the exact key/group the user should select.
+4. For cookie or storage overrides, use `playwright-mcp` to set the value directly on the current origin, then reload. If storage helper tools are unavailable, use browser evaluation with the confirmed cookie or storage key/value.
+5. Reload after applying the override and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored value alone is not enough evidence.
+6. For localhost-only validation, if the confirmed runtime override cannot be applied because assignment is server-side, extension-only, or unavailable in automation, temporarily hard-code or stub the confirmed flag/experiment return value in the local working tree. Remove the temporary change before finishing and label the evidence as local hard-code validation.
+7. If the only available switch is an extension or admin UI that automation cannot operate, and local hard-code validation is not suitable, mark that variant as awaiting user-assisted override and include the exact key/group the user should select.
 
 ## Verdict
 
@@ -123,6 +125,7 @@ After running the checklist, state one of:
 - Do not mix accessibility findings into this validation — use `a11y-audit` for that.
 - If the page cannot be loaded locally, say so and list what was not verified.
 - Do not call a treatment variant blocked after arbitrary cookie attempts; first prove the supported override path or report that the variant needs user-assisted/server-side allocation.
+- Do not leave temporary localhost hard-codes or stubs in the final diff unless the user explicitly asks for that implementation change.
 
 ## Common Rationalizations
 

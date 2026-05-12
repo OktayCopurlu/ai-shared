@@ -26,6 +26,7 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
    - Public, static pages → direct fetch/read tools
    - If the current session exposes a dedicated connector or authenticated integration for the domain, use that before generic browser automation
    - If no connector exists and browser state is required, use an explicit authenticated `playwright-mcp` browser path
+   - If the user says the page is already logged in through Chrome, use extension-backed Playwright MCP; do not substitute the VS Code simple browser or page-read tools
    - If browser access still fails or a first-party integration needs user-side prep, ask the user how to recover before marking the link blocked
 6. Track status per link.
    Mark each one as opened, partially read, awaiting user-assisted auth, awaiting user-side prep, blocked by missing tools, or unsupported.
@@ -66,6 +67,7 @@ If the host exposes only tools, still apply the distinction conceptually: read-o
 - Start from the source page, not from guessed downstream pages.
 - Route by domain and platform before considering browser fallback.
 - Use `playwright-mcp` as the browser fallback when a link requires browser state, interaction, or inspection.
+- Do not use the VS Code simple browser as proof that an authenticated browser fallback failed. For logged-in Chrome state, use extension-backed `playwright-mcp` or report that this route is unavailable.
 - When auth or user-side prep is still recoverable, use an "awaiting user" status instead of calling the link blocked.
 - Report blockers precisely: missing integration, auth gate, unsupported URL shape, or tool/policy limitation.
 - When the user asks to read all links, say which ones were actually opened and which ones were blocked.
