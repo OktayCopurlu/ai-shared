@@ -19,6 +19,27 @@ Automates the full flow from local changes to a reviewed pull request.
   ```
 - If branching from a different base, verify the correct base branch first
 
+#### Optional: isolated worktree for parallel work
+
+Use `git worktree` when you need to keep your current branch's working tree intact — e.g., a long-running feature branch is mid-implementation and a separate small change has to land first, or you're running multiple agent slices on disjoint branches in parallel.
+
+- Create the worktree from an up-to-date main:
+  ```
+  git fetch origin main
+  git worktree add ../<repo>-<TICKET> -b <TICKET>-<description> origin/main
+  cd ../<repo>-<TICKET>
+  ```
+- Re-run the project's setup command in the new worktree if it depends on installed deps (e.g., `yarn install`, `pnpm install`) — worktrees share `.git` but not `node_modules` or other build artifacts.
+- Verify a clean test/lint baseline in the worktree before writing any code, so later failures clearly belong to the slice and not to the setup.
+- When the branch is merged or abandoned, remove the worktree cleanly:
+  ```
+  cd <main-repo-path>
+  git worktree remove ../<repo>-<TICKET>
+  ```
+- Do not delete the worktree directory by hand without `git worktree remove` — the parent `.git/worktrees/` entry will go stale. If that happens, run `git worktree prune`.
+
+Skip worktrees when a single straightforward branch switch is enough; they add filesystem and dependency-install overhead that is not worth it for small sequential work.
+
 ### 2. Pre-commit Checks
 
 - Read the `applying-coding-style` skill and review all changed files against it — fix any violations (naming, comments, dead code, test structure) before proceeding
@@ -100,6 +121,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - Do not skip formatter or typecheck runs when the package provides them
 - Do not force-push without checking if anyone else has the branch
 - Do not blindly accept one side of a merge conflict without reading both
+- Do not delete a worktree directory by hand — use `git worktree remove`, then `git worktree prune` if it went stale
 - Do not add AI-assistant attribution anywhere — no `Co-Authored-By: Claude`/`Copilot`/etc. trailers, no "🤖 Generated with…" lines in commit messages, no "written by Claude/GPT/Copilot" notes in PR bodies or code comments. The human submitter owns the change.
 
 ## Common Rationalizations
