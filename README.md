@@ -392,7 +392,6 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── start-working.prompt.md     # Build — full delivery workflow
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
-│   ├── zoom-out.prompt.md          # Analyze — system-context explanation before changing code
 │   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
@@ -412,7 +411,8 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── search-first.md
 │   ├── security-checklist.md
 │   ├── testing-patterns.md
-│   └── work-shaping.md
+│   ├── work-shaping.md
+│   └── zoom-out.md
 ├── docs/                 # Contributor documentation
 │   ├── context-audit.md        # ai-shared-only content hygiene guide
 │   └── skill-anatomy.md        # Format spec for writing skills

@@ -212,3 +212,4 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - `~/.ai-shared/references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
 - `~/.ai-shared/references/performance-checklist.md` — for performance checks in Layer 4
 - `~/.ai-shared/references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through
+- `~/.ai-shared/references/zoom-out.md` — ad-hoc system-context map when Layer 4 attention is needed outside a full review
