@@ -84,6 +84,8 @@ Load the `manual-qa` skill and execute a QA run from the ticket requirements, PR
 
 Load the `validating-ui` skill and run its checklist on the preview environment when visible UI changed and manual QA has not already covered those browser checks.
 
+When the ticket has a Figma reference, the `validating-ui` token-level fidelity check is required — verify the report includes computed-style comparisons (spacing, typography, color, borders) against Figma values, not just screenshots or "looks similar". If the check was skipped, flag it as a review gap.
+
 If the PR visibly affects UI (component changes, layout, styling), also load the `a11y-audit` skill for an accessibility pass on the changed areas.
 
 #### Tracking validation

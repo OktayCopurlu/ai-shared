@@ -7,12 +7,7 @@ description: "Implement a Jira ticket: code changes, quality gates, manual QA, a
 When the user provides the ticket key or link:
 
 1. read the full Jira detail via Atlassian MCP
-2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs
-   - prefer first-party MCP or a direct integration first for known systems
-   - if no suitable first-party integration exists, choose the lightest workable path: fetch/read tools for public pages and `playwright-mcp` for browser flows that need interaction, authenticated state, or inspection
-   - if the page needs login, workspace membership, or browser state, prefer an explicit authenticated browser path such as `playwright-mcp --extension` or `--cdp` instead of inventing ad-hoc browser profile handling
-   - if the environment blocks the target domain or browser route, stop and report the blocker clearly instead of repeatedly scraping smart-link serialization or asking the user to paste protected content or credentials
-   - when linked context is successfully opened, extract the implementation-relevant details before moving on
+2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs. Use the `linked-context-routing` skill to pick the right tool, and `playwright-mcp` for authenticated browser flows. If the environment blocks access, stop and report the blocker. Extract implementation-relevant details before moving on.
 3. determine the target repository
 
 Proceed to implementation after all required linked context has been reviewed.
@@ -37,39 +32,18 @@ If the ticket is a code workflow:
    - search the codebase for similar patterns already implemented elsewhere (e.g. same layout, same interaction, same data shape)
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new
    - if a similar pattern exists elsewhere, reuse the same approach rather than inventing a parallel one
+   - when a Figma reference exists, use `figma-mcp` to extract exact design tokens **before** writing styles: spacing, padding, margin, gap, font-size, line-height, font-weight, color, border-radius, border-width. Prefer existing design-system variables; only fall back to Figma's raw values when no variable matches. Do not eyeball values from a screenshot.
 9. if the UI work touches forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load the `a11y-audit` skill during implementation and apply it while building
 10. if the ticket is large, cross-layer, or under-specified, apply the Task Shape and Context rules before implementation
 11. read the minimum code context needed and begin implementation
 
 ### Task Shape and Context
 
-Use `~/.ai-shared/references/work-shaping.md` when the ticket is large, cross-layer, or under-specified.
+For large, cross-layer, or under-specified tickets, follow `~/.ai-shared/references/work-shaping.md` to break work into vertical slices before implementing. Skip shaping for small, clear, single-slice work. Treat unresolved product/design/architecture choices as human-in-loop blockers, not details to invent.
 
-- For small, clear, single-slice work, skip shaping and implement directly after required context is reviewed.
-- Keep the active implementation slice small enough to explore, implement, test, and review in one focused pass.
-- If the work is still a layer-by-layer plan, pause implementation and reshape it into vertical slices.
-- Use read-only subagents for broad exploration, then continue with only the concise findings needed for the current slice.
-- Treat unresolved product, design, or architecture choices as human-in-loop blockers, not implementation details to invent.
-- Treat AFK implementation output as a draft until quality gates, cross-check, and human QA/review are complete.
+### Workspace and Branch Rules
 
-### Workspace Convention
-
-Use the configured workspace root. Default to `~/Desktop/` when no other workspace root is explicitly configured.
-
-To find a repository workspace:
-
-1. look for a matching directory under the configured workspace root
-2. if not found, clone from the `onrunning` GitHub org into the configured workspace root
-
-Do not work in a repository outside the configured workspace root unless explicitly configured otherwise.
-
-### Branch Rules
-
-- branch names must include the Jira ticket key
-- reuse an existing ticket branch when it is clearly the active work branch
-- default base branch is `main`; if `main` does not exist, use `master`
-- before creating a new ticket branch, update the base branch with the latest remote state
-- if neither `main` nor `master` exists, pause instead of guessing
+Follow the `git-workflow` skill for workspace location, branch naming (must include Jira key), base branch selection, and remote sync before branching.
 
 ### Implementation Quality
 
@@ -132,27 +106,13 @@ For medium or large changes, user-facing behavior, changed workflows, stateful l
 
 For small docs-only changes, harmless config metadata, or mechanical refactors with no observable behavior risk: do not manufacture a QA ceremony. Either run a cheap smoke check when there is an obvious one, or mark manual QA as not verified with a clear reason.
 
-If the QA plan includes visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket - load the `validating-ui` skill and execute it as part of manual QA. If the ticket contains a Figma link, use it as the design reference.
+If the changes have visible UI impact — component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket — load the `validating-ui` skill and follow its checklist and verdict format as part of manual QA. If the ticket contains a Figma link, use it as the design reference. Treat UI validation as evidence gathering, not a replacement for human taste; report what was verified and what still needs human review for subjective UX, visual polish, or copy.
 
 If the changes are purely backend, config, or logic-only with no UI surface, run focused manual QA for the observable behavior when risk exists. If there is no practical observable path, mark the relevant checks as not verified with a reason.
 
-### UI Validation
-
-Determine whether the changes have visible UI impact - e.g., component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket.
-
-If yes: load the `validating-ui` skill and follow its checklist and verdict format. If the ticket contains a Figma link, use it as the design reference.
-
-Treat UI validation as evidence gathering, not a replacement for human taste. If the change involves subjective UX, visual polish, product feel, or copy judgement, report what was verified and what still needs human review.
-
-If manual QA already executed `validating-ui`, do not duplicate the same browser checks. Reuse the manual QA evidence and only run missing UI checks.
-
-If the changes are purely backend, config, or logic-only with no UI surface: skip UI validation. Manual QA may be focused smoke coverage or explicitly not verified with a reason, based on risk.
-
 ### Failure Policy
 
-If browser validation fails because of the implementation: fix it, rerun.
-
-If browser validation causes code changes: rerun quality gates before continuing.
+If manual QA or UI validation fails because of the implementation: fix it, rerun. If the fix causes code changes, rerun quality gates before continuing.
 
 ## Blocker Handling
 
