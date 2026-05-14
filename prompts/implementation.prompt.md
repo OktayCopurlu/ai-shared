@@ -170,6 +170,20 @@ Pause for: contradictory requirements, inaccessible linked context, repository a
 
 Do not pause only because the correct implementation touches multiple files or shared interfaces.
 
+## Senior Reflection
+
+After reporting the implementation result, append a short **"🎯 Senior Reflection"** block at the very end of the response — 3–4 bullets max, rotating the lens based on the ticket type. Pull questions from `~/.ai-shared/references/senior-fundamentals.md`. Do not answer the questions yourself; surface them so the user can act on them as the human owner of the work.
+
+Default rotation for implementation work — pick the lenses that fit:
+
+- **Ownership** — Which metric will this move? Where and when will you check it post-ship (Sentry, analytics, user feedback)?
+- **Problem Framing** — Did the implementation surface anything that suggests we're solving the wrong problem, or solving it the wrong way?
+- **Spec Gaps** — Were there behaviors I had to invent because the spec was silent? Worth flagging back to the ticket?
+- **Technical Communication** — Does the PR description explain *why*, alternatives considered, and trade-offs — not just *what* changed?
+- **Scope / Saying No** — Did scope creep during implementation? Anything that should be a follow-up ticket instead of bundled here?
+
+Keep the block terse. The goal is a daily nudge toward senior-level behaviors, not a checklist ceremony.
+
 ## Guardrails
 
 - do not start implementation before the target repository is confirmed
