@@ -184,6 +184,22 @@ Default rotation for implementation work — pick the lenses that fit:
 
 Keep the block terse. The goal is a daily nudge toward senior-level behaviors, not a checklist ceremony.
 
+## Wins Log Nudge
+
+After the Senior Reflection block, append a single-line prompt:
+
+> 📝 **Wins log?** If this shipped something with real impact, glue work, or mentorship — add 1 line to `~/.ai-shared/wins/{year}.md`. Format: `YYYY-MM-DD — did X, with Y impact`. See `~/.ai-shared/references/wins-log.md`.
+
+Do not write the entry yourself — the user owns what counts as a win. Skip this nudge if the implementation was trivial (typo fix, dependency bump, no observable outcome).
+
+## Decision Journal Nudge
+
+If the implementation involved a non-trivial technical decision (picked one tool/pattern over another, took a deliberate shortcut, diverged from convention, designed a contract other code will rely on), append a single-line prompt after the Wins Log nudge:
+
+> 🧭 **Decision journal?** This involved a real trade-off. Consider 5 lines in `~/.ai-shared/decisions/{year}.md` (What / Context / Alternatives / Trade-off / Revisit). See `~/.ai-shared/references/decision-journal.md`.
+
+Do not write the entry yourself. Skip this nudge if there was only one viable approach or the choice was the framework default.
+
 ## Guardrails
 
 - do not start implementation before the target repository is confirmed
