@@ -64,6 +64,7 @@ If the task involves project-specific local/staging/production URL mapping or pr
 | Native `<select>` | `browser_select_option` | Prefer over keyboarding when available |
 | Keyboard submission | `browser_press_key` | Useful for Enter, Escape, Tab, arrows |
 | Wait for UI updates | `browser_wait_for` | Prefer waiting for text/state changes over fixed delays |
+| Layout-aware accessibility snapshot | `browser_snapshot` with `boxes: true` | Adds `[box=x,y,width,height]` to snapshot output; use only when spatial layout matters, because it is more verbose |
 | Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code_unsafe` | Use only when normal form tools cannot reach the editor; `run_code_unsafe` executes in the server process and is RCE-equivalent |
 | Drag and drop (between elements) | `browser_drag` | For sortable lists and draggable UIs |
 | Drop files/data onto element | `browser_drop` | External file drop; provide `paths` or MIME `data` |
@@ -98,6 +99,7 @@ These tools are **not** in the default tool set. Check your server config before
 - Do not guess refs or reuse stale refs after navigation, tab switches, modal opens, or large DOM updates
 - Prefer refs with clear roles and labels over brittle visual guesses
 - If the page changes significantly, take a new snapshot before the next action
+- Add `boxes: true` only for layout-sensitive checks, such as confirming responsive order, overlap, sticky positioning, or target placement
 
 ## Common Patterns
 
@@ -206,6 +208,7 @@ When a click or fill doesn't work:
 - For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
 - Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`), then call `browser_network_request` with the returned index for full request or response details
 - Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
+- Use `browser_snapshot` with `boxes: true` when coordinates are the evidence; avoid it for routine ref discovery because it increases output size
 - Use `browser_take_screenshot` with `filename` when you want an artifact file; recent servers omit the base64 payload from the response in that case to save context
 - Use `browser_run_code_unsafe` only for complex multi-step Playwright operations that would be verbose with individual tool calls; it is unsafe because it can execute arbitrary JavaScript in the Playwright server process
 
