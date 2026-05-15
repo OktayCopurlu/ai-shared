@@ -1,5 +1,5 @@
 ---
-description: "Commit, push, and create a PR with description and test instructions."
+description: "Commit, push, and create a PR using the repo's PR body contract."
 ---
 
 Load and follow the `git-workflow` skill to:
@@ -7,6 +7,15 @@ Load and follow the `git-workflow` skill to:
 1. Commit all staged changes with a clear commit message
 2. Push the branch
 3. Create a PR with:
-   - a descriptive title using the Jira ticket format `[TICKET] Brief description`
-   - a reviewer-friendly body including description, key changes, review/test instructions, and risks
+   - a descriptive title that follows the `git-workflow` title rules
+   - a reviewer-friendly body that follows the `git-workflow` PR Description Template exactly
+   - no extra standalone sections such as `Key Changes` or `Risks` unless the current repo already uses that section as a documented convention
 4. Request Copilot review
+
+## Wins Log Nudge
+
+After the PR is created, append a single-line prompt to the response:
+
+> 📝 **Wins log?** If this PR ships something with real impact, glue work, or mentorship — add 1 line to `~/.ai-shared/wins/{year}.md`. Format: `YYYY-MM-DD — did X, with Y impact`. See `~/.ai-shared/references/wins-log.md`.
+
+Do not write the entry yourself — the user owns what counts as a win. Skip this nudge if the PR was trivial (typo fix, dependency bump, no observable outcome).

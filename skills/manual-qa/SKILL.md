@@ -23,7 +23,7 @@ Do not use this as a replacement for automated tests, type checks, lint, or `val
    - ticket summary, acceptance criteria, and linked design/spec references
    - local diff or PR diff, including files unrelated to the ticket
    - for single PR mode, PR description, comments, CI status, linked ticket, changed files, and preview URL
-   - preview URL, local URL, feature flags, variants, and required test data
+   - preview URL, local URL, feature flags, variants, exact experiment keys/groups, supported override mechanism, and required test data
    - previous validation results and known blockers
 2. Pick QA depth from risk and available runtime:
    - `smoke`: CI is failing but preview is reachable, the change is docs/config/build-only, or runtime access is limited. Verify only that the relevant surface loads or the lightest observable behavior still works.
@@ -45,6 +45,7 @@ Do not use this as a replacement for automated tests, type checks, lint, or `val
    - For visible UI impact, load `validating-ui` and execute browser validation as part of this QA run.
    - For forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load `a11y-audit` for the relevant checks.
    - For browser interaction, load `playwright-mcp` and use the app directly where possible.
+   - For feature flags or experiments, follow `validating-ui`'s experiment override protocol before trying cookies or storage values.
    - For tracking, verify event names, triggers, and payloads through browser console logs or network requests.
    - For non-UI work, exercise the observable behavior through the lightest runnable path: CLI, API, dev server, focused script, or existing test harness.
 6. Update the temporary plan as checks complete.
@@ -62,7 +63,7 @@ Always add regression checks when the diff touches:
 - shared UI components or design-system wrappers: validate at least one other consumer
 - composables, stores, hooks, helpers, or mappers: validate one adjacent flow that uses the same abstraction
 - GraphQL/API queries or response mapping: validate expected data shape and one existing consumer path
-- feature flags or experiments: validate enabled and disabled states when controllable
+- feature flags or experiments: validate enabled and disabled states when controllable; if not controllable, record whether the blocker is server-side allocation, extension-only override, missing credentials, or missing environment support
 - routing, auth, checkout, pricing, localization, or tracking: validate the changed flow plus the nearest high-risk adjacent behavior
 - files not explained by the ticket: add a regression check for the user-facing behavior they affect, or mark the risk as not verified
 
