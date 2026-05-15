@@ -411,7 +411,8 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── search-first.md
 │   ├── security-checklist.md
 │   ├── testing-patterns.md
-│   └── work-shaping.md
+│   ├── work-shaping.md
+│   └── zoom-out.md
 ├── docs/                 # Contributor documentation
 │   ├── context-audit.md        # ai-shared-only content hygiene guide
 │   └── skill-anatomy.md        # Format spec for writing skills
