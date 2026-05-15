@@ -67,10 +67,10 @@ Accessible enough / Needs fixes / High-risk accessibility issues
 
 ## Rules
 
-- Prefer semantic HTML before ARIA workarounds.
-- Do not treat mouse-only success as accessible behavior.
-- Do not overstate certainty when only code was reviewed.
-- If no issues are found, say so explicitly and mention any testing gaps.
+1. Start with semantic HTML before ARIA workarounds.
+2. Make every interaction work without a mouse, with clear focus behavior.
+3. Use labels, names, states, and error messages that assistive technology can understand.
+4. Match certainty to evidence: code review is partial, exact contrast requires measurement, and no-issue results still need testing gaps.
 
 ## Common Rationalizations
 

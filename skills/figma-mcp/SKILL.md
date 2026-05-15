@@ -5,46 +5,25 @@ description: "Read Figma designs and node context using Figma integrations befor
 
 # Figma MCP
 
-Prefer a Figma integration over generic browser automation when the user gives a Figma link or asks to inspect a design.
+The official Figma MCP system instruction already covers tool inventory, URL parsing (fileKey / branchKey / makeFileKey, `-` → `:`, board → `get_figjam`), and the design-to-code workflow. This skill only records the local environment rules and routing decisions that are **not** in that instruction.
 
-## Tool Selection
+Use the Figma MCP tool names actually exposed in the session; do not assume one exact function name.
 
-1. Prefer a remote Figma MCP tool surface first.
-   In current sessions this may appear as activation helpers for Figma design-context and code-connect tool groups. Use the Figma tool names actually exposed in the session instead of assuming one exact function name.
-2. If a remote/server-backed Figma integration is not available but a desktop or local Figma MCP server is available in the session, use that next.
-3. If neither Figma integration is available, or the integration cannot resolve the target URL or node, fall back to browser inspection.
-4. If browser fallback lands on login, workspace, or membership gates, use the extension-backed browser tools directly and let the extension manage session state.
+## Local Environment
 
-## Default Route
+- **Remote-only.** No desktop or local Figma MCP server is configured. There is no desktop selection to read — always ask the user for a link if one is missing.
+- **Authenticated browser fallback = extension-backed Playwright MCP** (Chrome attached through the Playwright MCP Bridge extension). Do **not** use the VS Code simple browser, `open_browser_page`, or `read_page` as a Figma auth fallback. A login wall in those tools is evidence of the wrong surface, not a real block.
 
-1. Normalize the Figma URL first.
-   Extract the file key when possible and keep `node-id`, `m=dev`, and other context that may matter for the target.
-2. Activate the available design-context tool group first when the task is read-only.
-   Use them to fetch design context, metadata, screenshots, or reference code for the target node.
-3. Use the available code-connect tools only when the user asks about node-to-code mappings.
-   Do not route simple design-reading tasks through code-connect flows.
-4. If the Figma integration cannot open the target directly, say why.
-   Typical reasons: no Figma tool surface in the session, no Figma window or target file open for a desktop-backed integration, unsupported URL shape, missing node selection, or auth/access issues.
-   If the issue is user-side prep such as "No Figma window open", ask whether the user wants to open or focus the target file in Figma and then retry before falling back to the browser.
-5. Only then fall back to browser-based access.
-   If browser access is needed, verify whether the page is truly readable or only a login wall.
+## Blocker Taxonomy
 
-## Rules
+When the Figma MCP route fails, name the blocker precisely instead of retrying weaker fallbacks:
 
-- Do not jump straight to Playwright for a Figma URL if any Figma integration exists in the session.
-- Do not use code-connect tools for simple read-only design inspection unless the user asked for implementation mappings.
-- If the integration is present but needs a Figma desktop window or focused file, ask the user to provide that prep before switching to browser fallback.
-- Distinguish between "tool unavailable", "URL unsupported", and "auth required". These are different blockers.
-- If the MCP route succeeds, prefer its structured output over scraping the rendered Figma web app.
-- If the browser fallback also fails, report the exact blocker and stop. Do not keep retrying weaker fallbacks.
+- **tool unavailable** — no Figma MCP tool surface in the session
+- **URL unsupported** — shape doesn't match the known fileKey/branchKey/makeFileKey forms
+- **missing input** — no `node-id` and no `get_metadata` discovery requested by the user
+- **auth/access** — remote server can't read the file (unshared, wrong workspace, expired session)
 
-## Verification
-
-- [ ] I checked for a Figma integration before opening the URL in a browser.
-- [ ] I used design-context tools for read-only inspection and code-connect tools only when mapping code was requested.
-- [ ] If the integration was present but needed user-side prep, I asked for that before browser fallback.
-- [ ] If I fell back to the browser, I verified whether the page was actually readable or only an access gate.
-- [ ] If I could not read the design, I named the blocker precisely: missing Figma tool surface, unsupported URL, or auth/access gate.
+If the browser fallback also fails, report the exact blocker and stop.
 
 ## See Also
 

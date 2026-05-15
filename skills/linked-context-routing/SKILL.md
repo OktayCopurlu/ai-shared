@@ -26,13 +26,27 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
    - Public, static pages → direct fetch/read tools
    - If the current session exposes a dedicated connector or authenticated integration for the domain, use that before generic browser automation
    - If no connector exists and browser state is required, use an explicit authenticated `playwright-mcp` browser path
+   - If the user says the page is already logged in through Chrome, use extension-backed Playwright MCP; do not substitute the VS Code simple browser or page-read tools
    - If browser access still fails or a first-party integration needs user-side prep, ask the user how to recover before marking the link blocked
 6. Track status per link.
    Mark each one as opened, partially read, awaiting user-assisted auth, awaiting user-side prep, blocked by missing tools, or unsupported.
 
+## MCP Capability Routing
+
+When a first-party MCP integration is available, choose the MCP capability that matches the user's need before falling back to generic browser automation.
+
+| Need | Prefer | Avoid |
+|---|---|---|
+| Read attached context, schemas, docs, files, records, or page data | MCP resources or read/search tools | Browser scraping the rendered UI first |
+| Run a known reusable workflow or template from that system | MCP prompts or MCP apps when exposed by the host | Reconstructing the workflow manually from memory |
+| Mutate data, trigger an external action, or inspect live browser behavior | MCP tools with the narrowest permissions; `playwright-mcp` only for real browser interaction | Treating every linked page as a click-through task |
+
+If the host exposes only tools, still apply the distinction conceptually: read-only context first, workflow/template second, mutation last. Do not call a write-capable tool just to discover whether read-only context exists.
+
 ## Non-Obvious Rules
 
 - Prefer first-party integrations over browser automation even if the browser path looks faster.
+- MCP integrations can expose tools, resources, prompts, and apps. Do not collapse all MCP-backed links into tool calls; resources are often the least risky path for context gathering.
 - Project-specific environment URL references belong to routing, not to any one browser implementation. Load them before deciding whether the final path is fetch, generic browser, or Playwright.
 - A failed fetch for Slack, Asana, or Figma does not prove the content is unreadable. It may only mean auth or a missing integration is in the way.
 - For private SaaS, auth is usually the first problem to solve. Do not treat it like an ordinary public-page fetch.
@@ -53,6 +67,7 @@ Use this workflow when a single ticket, doc, or project page contains multiple o
 - Start from the source page, not from guessed downstream pages.
 - Route by domain and platform before considering browser fallback.
 - Use `playwright-mcp` as the browser fallback when a link requires browser state, interaction, or inspection.
+- Do not use the VS Code simple browser as proof that an authenticated browser fallback failed. For logged-in Chrome state, use extension-backed `playwright-mcp` or report that this route is unavailable.
 - When auth or user-side prep is still recoverable, use an "awaiting user" status instead of calling the link blocked.
 - Report blockers precisely: missing integration, auth gate, unsupported URL shape, or tool/policy limitation.
 - When the user asks to read all links, say which ones were actually opened and which ones were blocked.
