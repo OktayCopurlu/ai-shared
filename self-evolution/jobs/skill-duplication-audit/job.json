@@ -1,0 +1,13 @@
+{
+  "label": "com.ai-shared.skill-duplication-audit",
+  "description": "Bi-weekly duplication audit across skills/, prompts/, references/, and instructions.md. Opens at most one conservative consolidation PR per run.",
+  "target_dir": "~/.ai-shared",
+  "model": "github-copilot/gpt-5.5",
+  "variant": "xhigh",
+  "always_isolate": true,
+  "timeout": 3600,
+  "schedule": [
+    { "day": 1, "hour": 14, "minute": 0 },
+    { "day": 15, "hour": 14, "minute": 0 }
+  ]
+}

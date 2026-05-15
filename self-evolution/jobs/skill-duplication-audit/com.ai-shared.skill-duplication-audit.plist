@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ai-shared.skill-duplication-audit</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/oktay.copurlu/.ai-shared/self-evolution/runner.sh</string>
+        <string>skill-duplication-audit</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Day</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>14</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Day</key>
+            <integer>15</integer>
+            <key>Hour</key>
+            <integer>14</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/oktay.copurlu</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/Users/oktay.copurlu/.nvm/versions/node/v22.17.0/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/oktay.copurlu/.ai-shared/self-evolution/jobs/skill-duplication-audit/logs/launchd-stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/oktay.copurlu/.ai-shared/self-evolution/jobs/skill-duplication-audit/logs/launchd-stderr.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/oktay.copurlu/.ai-shared</string>
+
+    <key>Nice</key>
+    <integer>10</integer>
+</dict>
+</plist>
