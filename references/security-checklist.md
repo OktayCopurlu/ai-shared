@@ -33,6 +33,13 @@ Quick-reference for security review passes. Referenced by `reviewing-code` and `
 - [ ] No secrets in client-side bundles — verify with bundle analysis if unsure
 - [ ] No secrets logged to console, error tracking, or analytics
 
+## Delegated AI Agents
+
+- [ ] Do not rely on Copilot content exclusions to hide sensitive files from delegated agents — GitHub documents that Copilot CLI, Copilot cloud agent, and IDE Agent mode do not support content exclusion
+- [ ] Before assigning a cloud agent, remove or rotate any secrets committed in files it can read; `.gitignore` and content-exclusion settings are not a security boundary
+- [ ] For Copilot cloud agent MCP configuration, allowlist only required read-only tools where possible; configured MCP tools can be used autonomously without per-call approval
+- [ ] Keep Copilot cloud agent credentials in Agents secrets/variables, not Actions/Codespaces/Dependabot secrets; use `COPILOT_MCP_`-prefixed values only for MCP server configuration
+
 ## Dependencies
 
 - [ ] No dependencies with known vulnerabilities (`npm audit`, `yarn audit`)
