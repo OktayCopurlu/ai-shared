@@ -52,6 +52,14 @@ Ask the user where the design should go:
 
 Default to inline if the user does not specify.
 
+## Decision Journal Nudge
+
+After delivering the design, append a single-line prompt:
+
+> 🧭 **Decision journal?** This design picked one path over alternatives. Consider 5 lines in `~/.ai-shared/decisions/{year}.md` (What / Context / Alternatives / Trade-off / Revisit). See `~/.ai-shared/references/decision-journal.md`.
+
+Do not write the entry yourself — the user owns the decision. Skip this nudge if the design only had one viable approach or fully delegates to an existing pattern.
+
 ## Guardrails
 
 - do not invent requirements — design against what the ticket actually says
