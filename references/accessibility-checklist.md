@@ -32,6 +32,7 @@ Quick-reference for accessibility review passes. Referenced by `a11y-audit` and 
 
 - [ ] Every form input has a visible `<label>` or `aria-label`/`aria-labelledby`
 - [ ] Icon-only buttons have accessible names (`aria-label` or visually hidden text)
+- [ ] Dialogs/modals have an accessible name via a visible title (`aria-labelledby`/`DialogTitle`) or a deliberately hidden title
 - [ ] Images have meaningful `alt` text — or `alt=""` for decorative images
 - [ ] Links describe their destination — no "click here" or "read more" without context
 - [ ] Group labels exist for related form fields (`<fieldset>` + `<legend>`)

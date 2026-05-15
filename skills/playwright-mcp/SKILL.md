@@ -26,6 +26,7 @@ The server organizes tools into **core** tools plus a small set of opt-in capabi
 If the target page may require login, paywall access, or workspace membership, prefer `--extension` when a suitable logged-in browser already exists.
 Do not assume persistent auth by default; persistence only exists when `--user-data-dir` or another explicit config provides it.
 If the page is still blocked, verify the attached tab and browser state before calling the page unreadable.
+Do not use the VS Code simple browser, `open_browser_page`, or `read_page` as a substitute for extension-backed Playwright MCP when the user expects reuse of a logged-in Chrome session.
 
 ## Capability Groups
 
@@ -146,7 +147,32 @@ Use this only after the review or QA flow has identified a real flag/experiment 
 5. Verify the active variant through UI, exposure/tracking payload, network response, or runtime state
 ```
 
-Do not brute-force likely cookie names. If the only switch is the AB Flag Override extension or an admin-only/server-side assignment, report the exact manual switch needed and resume after the user confirms it.
+For confirmed cookie or storage overrides, use an explicit, host-scoped write and then reload:
+
+```js
+// browser_evaluate on the already-open target page
+(() => {
+   document.cookie = '<COOKIE_NAME>=<ENCODED_VALUE>; Path=/; SameSite=Lax';
+   localStorage.setItem('<STORAGE_KEY>', '<VALUE>');
+   sessionStorage.setItem('<STORAGE_KEY>', '<VALUE>');
+})();
+```
+
+For localhost cookies, omit `Domain` so the browser scopes the cookie to the current host. For HTTPS preview cookies, include `Secure` only when the page is actually HTTPS. To clear a stale assignment, write the same cookie name with `Max-Age=0; Path=/` before setting the new value.
+
+If `browser_evaluate` is unavailable but `browser_run_code_unsafe` is available, use Playwright context cookies instead of clicking through extension UI:
+
+```js
+const url = new URL('/', page.url()).toString();
+await page.context().addCookies([
+   { name: '<COOKIE_NAME>', value: '<VALUE>', url, path: '/', sameSite: 'Lax' },
+]);
+await page.reload();
+```
+
+For localhost-only validation, if the real assignment path is server-side, extension-only, or otherwise unreachable through automation, it is acceptable to temporarily hard-code or stub the confirmed flag/experiment return value in the local working tree to capture screenshots or validate UI behavior. Keep that change minimal, announce it, remove it before finishing, and report the evidence as "validated with local hard-code" rather than production-equivalent allocation.
+
+Do not brute-force likely cookie names. If the only switch is the AB Flag Override extension or an admin-only/server-side assignment and no localhost hard-code is acceptable, report the exact manual switch needed and resume after the user confirms it.
 
 ### Authenticated preview access (HTTP basic auth)
 

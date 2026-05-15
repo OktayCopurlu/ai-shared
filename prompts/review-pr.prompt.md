@@ -84,6 +84,8 @@ Load the `manual-qa` skill and execute a QA run from the ticket requirements, PR
 
 Load the `validating-ui` skill and run its checklist on the preview environment when visible UI changed and manual QA has not already covered those browser checks.
 
+When the ticket has a Figma reference, the `validating-ui` token-level fidelity check is required — verify the report includes computed-style comparisons (spacing, typography, color, borders) against Figma values, not just screenshots or "looks similar". If the check was skipped, flag it as a review gap.
+
 If the PR visibly affects UI (component changes, layout, styling), also load the `a11y-audit` skill for an accessibility pass on the changed areas.
 
 #### Tracking validation
@@ -113,9 +115,10 @@ To switch variants:
 2. Check the source code, linked docs, preview tooling, and runtime storage for supported QA overrides: URL parameter, cookie, localStorage, sessionStorage, experiment SDK debug API, or preview flag endpoint.
 3. Use only an override mechanism that is documented or visible in source/runtime state. Do not invent cookie or storage keys from the experiment name.
 4. After applying an override, reload and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored key alone is not proof.
-5. If the browser tool surface lacks dedicated storage helpers, use `playwright-mcp` evaluation to set the confirmed cookie/storage value, then reload and verify.
-6. If allocation is server-side or only controllable through the "AB Flag Override" Chrome extension/admin UI, do not keep trying weaker storage guesses. Ask the user to switch the exact key/group manually, then continue validation after confirmation.
-7. If CI is failing and validation is limited to smoke, still report which variant was reachable and which variant was not verified because it could not be forced.
+5. If the browser tool surface lacks dedicated storage helpers, use `playwright-mcp` evaluation to set the confirmed cookie/storage value on the current origin, then reload and verify.
+6. For localhost-only validation, if allocation is server-side or only controllable through the "AB Flag Override" Chrome extension/admin UI, a temporary local hard-code or stub of the confirmed experiment/flag value is acceptable for screenshots and UI checks. Remove it before finishing and label the evidence as local hard-code validation.
+7. If no automation or localhost hard-code path is suitable, do not keep trying weaker storage guesses. Ask the user to switch the exact key/group manually, then continue validation after confirmation.
+8. If CI is failing and validation is limited to smoke, still report which variant was reachable and which variant was not verified because it could not be forced.
 
 ## Output Format
 
@@ -148,6 +151,20 @@ To switch variants:
 ### Verdict: Pass | Pass with notes | Fail
 [Summary of blocking issues, if any]
 ```
+
+## Senior Reflection
+
+After the verdict, append a short **"🎯 Senior Reflection"** block at the very end of the response — 3–4 bullets max. The lens here is *you as the reviewer*, not the PR author. Pull questions from `~/.ai-shared/references/senior-fundamentals.md`. Do not answer them; surface them so the user can act on them.
+
+Default rotation for review work — pick the lenses that fit:
+
+- **Mentoring** — Is there one principle in this PR that's worth teaching, not just requesting a change for? Did your comments explain *why*, not just *what to change*?
+- **Ego-less Feedback** — Are your comments critiquing the code or the person? Did you include at least one positive observation alongside the constructive ones?
+- **Sponsorship** — Is there a teammate who would grow from owning the follow-up work this PR uncovers?
+- **Glue Work** — Did the review surface a cross-team ambiguity (API contract, missing spec, doc gap) that's worth closing now instead of leaving for the next person?
+- **Tech Vision** — Does this PR push the codebase toward or away from where it should be in 6–12 months? Worth raising as a pattern, not a one-off comment?
+
+Keep the block terse. The goal is a daily nudge toward senior-level behaviors, not a checklist ceremony.
 
 ## Guardrails
 

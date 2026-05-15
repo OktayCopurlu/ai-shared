@@ -19,7 +19,7 @@ This file applies to **all** research modes. Load it before executing any mode s
 | Cloudflare       | blog.cloudflare.com, developers.cloudflare.com/changelog                                                               |
 | Contentful       | contentful.com/changelog, contentful.com/blog                                                                          |
 | Amplitude        | amplitude.com/blog, help.amplitude.com/hc/en-us/categories/release-notes                                               |
-| MCP protocol     | modelcontextprotocol.io, github.com/modelcontextprotocol/servers/releases                                              |
+| MCP protocol     | modelcontextprotocol.io, registry.modelcontextprotocol.io, github.com/modelcontextprotocol/registry, github.com/modelcontextprotocol/servers/releases |
 
 ### Tier 1B — Frontend & tooling (required for stack-specific findings)
 
@@ -46,7 +46,8 @@ This file applies to **all** research modes. Load it before executing any mode s
 - Official migration guides and upgrade docs
 - RFC repositories: github.com/vuejs/rfcs, github.com/tc39/proposals
 - Actively maintained `awesome-*` lists (check last commit date — must be < 6 months)
-- MCP server repositories: github.com/modelcontextprotocol/servers, punkpeye/awesome-mcp-servers
+- MCP server discovery: registry.modelcontextprotocol.io and github.com/modelcontextprotocol/registry for official server metadata; punkpeye/awesome-mcp-servers for actively maintained community discovery
+- MCP reference implementations: github.com/modelcontextprotocol/servers for protocol examples only, not broad server discovery
 - W3C / TC39 proposal trackers for CSS and JS language changes
 - Can I Use (caniuse.com) for browser compatibility changes
 - MDN Web Docs changelog for Web API changes
@@ -73,6 +74,7 @@ This file applies to **all** research modes. Load it before executing any mode s
 - lobste.rs — curated tech link aggregator (article-finder mode)
 - The Pragmatic Engineer (newsletter.pragmaticengineer.com) — in-depth engineering articles (article-finder mode)
 - InfoQ (infoq.com) — engineering conference talks and articles (article-finder mode)
+- GitHub Trending (github.com/trending?since=weekly, with language filters) — discovery-only surface for novel AI/dev-tooling repos (trending-discovery mode); a trending listing alone is never sufficient evidence — read the actual repo files and validate against Tier 1/2 before PR-ing
 
 > **Rule**: Community-only sourcing is not sufficient for a top finding. Always validate with Tier 1 or Tier 2.
 > **Rule**: For Tier 1B sources, only check the vendors relevant to the current mode (e.g. release-watch checks them exhaustively; weekly-digest only checks if something bubbles up from Tier 3).

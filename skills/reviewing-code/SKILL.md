@@ -72,7 +72,7 @@ Scan every changed file for mechanical issues. Load `applying-coding-style` firs
 
 For every changed function/component, check the test file.
 
-**Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on.
+**Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on, hand-rolled stub components that re-implement production logic, single `it` blocks with many unrelated assertions, hardcoded fixture values duplicated in expectations, optional chaining inside `expect(...).toBe(...)` that can pass as `undefined === undefined`.
 
 **Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `test-driven-development` when in scope.
 
