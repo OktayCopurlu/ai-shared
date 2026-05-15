@@ -1,6 +1,6 @@
 # ai-shared — Central AI Configuration
 
-This folder is the single source of truth for all AI agent configuration — skills, prompts, agents, and global instructions. Other tools (Copilot, Codex, OpenCode) consume this via symlinks.
+This folder is the single source of truth for all AI agent configuration — skills, prompts, agents, and global instructions. Other tools (Copilot, Codex, OpenCode, Claude Code) consume this via symlinks.
 
 ## Core Dependency Graph
 
@@ -426,20 +426,26 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 | `instructions.md`     | `~/.github/copilot-instructions.md`                | VS Code Copilot | Auto-loaded every conversation                                                                                                |
 | `instructions.md`     | `~/.codex/instructions.md`                         | Codex           | Auto-loaded every conversation                                                                                                |
 | `instructions.md`     | `~/.config/opencode/AGENTS.md`                     | OpenCode        | Global rules file; OpenCode reads `AGENTS.md` not `instructions.md`                                                           |
+| `instructions.md`     | `~/.claude/CLAUDE.md`                              | Claude Code     | Global user instructions file                                                                                                 |
 | `skills/`             | `~/.copilot/skills/`                               | VS Code Copilot | Directory symlink; skills loaded on demand via `<skills>` block                                                               |
 | `skills/*`            | `~/.codex/skills/*` (per-skill symlinks)           | Codex           | Requires per-skill symlinks; no directory symlink support                                                                     |
 | `skills/`             | `~/.config/opencode/skills/`                       | OpenCode        | Directory symlink; on-demand loading                                                                                          |
+| `skills/`             | `~/.claude/skills/`                                | Claude Code     | Directory symlink; SKILL.md naming matches                                                                                    |
 | `agents/`             | `~/.copilot/agents/`                               | VS Code Copilot | Copilot + OpenCode; Codex does not support custom agents                                                                      |
 | `agents/`             | _(not symlinked)_                                  | OpenCode        | **Not compatible** — OpenCode agents require different frontmatter (`mode`, `model`, `permission` object) and `.md` extension |
+| `agents/*.agent.md`   | `~/.claude/agents/*.md` (per-file)                 | Claude Code     | Renamed symlinks; `.agent.md` → `.md`                                                                                         |
 | `prompts/`            | `~/Library/Application Support/Code/User/prompts/` | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder                                                            |
 | `prompts/`            | `~/.codex/prompts/`                                | Codex           | Slash-command prompts                                                                                                         |
 | `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file)      | OpenCode        | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
+| `prompts/*.prompt.md` | `~/.claude/commands/*.md` (per-file)               | Claude Code     | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
+| `references/`         | `~/.claude/references/`                            | Claude Code     | Directory symlink; shared checklists                                                                                          |
 
 ## Rules for agents
 
 - **Creating/updating skills, prompts, or agents**: always write to `~/.ai-shared/...` — symlinks propagate automatically.
-- **Adding a new prompt**: create `~/.ai-shared/prompts/<name>.prompt.md`, then run `./setup.sh` so OpenCode per-command symlinks are refreshed.
-- **Adding a new skill**: create `~/.ai-shared/skills/<name>/SKILL.md`, then add a per-skill symlink to `~/.codex/skills/`.
+- **Adding a new prompt**: create `~/.ai-shared/prompts/<name>.prompt.md`, then run `./setup.sh` so OpenCode and Claude per-command symlinks are refreshed.
+- **Adding a new skill**: create `~/.ai-shared/skills/<name>/SKILL.md`, then run `./setup.sh` so Codex per-skill symlinks are refreshed.
+- **Adding a new agent**: create `~/.ai-shared/agents/<name>.agent.md`, then run `./setup.sh` so Claude per-agent symlinks are refreshed.
 - **Global instructions**: edit `~/.ai-shared/instructions.md` — all tools pick up changes.
 - This folder is git-tracked. Commit changes to preserve them.
 

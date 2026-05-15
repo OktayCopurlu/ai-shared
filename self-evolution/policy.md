@@ -74,6 +74,7 @@ This file applies to **all** research modes. Load it before executing any mode s
 - lobste.rs — curated tech link aggregator (article-finder mode)
 - The Pragmatic Engineer (newsletter.pragmaticengineer.com) — in-depth engineering articles (article-finder mode)
 - InfoQ (infoq.com) — engineering conference talks and articles (article-finder mode)
+- GitHub Trending (github.com/trending?since=weekly, with language filters) — discovery-only surface for novel AI/dev-tooling repos (trending-discovery mode); a trending listing alone is never sufficient evidence — read the actual repo files and validate against Tier 1/2 before PR-ing
 
 > **Rule**: Community-only sourcing is not sufficient for a top finding. Always validate with Tier 1 or Tier 2.
 > **Rule**: For Tier 1B sources, only check the vendors relevant to the current mode (e.g. release-watch checks them exhaustively; weekly-digest only checks if something bubbles up from Tier 3).
