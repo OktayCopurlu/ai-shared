@@ -143,6 +143,39 @@ Re-surface a previously logged item **only** if:
 
 ---
 
+## Incremental Repo Watch
+
+High-signal repos that publish many small changes (skills, prompts, agent rules, cookbook recipes). Visit incrementally: only inspect commits and changed files since the last visit, not the whole repo.
+
+| Repo                     | Why it matters                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| anthropics/skills        | Anthropic's own skill packages — direct source of skill/agent patterns         |
+| openai/openai-cookbook   | Practical agent / prompt / tool-use recipes from OpenAI                        |
+| github/awesome-copilot   | Community-curated Copilot instructions, prompts, and agent configs             |
+
+### How to visit incrementally
+
+1. Find the last visit SHA for the repo from recent `run-log.jsonl` entries (field `repo_state.<owner>/<repo>`).
+2. If no prior SHA exists, treat this as the baseline: read the repo's top-level structure and any one obviously relevant file, then record the current `HEAD` SHA. Do not deep-read.
+3. If a prior SHA exists, list changes since then:
+   - `gh api repos/<owner>/<repo>/compare/<last_sha>...HEAD --jq '.files[].filename'`
+   - Filter to files that could improve our repo: `**/SKILL.md`, `**/AGENTS.md`, `**/*.prompt.md`, `**/*.agent.md`, `**/instructions.md`, `**/*cursorrules*`, `cookbook/**`, `examples/**`, top-level `*.md` policy/guideline files.
+   - Read only those files (not unrelated code, assets, or generated content).
+4. If nothing relevant changed, count the repo as one successful visited source and move on.
+5. Record the new `HEAD` SHA in the run-log entry under `repo_state`, so the next run can diff from it.
+
+### Run-log addition
+
+When this pattern is used, the run-log line must include a `repo_state` object alongside existing fields:
+
+```json
+{"run_id":"...","date":"...","focus":"...","urls_visited":[...],"findings":[...],"prs_opened":0,"repo_state":{"anthropics/skills":"abc1234","openai/openai-cookbook":"def5678"}}
+```
+
+Only include repos actually visited this run. Existing SHAs from prior runs remain valid; the runner does not need every repo every day.
+
+---
+
 ## Stop Conditions
 
 - Stop at **7 top findings**. Do not pad with weak ones.

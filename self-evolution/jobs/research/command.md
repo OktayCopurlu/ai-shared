@@ -58,6 +58,17 @@ If a ripe watchlist item exists, address it first: it consumes today's one PR sl
 
 This replaces the previous Saturday deep-dive day — promotion now happens opportunistically across the work week.
 
+## Incremental repo watch (when today's focus touches repo mining)
+
+When today's focus involves mining agent/skill/prompt repos (e.g. the Monday rotation), apply the **Incremental Repo Watch** section of `SELF_EVOLUTION_POLICY_PATH` for the listed repos.
+
+Rules:
+- Pull the last visit SHA per repo from recent run-log entries (`repo_state.<owner>/<repo>`). If none exists, take a small baseline read and record the current HEAD SHA — do not deep-read.
+- For repos with a prior SHA, use `gh api repos/<owner>/<repo>/compare/<last_sha>...HEAD` and read only changed files that match the policy's allowlist (SKILL.md, AGENTS.md, *.prompt.md, *.agent.md, cookbook/**, etc.).
+- Each successfully visited incremental repo counts as one source toward the 10/15 obligation, even if nothing actionable changed.
+- Always record the new HEAD SHA in `repo_state` on this run's log line.
+
+
 ## Research loop
 
 Target real, recent, actionable signal.
@@ -170,7 +181,7 @@ Your final write action must be one JSON line appended to `SELF_EVOLUTION_RUN_LO
 Format:
 
 ```json
-{"run_id":"YYYYMMDD-HHMMSS","date":"YYYY-MM-DD","focus":"<focus_area>","urls_visited":["url1","url2"],"findings":[{"title":"...","score":7,"action":"logged|pr_opened","pr":"#N or null"}],"prs_opened":0}
+{"run_id":"YYYYMMDD-HHMMSS","date":"YYYY-MM-DD","focus":"<focus_area>","urls_visited":["url1","url2"],"findings":[{"title":"...","score":7,"action":"logged|pr_opened","pr":"#N or null"}],"prs_opened":0,"repo_state":{"<owner>/<repo>":"<sha>"}}
 ```
 
 Rules:
@@ -178,6 +189,7 @@ Rules:
 - `prs_opened` must be `0` or `1`
 - log the best non-PR findings too when relevant
 - if nothing useful was found, write an empty findings array
+- include `repo_state` only when an incremental repo watch was performed; list only repos visited this run
 
 ## Execution order
 
