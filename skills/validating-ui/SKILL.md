@@ -41,11 +41,18 @@ Only when a Figma reference exists in the ticket:
 
 - Compare the rendered UI to the Figma design at both desktop and mobile breakpoints.
 - If Figma provides designs for both viewports, compare both. If only one viewport is designed, compare that one and still verify the other viewport renders correctly.
-- Check spacing, sizing, typography, and color against the design.
-- Note meaningful deviations — do not chase pixel-perfect alignment on dynamic content.
+- **Token-level fidelity check (required, not optional).** Visual similarity is not enough — "the button is visible" does not pass this check. For each changed or new component, extract the Figma values via `figma-mcp` and compare against the rendered DOM's computed styles using `browser_evaluate` with `getComputedStyle`. Verify at minimum:
+  - spacing: `padding`, `margin`, `gap`
+  - sizing: `width`, `height`, `min-*`, `max-*` where the design specifies them
+  - typography: `font-size`, `line-height`, `font-weight`, `letter-spacing`, `font-family`
+  - color: `color`, `background-color`, `border-color` (compare hex/rgba, not just "looks similar")
+  - borders/corners: `border-width`, `border-radius`
+- Report each deviation as Figma value → computed value with the property name. Tolerate ≤1px rounding on dimensions; treat any color/typography mismatch as a finding.
+- If the codebase has design-system tokens (e.g. CSS variables, theme keys), verify the implementation uses them rather than hardcoded numbers — a value that matches Figma but bypasses the token system is still a finding.
 - If the design shows multiple states (empty, loading, populated, error), verify each one that is reachable at both viewports.
 - If the ticket or Figma has multiple platform variants, select the web-specific design node before judging spacing or typography.
-- If visual polish, copy, or design intent remains subjective after comparison, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
+- Screenshots are supporting evidence, not the primary check. Do not approve design fidelity on screenshots alone.
+- If visual polish, copy, or design intent remains subjective after token comparison, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
 
 ### 4. Runtime Health
 
@@ -102,13 +109,14 @@ After running the checklist, state one of:
 
 - Viewport(s) tested: <list>
 - Design reference compared: yes / no / not available
+- Token-level fidelity check: pass / pass with deviations / fail / not applicable
 - Tracking verified: yes / no / not applicable
 
 ### Verdict: Pass | Pass with notes | Fail
 
 ### Findings
 
-- [check name] result — evidence or note
+- [check name] result — evidence or note (for token deviations: `property`: Figma `X` → computed `Y`)
 
 ### Not Verified
 
@@ -132,7 +140,9 @@ After running the checklist, state one of:
 | Rationalization | Reality |
 |---|---|
 | "It looks fine on desktop, mobile is probably fine too" | Most layout bugs are viewport-specific. Both viewports are mandatory unless explicitly scoped. |
-| "I compared it to the design mentally" | Comparing from memory is unreliable. Open Figma and the browser side by side. |
+| "It looks right next to the Figma" | Side-by-side visual comparison misses 4px, color, and font-weight drift. Read the computed style and compare to the Figma value. |
+| "The button shows up, design matches" | Visibility is not fidelity. Padding, font-size, color, and radius must match the Figma node values. |
+| "I'll skip the token check, it's a small change" | Reviewers and designers catch token drift on small changes too. Run the check or mark it not verified with a reason. |
 | "I checked Storybook, so design is approved" | Storybook/browser evidence helps reviewers, but subjective UX approval still needs the designer or UX owner when intent is ambiguous. |
 | "The tests pass, so the UI is correct" | Tests verify logic, not pixels. Visual regressions, layout shifts, and styling issues don't show up in unit tests. |
 | "Console warnings are not errors" | Hydration warnings, deprecation notices, and React/Vue warnings often indicate real bugs. Investigate each one. |
@@ -143,6 +153,8 @@ After running the checklist, state one of:
 
 - Verdict says "Pass" but only one viewport was tested
 - Design comparison claimed without a Figma link in the ticket
+- Design comparison claimed without a token-level computed-style check — only screenshots or visual side-by-side
+- Hardcoded numbers used when matching design-system tokens exist
 - Design feedback comes from a different platform node than the implemented web surface
 - Console errors dismissed as "pre-existing" without verification
 - No regression check on adjacent UI
@@ -157,6 +169,8 @@ After completing UI validation:
 - [ ] Page loads without errors or blank screen
 - [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
 - [ ] Design comparison done against Figma (if reference exists)
+- [ ] Token-level computed-style check completed for each changed/new component (spacing, sizing, typography, color, borders) — or marked not applicable with reason
+- [ ] Design-system tokens used instead of hardcoded values where available
 - [ ] Web-specific design node was used when multiple platform variants exist
 - [ ] Designer/UX handoff evidence was prepared when subjective visual approval is still needed
 - [ ] No new console errors or warnings
