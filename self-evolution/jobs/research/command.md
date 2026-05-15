@@ -50,6 +50,14 @@ Do these first:
 
 Do not scan the whole repo. Read only files directly relevant to the candidate you are exploring.
 
+## Watchlist pre-step (every run)
+
+Before starting today's focus, scan recent run-log entries for watchlist findings (score 8–10) and check whether any are now actionable. A watchlist item is ripe if new evidence has appeared since it was logged — a release shipped, a related repo gained traction, an article or doc confirmed the pattern, or it now recurs across multiple sources.
+
+If a ripe watchlist item exists, address it first: it consumes today's one PR slot instead of today's focus. Log the diverted focus in the run log so it is visible. If no watchlist item is ripe, proceed with today's focus as scheduled.
+
+This replaces the previous Saturday deep-dive day — promotion now happens opportunistically across the work week.
+
 ## Research loop
 
 Target real, recent, actionable signal.

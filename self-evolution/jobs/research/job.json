@@ -6,6 +6,10 @@
   "variant": "xhigh",
   "timeout": 3600,
   "schedule": [
-    { "hour": 11, "minute": 0 }
+    { "weekday": 1, "hour": 11, "minute": 0 },
+    { "weekday": 2, "hour": 11, "minute": 0 },
+    { "weekday": 3, "hour": 11, "minute": 0 },
+    { "weekday": 4, "hour": 11, "minute": 0 },
+    { "weekday": 5, "hour": 11, "minute": 0 }
   ]
 }
