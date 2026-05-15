@@ -410,6 +410,7 @@ When content feels heavy, first decide whether the problem is scope, duplication
 │   ├── refactoring-patterns.md
 │   ├── search-first.md
 │   ├── security-checklist.md
+│   ├── subagent-driven-development.md
 │   ├── testing-patterns.md
 │   └── work-shaping.md
 ├── docs/                 # Contributor documentation
