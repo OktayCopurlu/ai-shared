@@ -13,9 +13,21 @@ These rules apply to ALL code I write or modify. They override generic conventio
   - `FALLBACK_LABELS` not `MOCK_LABELS` + a JSDoc explaining it's a fallback
   - `isEligibleForScales()` not `checkProduct()` + a comment saying "checks if product can show scales"
   - `formatPriceWithCurrency()` not `format()` + inline comment
+
+### Variables and Props
+
 - **Boolean variables/props**: Prefix with `is`, `has`, `should`, `can` (e.g. `isVisible`, `hasError`)
+
+### Functions
+
 - **Functions**: Use verb phrases that describe what they do (e.g. `getScaleData`, `trackExposure`)
+
+### Constants
+
 - **Constants**: Use UPPER_SNAKE_CASE with a name that conveys purpose, not implementation (e.g. `ELIGIBLE_SUBTYPES` not `ROAD_RUNNING_SET`)
+
+### Generic Names
+
 - **Avoid generic names**: No `data`, `info`, `item`, `result`, `temp`, `val` unless scope is < 3 lines
 
 ## Comments
@@ -46,7 +58,7 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 ## Change Discipline
 
-- **Scope**: Touch only what the task requires. Don't "clean up" adjacent code, refactor imports in unrelated files, or add features not in the spec. Note improvements for later — don't fix them mid-task.
+- **Scope**: Modify only the code explicitly required to complete the task. Avoid refactoring unrelated code, even within the same file, unless explicitly instructed. Note improvements for later — don't fix them mid-task.
 - **Test between changes**: Don't write 100+ lines without running tests. Make a change, verify it works (tests pass, build succeeds), then move on. Bugs compound when changes pile up untested.
 - **Keep it compilable**: After every meaningful change, the project must build and existing tests must pass. Never leave the codebase in a broken state between edits.
 

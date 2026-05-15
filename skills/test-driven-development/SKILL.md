@@ -18,7 +18,10 @@ Write the test first. Make it pass. Clean up. Repeat.
 - `describe` block: the unit being tested. `it` block: behavior in plain English — no "should" prefix
 - Test priority: happy path → business rules / invariants → edge cases → error cases
 - Each test sets up its own data — no shared mutable state
+- One behavior per `it`. When two tests share the same arrange/act, move it into `beforeEach` so each `it` asserts a single outcome
 - Mock external dependencies (API calls, timers) — not internal modules
+- For Vue child components, prefer `stubs: { Child: true }` over hand-rolled stub components, and assert on `findComponent({ name }).props(...)` rather than text rendered by the stub
+- Derive expected values from the fixture; do not duplicate fixture values as hardcoded strings in assertions
 - If `beforeEach` is longer than the test body, use a factory with sensible defaults: `buildOrder({ status: 'pending' })`
 - Extract test helpers only when duplication causes maintenance pain — keep them in the same file, not a shared grab bag
 - Assert properties and invariants alongside specific values — ask "what must always be true about the output?"
@@ -59,6 +62,10 @@ Each cycle should respond to what you learned from the previous one.
 - Skipping the refactor step
 - `beforeEach` that sets up more state than any single test needs
 - Tests that only assert equality to hardcoded values without checking invariants
+- Hand-rolled stub component whose template re-implements production logic (`:href="disabled ? undefined : url"`) — the test now verifies the stub
+- One `it` with many unrelated assertions, instead of one behavior per `it`
+- Hardcoded SKUs/URLs/IDs duplicated from the fixture in assertions
+- `expect(x).toBe(fixture.a?.b?.c)` — optional chaining hides false-positive `undefined === undefined`
 
 ## See Also
 
