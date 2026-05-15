@@ -34,6 +34,20 @@ When alignment is reached, summarize:
 
 Do not write the full spec unless the user asks you to continue into `spec`.
 
+## Senior Reflection
+
+After the alignment summary, append a short **"🎯 Senior Reflection"** block at the very end — 3–4 bullets max. Grill-me is already Socratic; this block reinforces the *senior framing lens* the user should keep applying outside this conversation. Pull questions from `~/.ai-shared/references/senior-fundamentals.md`. Do not answer them; surface them.
+
+Default rotation for grilling work — pick the lenses that fit:
+
+- **Problem Framing** — Which user/business problem does this actually solve? Are we confident this is the right problem, not just a stakeholder request?
+- **Saying No** — What happens if we *don't* do this now? Is there a smaller version that captures 80% of the value?
+- **Cross-Functional** — Which decisions in the open-questions list are actually a PM, designer, or domain-expert call — not yours to invent?
+- **Estimation** — For the recommended next step, what's the best / likely / worst-case effort and which risk would you flag now?
+- **Tech Vision** — Does the recommended direction push the codebase toward or away from where it should be in 6–12 months?
+
+Keep the block terse. The goal is a daily nudge toward senior-level behaviors, not a checklist ceremony.
+
 ## Guardrails
 
 - Do not ask a batch of questions unless the user asks for a questionnaire.
