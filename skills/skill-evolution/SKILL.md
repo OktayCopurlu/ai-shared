@@ -28,6 +28,27 @@ All skills live in `~/.ai-shared/skills/`. Other repos see them via symlinks —
 
 Prune memory notes that have been codified, are stale (30+ days, no recurrence), or are project-specific.
 
+## Memory Provenance
+
+When a memory note encodes a hard-won lesson from a specific PR, ticket, incident, or external doc, optionally append a provenance suffix on the same line:
+
+```
+- Do not amend after review approval — commit is destructive (PR #74)
+- Atlassian `search` mixes Jira + Confluence results (Atlassian MCP docs, 2026-04)
+```
+
+Use provenance when:
+
+- the note overrules a default behavior or a previously documented practice
+- a future reader will reasonably ask "where did this come from?" before trusting it
+- the source is the kind of thing that can be re-read to re-verify — a PR diff, a Jira link, a vendor docs page, a specific commit
+
+Do not add provenance to generic preferences ("user likes short replies") or stable principles ("never claim tested unless verified") — the marker would just add noise.
+
+Keep provenance terse: a PR/issue number, a short doc title and date, or a commit SHA. Do not paste full URLs in user memory when a short reference is enough — the long form belongs in the codified skill or reference if the lesson got promoted.
+
+When a note is later codified into a skill, drop the memory entry rather than leaving a duplicate with stale provenance.
+
 ## Tool Drift While Using Skills
 
 When using a tool-adapter skill such as `playwright-mcp`, `github-mcp`, or `atlassian-mcp`, watch for runtime drift:
