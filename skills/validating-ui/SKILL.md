@@ -31,6 +31,7 @@ Run these checks in order. Stop early if a critical failure is found.
 - Test at both desktop (≥1280px) and mobile (375px) viewports. Both are mandatory unless the change is explicitly scoped to a single layout.
 - The changed UI renders as expected at each viewport.
 - Text content, images, and layout match what the ticket describes.
+- For visual-change tickets, prove the intended delta is actually visible by comparing against a baseline: staging/production, the previous component state, or a before screenshot. If no baseline is reachable, state that explicitly and verify the changed properties against ticket/design values instead of claiming the delta was confirmed.
 - Interactive states work: hover, focus, active, disabled, loading, empty, error.
 - For multi-step flows or wizards, exercise forward and backward navigation. Verify previous selections/input are restored unless the ticket explicitly resets them, and confirm focus remains visible and is not clipped after each step transition.
 - No layout shifts, overlapping elements, or clipped content in the affected area.
@@ -143,6 +144,7 @@ After running the checklist, state one of:
 | "It looks fine on desktop, mobile is probably fine too" | Most layout bugs are viewport-specific. Both viewports are mandatory unless explicitly scoped. |
 | "It looks right next to the Figma" | Side-by-side visual comparison misses 4px, color, and font-weight drift. Read the computed style and compare to the Figma value. |
 | "The button shows up, design matches" | Visibility is not fidelity. Padding, font-size, color, and radius must match the Figma node values. |
+| "I checked the preview and it looks fine" | A visual-change ticket must show the requested change versus a baseline; otherwise you may only know that the UI renders, not that the intended delta happened. |
 | "I'll skip the token check, it's a small change" | Reviewers and designers catch token drift on small changes too. Run the check or mark it not verified with a reason. |
 | "I checked Storybook, so design is approved" | Storybook/browser evidence helps reviewers, but subjective UX approval still needs the designer or UX owner when intent is ambiguous. |
 | "The tests pass, so the UI is correct" | Tests verify logic, not pixels. Visual regressions, layout shifts, and styling issues don't show up in unit tests. |
@@ -153,6 +155,7 @@ After running the checklist, state one of:
 ## Red Flags
 
 - Verdict says "Pass" but only one viewport was tested
+- Visual-change ticket marked pass without a baseline/before comparison or an explicit reason the baseline was unavailable
 - Design comparison claimed without a Figma link in the ticket
 - Design comparison claimed without a token-level computed-style check — only screenshots or visual side-by-side
 - Hardcoded numbers used when matching design-system tokens exist
@@ -169,6 +172,7 @@ After completing UI validation:
 
 - [ ] Page loads without errors or blank screen
 - [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
+- [ ] Visual-change delta verified against a reachable baseline/before state, or marked not verified with reason
 - [ ] Design comparison done against Figma (if reference exists)
 - [ ] Token-level computed-style check completed for each changed/new component (spacing, sizing, typography, color, borders) — or marked not applicable with reason
 - [ ] Design-system tokens used instead of hardcoded values where available
