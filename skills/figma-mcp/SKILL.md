@@ -29,3 +29,4 @@ If the browser fallback also fails, report the exact blocker and stop.
 
 - `linked-context-routing` — route mixed project-page links to the right integration before browser fallback
 - `validating-ui` — compare implementation against a Figma design once the design is readable
+- `~/.ai-shared/references/ui-fidelity-check.md` — three-way Figma / codebase / browser comparison; load before claiming a UI change matches Figma

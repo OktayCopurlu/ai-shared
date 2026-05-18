@@ -17,6 +17,8 @@ Create a temporary QA plan, execute it, and report evidence. Do not stop at writ
 
 Do not use this as a replacement for automated tests, type checks, lint, or `validating-ui`. Use it to cover the human-facing functional checks those gates do not prove.
 
+When the QA includes Figma-vs-implementation fidelity, load `~/.ai-shared/references/ui-fidelity-check.md` and run the three-way check (Figma specs, codebase CSS, browser computed styles) instead of judging from screenshots.
+
 ## Workflow
 
 1. Gather the smallest complete context:

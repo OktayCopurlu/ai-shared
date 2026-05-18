@@ -40,20 +40,11 @@ Run these checks in order. Stop early if a critical failure is found.
 
 Only when a Figma reference exists in the ticket:
 
-- Compare the rendered UI to the Figma design at both desktop and mobile breakpoints.
-- If Figma provides designs for both viewports, compare both. If only one viewport is designed, compare that one and still verify the other viewport renders correctly.
-- **Token-level fidelity check (required, not optional).** Visual similarity is not enough — "the button is visible" does not pass this check. For each changed or new component, extract the Figma values via `figma-mcp` and compare against the rendered DOM's computed styles using `browser_evaluate` with `getComputedStyle`. Verify at minimum:
-  - spacing: `padding`, `margin`, `gap`
-  - sizing: `width`, `height`, `min-*`, `max-*` where the design specifies them
-  - typography: `font-size`, `line-height`, `font-weight`, `letter-spacing`, `font-family`
-  - color: `color`, `background-color`, `border-color` (compare hex/rgba, not just "looks similar")
-  - borders/corners: `border-width`, `border-radius`
-- Report each deviation as Figma value → computed value with the property name. Tolerate ≤1px rounding on dimensions; treat any color/typography mismatch as a finding.
-- If the codebase has design-system tokens (e.g. CSS variables, theme keys), verify the implementation uses them rather than hardcoded numbers — a value that matches Figma but bypasses the token system is still a finding.
+- **Token-level fidelity check (required, not optional).** Follow `~/.ai-shared/references/ui-fidelity-check.md` — the three-way Figma / codebase / browser comparison, property list, viewport matrix, and shared-component consumer rule live there. Do not claim a UI change matches Figma without running it.
 - If the design shows multiple states (empty, loading, populated, error), verify each one that is reachable at both viewports.
 - If the ticket or Figma has multiple platform variants, select the web-specific design node before judging spacing or typography.
 - Screenshots are supporting evidence, not the primary check. Do not approve design fidelity on screenshots alone.
-- If visual polish, copy, or design intent remains subjective after token comparison, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
+- If visual polish, copy, or design intent remains subjective after the fidelity check, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
 
 ### 4. Runtime Health
 

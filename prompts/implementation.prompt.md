@@ -32,7 +32,7 @@ If the ticket is a code workflow:
    - search the codebase for similar patterns already implemented elsewhere (e.g. same layout, same interaction, same data shape)
    - if a shared component exists, verify its prop/slot API covers the ticket's needs before deciding to use it, extend it, or build something new
    - if a similar pattern exists elsewhere, reuse the same approach rather than inventing a parallel one
-   - when a Figma reference exists, use `figma-mcp` to extract exact design tokens **before** writing styles: spacing, padding, margin, gap, font-size, line-height, font-weight, color, border-radius, border-width. Prefer existing design-system variables; only fall back to Figma's raw values when no variable matches. Do not eyeball values from a screenshot.
+   - when a Figma reference exists, use `figma-mcp` to extract exact design tokens **before** writing styles: spacing, padding, margin, gap, font-size, line-height, font-weight, color, border-radius, border-width. Prefer existing design-system variables; only fall back to Figma's raw values when no variable matches. Do not eyeball values from a screenshot. See `~/.ai-shared/references/ui-fidelity-check.md` for the verification rules that will be applied during validation.
 9. if the UI work touches forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load the `a11y-audit` skill during implementation and apply it while building
 10. if the ticket is large, cross-layer, or under-specified, apply the Task Shape and Context rules before implementation
 11. read the minimum code context needed and begin implementation
