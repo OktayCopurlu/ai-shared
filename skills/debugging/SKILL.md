@@ -45,6 +45,12 @@ Prevent recurrence.
 - Commit the fix and guard together.
 - **Exit:** A test guards against recurrence.
 
+## Loop Breaker
+
+When a fix attempt or verification command fails the same way again, pause before trying another patch. Write down the current hypothesis, the evidence that supports or disproves it, and one different hypothesis to test next.
+
+Then return to Localize or Reduce with that new test; do not repeat the same command or edit unless new evidence changed the situation.
+
 ## Common Rationalizations
 
 | Rationalization | Reality |
@@ -52,11 +58,13 @@ Prevent recurrence.
 | "I know what the bug is, let me just fix it" | Skipping reproduction means you might fix the wrong thing. |
 | "It works on my machine" | Environment differences are bugs too. |
 | "I'll just restart and try again" | Intermittent failures are real bugs — harder to find, not less important. |
+| "Maybe the same fix will work if I try it again" | Repeating a failed action without new evidence is a loop, not debugging. |
 
 ## Red Flags
 
 - Fixing without reproducing first
 - Multiple "fix" attempts without localizing the root cause
+- Re-running the same failed command or applying the same style of patch without a new hypothesis
 - Bug fix committed without a regression test
 
 ## See Also

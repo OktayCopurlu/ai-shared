@@ -9,3 +9,4 @@ ui-validation-design-handoff|validating-ui|validate this UI against Figma before
 ui-validation-multistep-flow|validating-ui|validate this multi-step wizard UI|forward and backward navigation.*previous selections/input.*focus remains visible
 playwright-snapshot-first|playwright-mcp|fill this web form|Always snapshot before interacting
 skill-drift-codify|skill-evolution|this skill's MCP tools drifted|Prefer updating selection heuristics.*representative examples over maintaining exhaustive tool inventories
+debugging-loop-breaker|debugging|the test still fails after two fixes|write down the current hypothesis.*one different hypothesis
