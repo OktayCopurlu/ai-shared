@@ -1,16 +1,17 @@
 ---
-description: "Draft a solution design for a Jira ticket. Reads ticket context, linked resources, and produces a technical design doc section or standalone design."
+description: "Draft a project or epic-level technical design. Reads project context, linked resources, and produces a technical design doc section or standalone design."
 ---
 
-# Solution Design
+# Project Design
 
-When the user provides a ticket key, link, or topic:
+When the user provides a project page, epic, ticket key, link, or topic:
 
 1. read the full Jira detail via Atlassian MCP (if a ticket is provided)
 2. open and read every link in the ticket — Figma, Contentful, wiki pages, linked tickets, and any other referenced URLs
 3. if a Confluence project page exists, read it to understand the broader project context
+4. if the request is ticket-sized rather than project- or epic-shaped, suggest `spec` or `refine-ticket` unless the user explicitly wants a broader design
 
-## Draft the Design
+## Draft the Project Design
 
 Use the `project-doc-expert` agent's Technical Design mode. The design should cover:
 
@@ -26,11 +27,11 @@ Omit sections that do not apply. Do not pad with empty or boilerplate sections.
 
 ### Scope Calibration
 
-Match the depth to the ticket size:
+Match the depth to the project size:
 
-- **Small ticket** (1-2 AC items, single component): 1-page inline design — Context, Approach, Risks. No need for a separate Confluence page.
-- **Medium ticket** (3-6 AC items, touches multiple files/packages): full design with all sections above.
-- **Large ticket** (cross-team, new architecture, data model changes): full design plus Data Model, API/Contract Changes, Rollout Plan, Observability.
+- **Small project or epic** (single domain, known implementation pattern): 1-page inline design — Context, Approach, Risks. No need for a separate Confluence page.
+- **Medium project or epic** (multiple components, packages, or dependencies): full design with all sections above.
+- **Large project or epic** (cross-team, new architecture, data model changes): full design plus Data Model, API/Contract Changes, Rollout Plan, Observability.
 
 ### Work-Shaping Rules
 
@@ -64,6 +65,6 @@ Do not write the entry yourself — the user owns the decision. Skip this nudge 
 
 - do not invent requirements — design against what the ticket actually says
 - do not propose architecture changes beyond what the ticket scope needs
-- do not write a solution design for a ticket that already has one unless the user asks to rewrite it
+- do not write a project design for ticket-sized work unless the user asks for project-level planning
 - if the ticket is too vague to design against, say so and suggest refining the ticket first
 - keep the design practical — optimize for "can an engineer start work from this?" not for completeness

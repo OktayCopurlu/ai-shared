@@ -99,7 +99,8 @@ That's it. All four tools now read from this repo.
 ├── prompts/              # Slash-command prompts (development lifecycle)
 │   ├── grill-me.prompt.md          # Define — alignment interview before spec
 │   ├── spec.prompt.md              # Define — clarify what to build
-│   ├── solution-design.prompt.md   # Plan — technical design
+│   ├── project-design.prompt.md    # Design — project/epic-level technical design (not per-ticket)
+│   ├── pipeline.prompt.md          # Contract — canonical phase order for ticket delivery
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── start-working.prompt.md     # Build — full delivery workflow
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
@@ -267,7 +268,7 @@ graph LR
   P_GRILL[/grill-me/]:::prompt
   P_SPEC[/spec/]:::prompt
   P_REFINE[/refine-ticket/]:::prompt
-  P_SOLUTION[/solution-design/]:::prompt
+  P_PROJDESIGN[/project-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
   P_START[/start-working/]:::prompt
   P_INV[/investigation/]:::prompt
@@ -319,15 +320,15 @@ graph LR
   %% ── Prompt → Skill / Agent / Reference ─────────────
   P_GRILL --> R_WORK
   P_SPEC -. optional .-> P_GRILL
-  P_SPEC -. See Also .-> P_SOLUTION
+  P_SPEC -. See Also .-> P_PROJDESIGN
   P_SPEC -. See Also .-> P_REFINE
   P_SPEC -. See Also .-> S_JIRA
   P_SPEC --> R_WORK
   P_REFINE --> S_JIRA
   P_REFINE --> S_ATLAS
-  P_SOLUTION --> A_PROJDOC
-  P_SOLUTION --> S_ATLAS
-  P_SOLUTION --> R_WORK
+  P_PROJDESIGN --> A_PROJDOC
+  P_PROJDESIGN --> S_ATLAS
+  P_PROJDESIGN --> R_WORK
   P_START --> P_IMPL
   P_START -. analysis-only .-> P_INV
   P_INV --> R_SEARCH

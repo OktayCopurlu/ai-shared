@@ -17,7 +17,7 @@ This skill does not explain how to use browser tools — load `playwright-mcp` f
 
 ## Validation Checklist
 
-Run these checks in order. Stop early if a critical failure is found.
+Run these checks in order. If a critical failure blocks the target UI, run the Validation Recovery Protocol before marking anything blocked or not verified.
 
 ### 1. Page Load
 
@@ -74,6 +74,33 @@ Only when the ticket mentions analytics or tracking:
 4. If a11y is relevant, load `a11y-audit` separately — do not mix a11y findings into this validation.
 5. If the change is behind a feature flag, experiment, or A/B test, follow the experiment override protocol below. Test both enabled/disabled or control/treatment states when they are controllable.
 
+### Validation Recovery Protocol
+
+Use this when the expected UI is not immediately reachable: localhost will not open, the preview URL is missing, the route 404s, the changed section is not visible, the PDP/product data does not show the component, a locale/market differs, auth is missing, or a flag/experiment hides the UI.
+
+Do not mark UI validation as skipped, blocked, or not verified after a single failed attempt. First try concrete recovery paths and record what happened.
+
+1. Capture the failed attempt: URL, viewport, console/network symptom, screenshot or DOM observation, and why it did not reach the target UI.
+2. Verify the runtime path:
+	- confirm the dev server command and port from repo scripts/docs
+	- if localhost fails, try the PR preview when available
+	- if the preview is missing, try the PR branch locally
+	- if the route is unclear, search the app routes, navigation, ticket links, and changed files for the intended path
+3. Verify prerequisites before giving up:
+	- auth/session state
+	- locale, market, country, currency, or language path
+	- feature flag or experiment assignment
+	- product/test data, query parameters, or CMS/API data needed to render the section
+4. Try an alternate render surface when the production route cannot expose the UI:
+	- direct route or deep link from source code
+	- app navigation from a known working page
+	- Storybook, component playground, or docs page for the changed component
+	- local fixture, mock, or temporary hard-code only for validation evidence; remove it before finishing and label the evidence clearly
+5. Once the target DOM is reachable, rerun the required viewport and token-level checks. Do not stop at page-load evidence if the ticket requires design fidelity.
+6. Ask the user for help only after exhausting reasonable recovery paths or hitting a hard blocker such as missing credentials, unavailable environment access, or a build/runtime failure that prevents any browser surface from rendering.
+
+A blocked/not-verified verdict must include the recovery attempts, grouped by path tried. The minimum bar is: one environment check, one route/data/flag prerequisite check, and one alternate render-surface attempt, unless a hard blocker makes one of those categories impossible.
+
 ### Experiment Override Protocol
 
 Use this when a UI change is gated by a feature flag, experiment, or A/B test.
@@ -123,7 +150,7 @@ After running the checklist, state one of:
 - Do not use an app/native/mobile-platform design node as the source of truth for web UI unless the ticket explicitly says to.
 - Do not treat agent-side UI validation as designer or UX approval. Report the concrete evidence and any design handoff still needed.
 - Do not mix accessibility findings into this validation — use `a11y-audit` for that.
-- If the page cannot be loaded locally, say so and list what was not verified.
+- If the page cannot be loaded locally, run the Validation Recovery Protocol before listing anything as blocked or not verified.
 - Do not call a treatment variant blocked after arbitrary cookie attempts; first prove the supported override path or report that the variant needs user-assisted/server-side allocation.
 - Do not leave temporary localhost hard-codes or stubs in the final diff unless the user explicitly asks for that implementation change.
 
@@ -140,6 +167,8 @@ After running the checklist, state one of:
 | "Console warnings are not errors" | Hydration warnings, deprecation notices, and React/Vue warnings often indicate real bugs. Investigate each one. |
 | "I'll check regression later" | Adjacent UI sharing the same container or data source can break silently. Check it now. |
 | "The change is too small to need browser validation" | Even a one-line CSS change can cause layout shifts across viewports. Small changes are quick to validate. |
+| "Localhost did not open, so UI validation is skipped" | Try the preview, confirm the dev server/port, run the PR branch locally, or validate the changed component in Storybook before calling it blocked. |
+| "I did not see the section on the PDP" | Check locale, product data, flags, CMS/API state, route parameters, and alternate render surfaces before marking the section not verified. |
 
 ## Red Flags
 
@@ -153,6 +182,8 @@ After running the checklist, state one of:
 - Subjective UX or visual-polish questions are marked fully verified without designer handoff evidence
 - Validation done before quality gates passed
 - Tracking verification skipped when the ticket mentions analytics
+- UI validation marked skipped/blocked after one failed URL, route, or section lookup
+- No recovery attempts listed for a missing preview, broken localhost, hidden section, locale mismatch, or gated UI
 
 ## Verification
 
@@ -168,6 +199,7 @@ After completing UI validation:
 - [ ] No new console errors or warnings
 - [ ] Regression check on adjacent UI completed
 - [ ] Tracking verified (if applicable)
+- [ ] Recovery protocol followed and attempts recorded when the target UI was not immediately reachable
 - [ ] Verdict stated with evidence
 
 ## See Also

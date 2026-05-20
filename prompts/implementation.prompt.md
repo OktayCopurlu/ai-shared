@@ -108,11 +108,15 @@ For small docs-only changes, harmless config metadata, or mechanical refactors w
 
 If the changes have visible UI impact — component changes, layout shifts, styling updates, new UI elements, or a Figma link in the ticket — load the `validating-ui` skill and follow its checklist and verdict format as part of manual QA. If the ticket contains a Figma link, use it as the design reference. Treat UI validation as evidence gathering, not a replacement for human taste; report what was verified and what still needs human review for subjective UX, visual polish, or copy.
 
+Do not skip manual QA or UI validation after one failed attempt to reach the target UI. If localhost will not open, the preview is missing, the changed section is not visible, the route is wrong, the locale/data state differs, or a flag/experiment hides the UI, follow the `validating-ui` Validation Recovery Protocol before marking anything blocked or not verified. Try reasonable preview/local/route/data/flag/component-surface fallbacks and record the attempts.
+
 If the changes are purely backend, config, or logic-only with no UI surface, run focused manual QA for the observable behavior when risk exists. If there is no practical observable path, mark the relevant checks as not verified with a reason.
 
 ### Failure Policy
 
 If manual QA or UI validation fails because of the implementation: fix it, rerun. If the fix causes code changes, rerun quality gates before continuing.
+
+If manual QA or UI validation cannot reach the target environment, treat that as a validation recovery problem first, not an automatic skip. Only report `Blocked` or `Not verified` after the recovery attempts are recorded.
 
 ## Blocker Handling
 

@@ -50,9 +50,11 @@ When the QA includes Figma-vs-implementation fidelity, load `~/.ai-shared/refere
    - For feature flags or experiments, follow `validating-ui`'s experiment override protocol before trying cookies or storage values.
    - For tracking, verify event names, triggers, and payloads through browser console logs or network requests.
    - For non-UI work, exercise the observable behavior through the lightest runnable path: CLI, API, dev server, focused script, or existing test harness.
+   - If the target runtime or changed UI is not immediately reachable, follow `validating-ui`'s Validation Recovery Protocol before marking a check blocked or not verified. Do not stop after one failed localhost, preview, route, or data-state attempt.
 6. Update the temporary plan as checks complete.
    - Use `Pass`, `Fail`, `Blocked`, or `Not verified`.
    - Record concrete evidence: URL, viewport, input data, observed output, console/network result, command output, or blocker.
+   - For any `Blocked` or `Not verified` UI/browser check, include the recovery paths tried.
 7. Report the final QA result.
    - Summarize primary scenarios, regression checks, failures, blockers, and not-verified items.
    - Include the temporary plan path for traceability.
@@ -101,12 +103,14 @@ Always add regression checks when the diff touches:
 | "UI validation covers QA." | UI validation covers browser/rendering evidence. Manual QA also covers ticket intent, regression risk, data states, and non-UI behavior. |
 | "The ticket did not mention this changed file." | Ticket-unrelated changes are exactly where regression risk hides. Add a targeted check or mark it not verified. |
 | "Automated tests passed." | Passing tests do not prove preview behavior, flags, data wiring, tracking payloads, or adjacent UI regressions. |
+| "The first URL did not show the target UI." | Manual QA should try the correct route, data, locale, flag, preview/local fallback, or component surface before calling the check blocked. |
 
 ## Red Flags
 
 - Final answer contains only a plan with no executed checks.
 - QA ignores changed files outside the ticket scope.
 - UI-affecting changes skip browser evidence.
+- UI/browser checks are marked blocked or not verified after one failed attempt.
 - Regression checks are generic rather than tied to actual changed files.
 - Items are marked pass without evidence.
 
@@ -120,6 +124,7 @@ After manual QA:
 - [ ] Ticket acceptance criteria are covered or listed as not verified.
 - [ ] Diff-driven regression risks are covered or listed as not verified.
 - [ ] UI validation was run when visible UI changed.
+- [ ] Recovery attempts are recorded for any UI/browser check that could not be completed.
 - [ ] Failures and blockers are separated from not-verified items.
 
 ## See Also

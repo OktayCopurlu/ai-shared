@@ -199,4 +199,4 @@ Suggest splitting when:
 
 - `spec` prompt — for defining scope when a ticket doesn't exist yet
 - `refine-ticket` prompt — for pre-refinement review of an existing ticket
-- `solution-design` prompt — for deeper technical design after the spec is clear
+- `project-design` prompt — for deeper technical design at the project/epic level (not per-ticket)

@@ -30,7 +30,7 @@ When alignment is reached, summarize:
 - **Decisions made**
 - **Open questions**
 - **Out of scope**
-- **Recommended next step**: usually `spec`, `solution-design`, or a prototype/investigation
+- **Recommended next step**: usually `spec`, `project-design` (for project/epic-level work), or a prototype/investigation
 
 Do not write the full spec unless the user asks you to continue into `spec`.
 

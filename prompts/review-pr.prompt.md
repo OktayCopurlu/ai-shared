@@ -65,8 +65,8 @@ Load the `reviewing-code` skill and run it on the PR diff.
 
 Before starting: check the PR's CI status checks.
 - **Checks passing**: proceed with full validation.
-- **Checks failing but preview is reachable**: skip full UI validation (per `validating-ui` quality-gate rule). Only do an optional smoke check — verify the page loads and the changed area renders. Report as "smoke only — CI checks failing".
-- **No preview URL found**: skip this step entirely.
+- **Checks failing but preview/local UI is reachable**: decide whether the failing checks invalidate browser validation. If they are build/deploy/runtime failures, limit validation to smoke and report the limitation. If they are unrelated or non-blocking, continue focused manual QA/UI validation with a caveat instead of skipping.
+- **No preview URL found**: do not skip immediately. Try the PR branch locally, a known local dev URL, Storybook/component playground, or a direct route from the changed code. If no browser surface can be reached, mark functional validation blocked and list the attempts.
 
 Always state what was validated, what was skipped, and why.
 
@@ -83,6 +83,8 @@ Load the `manual-qa` skill and execute a QA run from the ticket requirements, PR
 #### UI validation
 
 Load the `validating-ui` skill and run its checklist on the preview environment when visible UI changed and manual QA has not already covered those browser checks.
+
+If the changed UI is not immediately visible, follow `validating-ui`'s Validation Recovery Protocol before marking UI validation blocked or not verified. Do not stop after one failed localhost, missing preview, PDP section lookup, locale mismatch, or hidden flag/experiment state. Record the fallback paths tried.
 
 When the ticket has a Figma reference, the `validating-ui` token-level fidelity check is required — verify the report includes computed-style comparisons (spacing, typography, color, borders) against Figma values, not just screenshots or "looks similar". If the check was skipped, flag it as a review gap.
 
@@ -140,7 +142,10 @@ To switch variants:
 [Output from reviewing-code]
 
 ### Functional Validation
-[Manual QA verdict and UI validation evidence, or "Skipped — reason"]
+[Manual QA verdict and UI validation evidence, or blocked/not-verified reason with recovery attempts]
+
+#### Recovery Attempts
+[List environment, route/data/flag, and alternate render-surface attempts when browser validation could not be completed, or "N/A"]
 
 #### Tracking
 [Event-by-event results or "N/A"]
@@ -171,5 +176,6 @@ Keep the block terse. The goal is a daily nudge toward senior-level behaviors, n
 - Do not skip the wiki page if one is linked — it often contains the detailed spec that the AC only summarizes.
 - Do not claim "all ACs covered" without file/line evidence per AC.
 - Do not silently skip functional validation — state what was not verified and why.
+- Do not mark UI/browser validation blocked after one failed attempt. Use the `validating-ui` recovery protocol and report the attempts.
 - Do not claim "events fire correctly" without showing payload evidence from console or network.
-- When the preview is not available, still complete steps 1–3 and note step 4 as skipped.
+- When the preview is not available, still complete steps 1–3 and try local/component fallback paths before marking functional validation blocked.

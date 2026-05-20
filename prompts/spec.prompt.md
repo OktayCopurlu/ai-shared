@@ -83,7 +83,7 @@ Match the spec depth to the scope:
 
 - **Small task** (1–2 AC items): Problem + Scope + Open Questions. One paragraph each.
 - **Medium feature** (3–6 AC items): Full spec with all sections. Fits on one screen.
-- **Large initiative** (cross-team, new architecture): Full spec + link to solution design. Consider using `solution-design` prompt.
+- **Large initiative** (cross-team, new architecture): Full spec + link to project design. Consider using `project-design` prompt.
 
 ## Variant: README-Driven for New Tools/Libraries/CLIs
 
@@ -126,6 +126,6 @@ Default to inline if the user doesn't specify.
 
 - `grill-me` — for alignment interviews before writing the spec
 - `jira-ticket` — for ticket structure, AC rules, and review mode
-- `solution-design` — for deeper technical design after the spec is clear
+- `project-design` — for deeper technical design at the project/epic level (not per-ticket)
 - `refine-ticket` — for reviewing an existing ticket before refinement
 - `~/.ai-shared/references/work-shaping.md` — smart context, human-in-loop decisions, and vertical slices
