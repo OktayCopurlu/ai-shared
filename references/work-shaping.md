@@ -33,6 +33,26 @@ Shape the work in this order:
 - Treat compacted history as lossy. When exact details matter, verify from source files, tickets, specs, or tests.
 - If the context is getting crowded, stop and create the next durable artifact instead of pushing through.
 
+### Subagent Context Contract
+
+Use this when delegating research, codebase mapping, option comparison, or other read-heavy work. Skip it for tiny lookups where one direct search is cheaper.
+
+Before spawning a subagent, give it a tight packet:
+
+- the exact question to answer and the decision it supports
+- the allowed scope: repos, paths, links, tools, and whether it is read-only
+- the expected evidence: file paths, line references, official docs, or command outputs
+- explicit non-goals and stop conditions so it does not expand the task
+
+Ask the subagent to return only:
+
+- answer or recommendation
+- key evidence references
+- risks, unknowns, or blockers
+- next action for the parent agent
+
+Do not ask subagents to return full file dumps, long transcripts, or every source they opened. If their result affects implementation, the parent agent still verifies the cited source before editing.
+
 ## Human-In-Loop vs AFK
 
 Keep the human in the loop for:
