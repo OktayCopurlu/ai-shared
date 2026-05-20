@@ -93,9 +93,7 @@ That's it. All three tools now read from this repo.
 ├── agents/               # Custom agent modes
 │   ├── devils-advocate.agent.md
 │   ├── goal-setter.agent.md
-│   ├── profile-writer.agent.md
-│   ├── project-doc-expert.agent.md
-│   └── research.agent.md
+│   └── project-doc-expert.agent.md
 ├── prompts/              # Slash-command prompts (development lifecycle)
 │   ├── grill-me.prompt.md          # Define — alignment interview before spec
 │   ├── spec.prompt.md              # Define — clarify what to build
@@ -134,7 +132,6 @@ The physical folders are organized by primitive (`skills`, `prompts`, `agents`, 
 | --- | --- | --- | --- |
 | Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
 | Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
-| Personal | Oktay-specific career, writing, preference, or taste guidance. Useful locally, but not automatically reusable by another engineer. | `agents/goal-setter.agent.md`, `agents/profile-writer.agent.md`, `skills/applying-coding-style/` | Keep factual source material separate from reusable process rules when it grows. Review for stale personal facts. |
 | Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
 
 ## Content Hygiene

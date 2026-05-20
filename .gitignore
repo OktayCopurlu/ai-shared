@@ -3,5 +3,6 @@
 *.tmp
 *.swp
 .secrets
+.profile/
 .playwright-mcp/
 self-evolution/jobs/*/logs/
