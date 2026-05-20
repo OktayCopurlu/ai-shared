@@ -55,6 +55,6 @@ This pipeline is independently callable for a single ticket. A user can provide 
 
 ## Related
 
-- Phase 0 governing rules: `~/.github/copilot-instructions.md` for VS Code Copilot, `~/.codex/instructions.md` for Codex, `~/.config/opencode/AGENTS.md` for OpenCode, `~/.claude/CLAUDE.md` for Claude Code)
+- Phase 0 governing rules: `~/.github/copilot-instructions.md` for VS Code Copilot, `~/.codex/instructions.md` for Codex, `~/.config/opencode/AGENTS.md` for OpenCode
 - Work-shaping rules used in Clarify and Implement §Task Shape: [references/work-shaping.md](../references/work-shaping.md)
 - Post-ship learning loop: [skills/skill-evolution/SKILL.md](../skills/skill-evolution/SKILL.md)

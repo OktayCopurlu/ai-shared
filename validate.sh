@@ -58,7 +58,6 @@ symlink_targets=(
   "$HOME/.github/copilot-instructions.md"
   "$HOME/.codex/instructions.md"
   "$HOME/.config/opencode/AGENTS.md"
-  "$HOME/.claude/CLAUDE.md"
   "$HOME/.copilot/skills"
   "$HOME/.copilot/agents"
   "$HOME/Library/Application Support/Code/User/prompts"
@@ -67,8 +66,6 @@ symlink_targets=(
   "$HOME/.codex/references"
   "$HOME/.config/opencode/skills"
   "$HOME/.config/opencode/references"
-  "$HOME/.claude/skills"
-  "$HOME/.claude/references"
 )
 
 for target in "${symlink_targets[@]}"; do
@@ -102,27 +99,16 @@ for prompt in "$AI"/prompts/*.prompt.md; do
   fi
 done
 
-# Claude per-agent symlinks
-for agent in "$AI"/agents/*.agent.md; do
-  [[ -f "$agent" ]] || continue
-  name=$(basename "$agent" .agent.md)
-  cl_link="$HOME/.claude/agents/${name}.md"
-  if [[ ! -L "$cl_link" ]]; then
-    fail "Missing Claude agent symlink: $cl_link"
-  elif [[ ! -e "$cl_link" ]]; then
-    fail "Broken Claude agent symlink: $cl_link -> $(readlink "$cl_link")"
-  fi
-done
+legacy_claude_targets=(
+  "$HOME/.claude/CLAUDE.md"
+  "$HOME/.claude/skills"
+  "$HOME/.claude/references"
+)
 
-# Claude per-command symlinks
-for prompt in "$AI"/prompts/*.prompt.md; do
-  [[ -f "$prompt" ]] || continue
-  name=$(basename "$prompt" .prompt.md)
-  cl_link="$HOME/.claude/commands/${name}.md"
-  if [[ ! -L "$cl_link" ]]; then
-    fail "Missing Claude command symlink: $cl_link"
-  elif [[ ! -e "$cl_link" ]]; then
-    fail "Broken Claude command symlink: $cl_link -> $(readlink "$cl_link")"
+for target in "${legacy_claude_targets[@]}" "$HOME"/.claude/agents/*.md(N) "$HOME"/.claude/commands/*.md(N); do
+  [[ -L "$target" ]] || continue
+  if [[ "$(readlink "$target")" == "$AI"* ]]; then
+    fail "Legacy Claude symlink still points to ai-shared: $target -> $(readlink "$target")"
   fi
 done
 

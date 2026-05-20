@@ -9,7 +9,7 @@ AI="$HOME/.ai-shared"
 echo "Setting up ai-shared symlinks..."
 
 # Create target directories
-mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references ~/.claude/agents ~/.claude/commands
+mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references
 
 # Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
@@ -29,7 +29,6 @@ link() {
 link "$AI/instructions.md" ~/.github/copilot-instructions.md
 link "$AI/instructions.md" ~/.codex/instructions.md
 link "$AI/instructions.md" ~/.config/opencode/AGENTS.md
-link "$AI/instructions.md" ~/.claude/CLAUDE.md
 
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
@@ -39,10 +38,7 @@ link "$AI/prompts"          ~/.codex/prompts
 link "$AI/references"       ~/.copilot/references
 link "$AI/skills"           ~/.config/opencode/skills
 link "$AI/references"       ~/.config/opencode/references
-link "$AI/skills"           ~/.claude/skills
-link "$AI/references"       ~/.claude/references
 # agents/ not symlinked for OpenCode — incompatible frontmatter format
-# agents/ and prompts/ are linked per-file for Claude below (rename .agent.md / .prompt.md → .md)
 
 # Codex per-skill symlinks (codex needs individual skill links)
 # Clean up stale Codex skill symlinks first
@@ -77,38 +73,6 @@ done
 for prompt in "$AI"/prompts/*.prompt.md; do
   name=$(basename "$prompt" .prompt.md)
   link "$prompt" "$HOME/.config/opencode/commands/${name}.md"
-done
-
-# Claude per-agent symlinks (rename *.agent.md → *.md so agent names are clean)
-# Clean up stale Claude agent symlinks first
-for existing in "$HOME"/.claude/agents/*; do
-  [[ -L "$existing" ]] || continue
-  name=$(basename "$existing" .md)
-  if [[ ! -f "$AI/agents/${name}.agent.md" ]]; then
-    echo "  🧹 Removing stale Claude agent symlink: ~/.claude/agents/$(basename "$existing")"
-    rm "$existing"
-  fi
-done
-
-for agent in "$AI"/agents/*.agent.md; do
-  name=$(basename "$agent" .agent.md)
-  link "$agent" "$HOME/.claude/agents/${name}.md"
-done
-
-# Claude per-command symlinks (rename *.prompt.md → *.md so command names are clean)
-# Clean up stale Claude command symlinks first
-for existing in "$HOME"/.claude/commands/*; do
-  [[ -L "$existing" ]] || continue
-  name=$(basename "$existing" .md)
-  if [[ ! -f "$AI/prompts/${name}.prompt.md" ]]; then
-    echo "  🧹 Removing stale Claude command symlink: ~/.claude/commands/$(basename "$existing")"
-    rm "$existing"
-  fi
-done
-
-for prompt in "$AI"/prompts/*.prompt.md; do
-  name=$(basename "$prompt" .prompt.md)
-  link "$prompt" "$HOME/.claude/commands/${name}.md"
 done
 
 # ─── Self-evolution jobs (launchd plists) ─────────────────────────────
