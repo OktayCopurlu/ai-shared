@@ -102,16 +102,13 @@ That's it. All four tools now read from this repo.
 │   ├── project-design.prompt.md    # Design — project/epic-level technical design (not per-ticket)
 │   ├── pipeline.prompt.md          # Contract — canonical phase order for ticket delivery
 │   ├── implementation.prompt.md    # Build — implement a ticket
-│   ├── start-working.prompt.md     # Build — full delivery workflow
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
 │   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── review-pr.prompt.md         # Review — full PR review against ticket
-│   ├── self-evolution-from-pr-feedback.prompt.md # Improve — convert PR feedback into guardrails
 │   ├── test.prompt.md              # Test — run or write tests
 │   ├── refine-ticket.prompt.md     # Define — pre-refinement review
-│   ├── sprint-review.prompt.md     # Report — generate and email sprint review PDFs
 │   └── update-project-page.prompt.md # Ship — update Confluence
 ├── references/           # Shared checklists (referenced by skills)
 │   ├── accessibility-checklist.md
@@ -136,7 +133,7 @@ The physical folders are organized by primitive (`skills`, `prompts`, `agents`, 
 | Layer | What belongs here | Current examples | Maintenance rule |
 | --- | --- | --- | --- |
 | Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
-| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `prompts/sprint-review.prompt.md`, `prompts/start-working.prompt.md`, `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
+| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
 | Personal | Oktay-specific career, writing, preference, or taste guidance. Useful locally, but not automatically reusable by another engineer. | `agents/goal-setter.agent.md`, `agents/profile-writer.agent.md`, `skills/applying-coding-style/` | Keep factual source material separate from reusable process rules when it grows. Review for stale personal facts. |
 | Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
 
@@ -270,15 +267,12 @@ graph LR
   P_REFINE[/refine-ticket/]:::prompt
   P_PROJDESIGN[/project-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
-  P_START[/start-working/]:::prompt
   P_INV[/investigation/]:::prompt
   P_QA[/manual-qa/]:::prompt
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
   P_REVIEWPR[/review-pr/]:::prompt
-  P_SE_PR[/self-evolution-from-pr-feedback/]:::prompt
-  P_SPRINT[/sprint-review/]:::prompt
   P_UPDATE[/update-project-page/]:::prompt
 
   %% ── Skills ──────────────────────────────────────────
@@ -329,8 +323,6 @@ graph LR
   P_PROJDESIGN --> A_PROJDOC
   P_PROJDESIGN --> S_ATLAS
   P_PROJDESIGN --> R_WORK
-  P_START --> P_IMPL
-  P_START -. analysis-only .-> P_INV
   P_INV --> R_SEARCH
   P_IMPL --> S_STYLE
   P_IMPL --> S_ATLAS
@@ -356,10 +348,6 @@ graph LR
   P_REVIEWPR --> S_GH
   P_REVIEWPR --> S_PW
   P_REVIEWPR -. optional .-> S_A11Y
-  P_SE_PR --> S_EVOLVE
-  P_SE_PR --> S_GH
-  P_SE_PR --> R_COG
-  P_SPRINT --> S_ATLAS
   P_UPDATE --> S_ATLAS
 
   %% ── Skill → Skill ──────────────────────────────────

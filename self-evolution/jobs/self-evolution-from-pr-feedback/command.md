@@ -100,7 +100,7 @@ Use `SELF_EVOLUTION_HISTORY_PATH` and the current run log as the staging area. D
 ## Decision Process
 
 1. Read `SELF_EVOLUTION_HISTORY_PATH` if it exists.
-2. Read the current `prompts/self-evolution-from-pr-feedback.prompt.md` and only the ai-shared files relevant to candidate fixes.
+2. Read only the ai-shared files relevant to candidate fixes.
 3. Collect PR feedback from the required window.
 4. Cluster feedback by failure mode.
 5. Pick exactly one failure mode to address now. Prefer repeated, verifiable, small fixes.
