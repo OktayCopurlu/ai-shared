@@ -105,6 +105,29 @@ When the deliverable is a **net-new standalone tool, library, or CLI** (no Jira 
 
 **Sources:** Tom Preston-Werner, "Readme Driven Development" (2010); Simon Willison, `scan-for-secrets` and `datasette-ports` build logs (Apr 2026); Lalit Maganti, "Building syntaqlite with AI" (2026).
 
+## Variant: SPEC.md for Agent-Implemented Services
+
+When the deliverable is a **net-new service, daemon, orchestrator, or integration harness** that an agent will implement from scratch, write a `SPEC.md`-style contract instead of a ticket-sized feature spec.
+
+**When to use this variant (decision rule):**
+
+- Net-new service/orchestrator/harness with runtime behavior, safety boundaries, and operational failure modes — yes, use `SPEC.md`
+- Existing app feature, UI flow, or small behavior change — no, use the standard spec above
+- Net-new library or CLI where the main risk is API/usage design — prefer the README-driven variant
+
+**Workflow:**
+
+1. Define goals, non-goals, and the trust/safety posture before describing components
+2. Specify observable domain objects, state transitions, lifecycle hooks, failure classes, and recovery behavior in implementation-neutral language
+3. Mark policy choices as `implementation-defined` only when the implementation must document its chosen behavior
+4. Capture safety invariants separately from implementation preferences — for example workspace boundaries, credential handling, approval policy, and cleanup semantics
+5. Include a validation matrix or definition of done that maps the spec contract to deterministic tests, integration checks, and operator-visible evidence
+6. Feed the spec to the coding agent as the source of truth, then require implementation notes or PR descriptions to call out any spec gaps discovered during build
+
+**Why this works:** agents can generate substantial systems from natural-language contracts, but only if the contract separates durable requirements from implementation choices. A `SPEC.md` makes the handoff explicit: human-reviewed intent, safety boundaries, and validation criteria first; generated implementation second.
+
+**Sources:** OpenAI Symphony `SPEC.md` (2026); OpenAI, "An open-source spec for Codex orchestration: Symphony" (2026); GitHub `spec-kit` specification-driven development guide (2026).
+
 ## Output Options
 
 1. **Inline in chat** — for quick review and iteration
