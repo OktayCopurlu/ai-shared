@@ -29,6 +29,15 @@ Pick the isolation technique that fits the situation:
 For unfamiliar code, use the `Explore` subagent to map module boundaries before diving in.
 - **Exit:** You know which file, function, and roughly which lines cause the failure.
 
+### MCP integration failures
+When the failure involves an MCP server, client configuration, missing tool, or JSON-RPC error, keep the same reproduce/localize order but use MCP-specific probes:
+
+1. Reproduce outside the host with MCP Inspector; verify capability negotiation, list tools/resources/prompts, call one happy path, and call one invalid-input path.
+2. For local stdio servers, run the configured command directly, use absolute paths, pass required env vars explicitly, and verify startup/log text goes to stderr or files rather than stdout.
+3. Read the client MCP logs before editing server logic; config syntax, missing executables, inherited working directories, and missing env vars often fail before tool code runs.
+4. For Streamable HTTP servers, inspect the initialize exchange plus `MCP-Protocol-Version`, `Mcp-Session-Id`, auth, `Origin`, and `Accept` headers before changing application behavior.
+5. If sampling, elicitation, resources, prompts, or list-change notifications fail, confirm both client and server negotiated that capability before treating it as a tool bug.
+
 ### Step 3 — Reduce
 Create the simplest possible reproduction. Skip if the reproduction is already trivial.
 - **Exit:** A minimal test case or snippet that demonstrates the bug clearly.
@@ -52,12 +61,14 @@ Prevent recurrence.
 | "I know what the bug is, let me just fix it" | Skipping reproduction means you might fix the wrong thing. |
 | "It works on my machine" | Environment differences are bugs too. |
 | "I'll just restart and try again" | Intermittent failures are real bugs — harder to find, not less important. |
+| "The MCP tool is broken, so I'll rewrite the handler" | Many MCP failures happen before the handler runs: launch config, stdout corruption, env inheritance, transport headers, or capability negotiation. |
 
 ## Red Flags
 
 - Fixing without reproducing first
 - Multiple "fix" attempts without localizing the root cause
 - Bug fix committed without a regression test
+- Editing MCP server code before checking Inspector output and client logs
 
 ## See Also
 
