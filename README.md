@@ -99,6 +99,7 @@ That's it. All three tools now read from this repo.
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── project-design.prompt.md    # Design — project/epic-level technical design (not per-ticket)
 │   ├── pipeline.prompt.md          # Contract — canonical phase order for ticket delivery
+│   ├── pip.prompt.md               # Automation — start experimental delivery pipeline in background
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
 │   ├── manual-qa.prompt.md         # QA — plan and execute manual QA

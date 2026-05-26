@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-shared.local/experiment/delivery-pipeline/pipeline.schema.json",
+  "title": "Delivery Pipeline Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "version",
+    "description",
+    "max_fix_loops",
+    "default_model",
+    "notifications",
+    "retention",
+    "local_safety_loop",
+    "phases"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "description": { "type": "string" },
+    "max_fix_loops": { "type": "integer", "minimum": 0 },
+    "default_timeout_seconds": { "type": "integer", "minimum": 1 },
+    "default_model": { "$ref": "#/$defs/model_config" },
+    "model_fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "model"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "model": { "type": "string", "minLength": 1 },
+        "variant": { "type": "string" }
+      }
+    },
+    "opencode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dangerously_skip_permissions"],
+      "properties": {
+        "dangerously_skip_permissions": { "type": "boolean" }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "events", "channels"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "config_path": { "type": "string", "minLength": 1 },
+        "rate_limit_seconds": { "type": "integer", "minimum": 0 },
+        "events": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["pause-for-human", "blocked", "failed", "finished"] },
+          "uniqueItems": true
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["type", "mode"],
+            "properties": {
+              "type": { "type": "string", "enum": ["whatsapp", "local-log"] },
+              "mode": { "type": "string" },
+              "adapter": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_runs_dir",
+        "archive_dir",
+        "tmp_dir",
+        "handoff_complete_days",
+        "keep_failed_days",
+        "keep_paused_days",
+        "partial_run_ttl_hours",
+        "delete_bulky_artifacts_after_archive",
+        "bulky_artifact_patterns"
+      ],
+      "properties": {
+        "active_runs_dir": { "type": "string" },
+        "archive_dir": { "type": "string" },
+        "tmp_dir": { "type": "string" },
+        "handoff_complete_days": { "type": "integer", "minimum": 0 },
+        "keep_failed_days": { "type": "integer", "minimum": 0 },
+        "keep_paused_days": { "type": "integer", "minimum": 0 },
+        "partial_run_ttl_hours": { "type": "integer", "minimum": 1 },
+        "delete_bulky_artifacts_after_archive": { "type": "boolean" },
+        "bulky_artifact_patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "local_safety_loop": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["implement", "test-review", "code-review", "qa", "ui-validation"] }
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": { "$ref": "#/$defs/phase" }
+    }
+  },
+  "$defs": {
+    "model_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model"],
+      "properties": {
+        "model": { "type": "string", "minLength": 1 },
+        "variant": { "type": "string" }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "number",
+        "id",
+        "label",
+        "command",
+        "model",
+        "writes_code",
+        "required_outputs",
+        "next_on_pass",
+        "next_on_fail"
+      ],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1, "maximum": 11 },
+        "id": {
+          "type": "string",
+          "enum": [
+            "context-intake",
+            "plan",
+            "implement",
+            "test-review",
+            "code-review",
+            "qa",
+            "ui-validation",
+            "create-pr",
+            "pr-code-review",
+            "pr-qa",
+            "pr-ui-validation"
+          ]
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "variant": { "type": "string" },
+        "timeout_seconds": { "type": "integer", "minimum": 1 },
+        "writes_code": { "type": "boolean" },
+        "required_outputs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "next_on_pass": {
+          "type": "string",
+          "enum": [
+            "plan",
+            "implement",
+            "test-review",
+            "code-review",
+            "qa",
+            "ui-validation",
+            "create-pr",
+            "pr-code-review",
+            "pr-qa",
+            "pr-ui-validation",
+            "finished"
+          ]
+        },
+        "next_on_fail": {
+          "type": "string",
+          "enum": ["implement", "pause-for-human"]
+        }
+      }
+    }
+  }
+}

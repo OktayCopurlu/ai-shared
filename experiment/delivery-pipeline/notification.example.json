@@ -1,0 +1,10 @@
+{
+  "whatsapp": {
+    "command": "~/.ai-automation/scripts/send-whatsapp.sh",
+    "env_file": "~/.ai-automation/.env",
+    "keychain_access_token_service": "ai-automation.whatsapp.access-token",
+    "message_mode": "text",
+    "thread_map_path": "tmp/whatsapp-thread-map.jsonl",
+    "to_env": "WHATSAPP_RECIPIENT"
+  }
+}

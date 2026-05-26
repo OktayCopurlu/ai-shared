@@ -6,3 +6,6 @@
 .profile/
 .playwright-mcp/
 self-evolution/jobs/*/logs/
+tmp/
+experiment/delivery-pipeline/runs/
+experiment/delivery-pipeline/tmp/

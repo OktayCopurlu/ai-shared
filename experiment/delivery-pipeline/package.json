@@ -1,0 +1,21 @@
+{
+  "name": "delivery-pipeline-experiment",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "doctor": "./runner.sh doctor",
+    "test": "npm run test:timeout && npm run test:transitions && npm run test:cleanup && npm run test:schema && npm run test:phase-execution && npm run test:runner-integration",
+    "test:timeout": "bash tests/timeout.sh",
+    "test:transitions": "bash tests/transitions.sh",
+    "test:cleanup": "bash tests/cleanup.sh",
+    "test:schema": "bash tests/schema-failures.sh",
+    "test:phase-execution": "bash tests/phase-execution.sh",
+    "test:runner-integration": "bash tests/runner-integration.sh",
+    "validate:pipeline": "node tools/validate-schema.mjs schemas/pipeline.schema.json pipeline.json",
+    "validate:phase-examples": "for file in examples/phase-output/*.json; do node tools/validate-schema.mjs schemas/phase-output.schema.json \"$file\"; done"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  }
+}

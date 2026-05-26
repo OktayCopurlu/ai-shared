@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-shared.local/experiment/delivery-pipeline/context-packet.schema.json",
+  "title": "Delivery Pipeline Context Packet JSON Artifact",
+  "$ref": "#/$defs/context_packet",
+  "$defs": {
+    "context_packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version"],
+      "minProperties": 2,
+      "properties": {
+        "schema_version": { "type": "string", "const": "1" },
+        "ticket": { "type": ["string", "object", "null"] },
+        "acceptance_criteria": { "$ref": "#/$defs/acceptance_criteria_array" },
+        "figma_specs": { "$ref": "#/$defs/figma_specs" },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "validation_targets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/validation_target" }
+        }
+      }
+    },
+    "acceptance_criteria_array": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/acceptance_criterion" }
+    },
+    "acceptance_criterion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^AC-[0-9]+$" },
+        "text": { "type": "string", "minLength": 1 },
+        "source": { "type": ["string", "null"] },
+        "priority": { "type": ["string", "null"] },
+        "observable_behavior": { "type": ["string", "null"] }
+      }
+    },
+    "figma_specs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available"],
+      "allOf": [
+        {
+          "if": { "properties": { "available": { "const": false } }, "required": ["available"] },
+          "then": { "required": ["reason"] }
+        },
+        {
+          "if": { "properties": { "available": { "const": true } }, "required": ["available"] },
+          "then": {
+            "required": ["source"],
+            "anyOf": [
+              { "required": ["screens"], "properties": { "screens": { "minItems": 1 } } },
+              { "required": ["components"], "properties": { "components": { "minItems": 1 } } }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "available": { "type": "boolean" },
+        "reason": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "node": { "type": "string", "minLength": 1 },
+        "screens": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/screen_spec" }
+        },
+        "frame_exports": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/frame_export" }
+        },
+        "components": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/component_spec" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "screen_spec": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "node": { "type": "string", "minLength": 1 },
+        "bounds": { "type": "object" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "layout": { "type": ["object", "string"] },
+        "spacing": { "type": ["object", "string", "array"] },
+        "typography": { "type": ["object", "array"] },
+        "colors": { "type": ["object", "array"] },
+        "states": { "type": ["object", "array"] },
+        "interactions": { "type": ["object", "array"] },
+        "responsive_behavior": { "type": ["object", "string", "array"] }
+      }
+    },
+    "frame_export": {
+      "type": "object",
+      "additionalProperties": true,
+      "minProperties": 1,
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "node": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" }
+      }
+    },
+    "component_spec": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "node": { "type": "string", "minLength": 1 },
+        "states": { "type": ["object", "array"] },
+        "layout": { "type": ["object", "string"] },
+        "tokens": { "type": ["object", "array"] }
+      }
+    },
+    "validation_target": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "description"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "surface": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

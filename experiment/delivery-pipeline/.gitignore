@@ -1,0 +1,8 @@
+node_modules/
+notification.local.json
+*.local.json
+.env
+.env.*
+*.secret.json
+secrets/
+notifications/*.local.sh

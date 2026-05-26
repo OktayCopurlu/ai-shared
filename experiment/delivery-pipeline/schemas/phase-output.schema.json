@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-shared.local/experiment/delivery-pipeline/phase-output.schema.json",
+  "title": "Delivery Pipeline Phase Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "phase",
+    "status",
+    "summary",
+    "inputs_read",
+    "artifacts_written",
+    "evidence",
+    "fix_requests",
+    "blockers",
+    "stale_artifacts",
+    "next_recommendation"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "fail" } }, "required": ["status"] },
+      "then": {
+        "anyOf": [
+          { "properties": { "fix_requests": { "minItems": 1 } } },
+          { "properties": { "blockers": { "minItems": 1 } } }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "blocked" } }, "required": ["status"] },
+      "then": { "properties": { "blockers": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "protocol-error" } }, "required": ["status"] },
+      "then": { "properties": { "blockers": { "minItems": 1 } } }
+    }
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "context-intake",
+        "plan",
+        "implement",
+        "test-review",
+        "code-review",
+        "qa",
+        "ui-validation",
+        "create-pr",
+        "pr-code-review",
+        "pr-qa",
+        "pr-ui-validation"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail", "blocked", "not-applicable", "protocol-error"]
+    },
+    "summary": { "type": "string" },
+    "inputs_read": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "artifacts_written": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["type", "description"],
+        "properties": {
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "path": { "type": ["string", "null"] },
+          "url": { "type": ["string", "null"] },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "fix_requests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fix_request" }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blocker" }
+    },
+    "stale_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "next_recommendation": {
+      "type": "string",
+      "enum": ["continue", "fix", "pause-for-human", "retry-phase", "stop"]
+    }
+  },
+  "$defs": {
+    "fix_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_phase",
+        "severity",
+        "acceptance_criteria",
+        "scenario",
+        "expected",
+        "actual",
+        "reproduction",
+        "suggested_direction"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source_phase": { "type": "string" },
+        "severity": { "type": "string", "enum": ["blocker", "high", "medium", "low"] },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scenario": { "type": "string" },
+        "expected": { "type": "string" },
+        "actual": { "type": "string" },
+        "reproduction": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "suggested_direction": { "type": "string" }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "message", "needed_from_human"],
+      "properties": {
+        "type": { "type": "string" },
+        "message": { "type": "string" },
+        "needed_from_human": { "type": "string" },
+        "attempts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
