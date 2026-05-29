@@ -638,13 +638,13 @@ What to send back:
 
 Write a short plain-language reply. Start the first line with one of:
 
-- `impact: access`
-- `impact: decision`
-- `impact: scope-change`
+- \`impact: access\`
+- \`impact: decision\`
+- \`impact: scope-change\`
 
 Example:
 
-`impact: access`
+\`impact: access\`
 The sheet is available now. Continue.
 
 Resume with:
