@@ -33,8 +33,8 @@ The official Contentful MCP server (v1.7+) exposes **both read and write tools**
 | Category | Tools | Why |
 |---|---|---|
 | Content Types | `create_content_type`, `update_content_type`, `publish_content_type`, `unpublish_content_type`, `delete_content_type` | Mutates content model |
-| Entries | `create_entry`, `update_entry`, `publish_entry`, `unpublish_entry`, `delete_entry` | Mutates content |
-| Assets | `upload_asset`, `update_asset`, `publish_asset`, `unpublish_asset`, `delete_asset` | Mutates assets |
+| Entries | `create_entry`, `update_entry`, `publish_entry`, `unpublish_entry`, `archive_entry`, `unarchive_entry`, `delete_entry` | Mutates content |
+| Assets | `upload_asset`, `update_asset`, `publish_asset`, `unpublish_asset`, `archive_asset`, `unarchive_asset`, `delete_asset` | Mutates assets |
 | Environments | `create_environment`, `delete_environment` | Destructive infrastructure change |
 | Locales | `create_locale`, `update_locale`, `delete_locale` | Mutates locale config |
 | Tags | `create_tag` | Mutates taxonomy |
