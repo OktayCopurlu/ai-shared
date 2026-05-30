@@ -31,7 +31,7 @@ The pipeline should name the skills involved, but the detailed trigger rules sta
 | Sub-step inside Implement       | Section in implementation.prompt.md  | Skills / refs used |
 | ------------------------------- | ------------------------------------ | ------------------ |
 | **Tasks** — shape work into vertical slices | §"Task Shape and Context"  | [references/work-shaping.md](../references/work-shaping.md) |
-| **Implement** — write code                  | §"Code Changes"            | `applying-coding-style`; `linked-context-routing`; `figma-mcp` / `playwright-mcp` when linked context requires them; `a11y-audit` for interactive UI; `security-hardening` for auth, user input, secrets, or data-boundary changes |
+| **Implement** — write code                  | §"Code Changes"            | `applying-coding-style`; source-specific context skills (`atlassian-mcp`, `figma-mcp`, `contentful`, `google-drive`) when linked context requires them; `playwright-mcp` for browser-only or authenticated flows; `a11y-audit` for interactive UI; `security-hardening` for auth, user input, secrets, or data-boundary changes |
 | **Analyze** — AC ↔ diff coverage map        | §"Cross-Check"             | Ticket/spec contract |
 | **Self-review** — coding-style pass         | §"Quality Gates" (step 4)  | `applying-coding-style` |
 | **Quality gates** — lint, types, tests      | §"Quality Gates"           | Repo-defined commands; `test-driven-development` when adding behavior with regression coverage |

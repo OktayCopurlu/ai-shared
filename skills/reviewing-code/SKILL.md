@@ -1,17 +1,92 @@
 ---
 name: reviewing-code
-description: 'Proactive code review using a 4-layer heuristic: surface correctness, test coverage gaps, bounded refactors, and architecture attention signals. USE FOR: reviewing PRs, self-review before creating a PR, evaluating changed files. Use when user says "review this", "check this PR", "anything I missed", or "review my changes".'
+description: 'Proactive code review using line-by-line changed-hunk inspection, file-type lenses, and a 4-layer heuristic: surface correctness, test coverage gaps, bounded refactors, and architecture attention signals. USE FOR: reviewing PRs, review this PR for missing tests, self-review before creating a PR, evaluating changed files. Use when user says "review this", "check this PR", "anything I missed", "review my changes", or asks for line-by-line code review.'
 ---
 
 # Code Review — 4-Layer Heuristic
 
-Review code changes using four layers, from mechanical to architectural. Layers 1–3 produce **fixes or suggestions**; layer 4 produces **questions only**.
+Review code changes line-by-line inside each changed hunk, then apply four layers from mechanical to architectural. Layers 1–3 produce **fixes or suggestions**; layer 4 produces **questions only**.
 
 Finish the mechanical scan before opining on architecture.
 
 ## Input
 
 Review operates on a diff — staged/unstaged changes, a PR diff, or changed files the user points to.
+
+## Non-Negotiable Review Contract
+
+Do not review from the file list, diff summary, or intuition alone. For every changed file:
+
+- read each changed hunk with enough surrounding context to understand intent
+- inspect every added or modified line, including template, style, test, and config-only hunks
+- decide whether each hunk is `OK`, `finding`, `question`, or `unnecessary`
+- ask whether the change is required for the PR goal, or whether a smaller local change would do the same job
+- report all findings, questions, and unnecessary changes with exact file/line references
+
+Clean hunks do not need one comment each, but the final response must include brief evidence of coverage, such as `Reviewed changed hunks in: Component.vue template/script/style, useThing.ts, Component.spec.ts`.
+
+Do not claim a complete review if any changed hunk was not inspected. If the diff is too large for full confidence, say exactly which files or hunks received lower-confidence review.
+
+## Changed Hunk Pass
+
+Run this pass before the four layers.
+
+For each changed hunk, ask:
+
+- **Necessity:** Does this changed line need to exist for the PR goal, or is it drive-by cleanup/noise?
+- **Simpler expression:** Could this be written with less branching, fewer wrappers, fewer props, fewer mocks, or an existing local helper?
+- **Local consistency:** Does it match nearby naming, component patterns, test style, composables, CSS conventions, and data-flow patterns?
+- **Behavior:** What user-visible, API-visible, state, error, loading, permission, analytics, or accessibility behavior changed?
+- **Removal risk:** Did this delete a guard, state branch, fallback, event, class, attribute, test assertion, or type constraint that mattered?
+
+Use this hunk decision internally:
+
+| Decision | Meaning | Output |
+|---|---|---|
+| `OK` | Required, readable, locally consistent | Usually no per-line output |
+| `finding` | Bug, risk, missing test, or concrete improvement | Report with severity and line |
+| `question` | Intent unclear or architecture signal | Ask a direct question |
+| `unnecessary` | Change does not support PR goal or adds noise | Ask to revert or justify |
+
+## File-Type Review Lenses
+
+Apply the relevant lens to every changed file type. For Vue single-file components, apply template, script, and style lenses separately.
+
+### Template / Markup
+
+Check for: unnecessary wrappers, duplicated conditions, unclear slot usage, excessive inline expressions, missing keys, unstable `v-if`/`v-for` combinations, broken semantics, missing labels/alt text/ARIA where needed, event handlers doing too much, and layout changes hidden inside markup.
+
+Ask: Could this template be flatter, more semantic, or closer to existing component patterns without changing behavior?
+
+### Script / Component Logic
+
+Check for: derived state stored as mutable state, watchers used where computed state would fit, side effects in setup/render paths, missing null/error/loading handling, unused imports/props/emits, broad types, duplicated transformation logic, lifecycle cleanup gaps, and unclear event/data ownership.
+
+Ask: Is the state/data flow obvious from the changed lines, and can any branch or helper be simplified locally?
+
+### Composables / Hooks / Utilities
+
+Check for: single-consumer abstractions, hidden global state, stale closures, missing cleanup, unstable returned object shapes, weak typing at boundaries, swallowed errors, duplicated API normalization, and tests that miss edge cases.
+
+Ask: Does this composable earn its abstraction, or would the logic be clearer at the call site for now?
+
+### Tests
+
+Check for: assertions that only mirror implementation, snapshots without behavioral checks, over-mocked collaborators, mocks that are never asserted, test names that hide the rule being protected, missing negative/error/loading cases, duplicated fixture literals, and optional chaining that can make `undefined === undefined` pass.
+
+Ask: Would this test fail for the real bug or business rule the PR is meant to protect?
+
+### CSS / SCSS / Styling
+
+Check for: duplicate selectors, specificity creep, magic spacing/colors instead of tokens, responsive breakage, text overflow, layout shift, hidden focus states, style changes that affect unrelated children, dead classes, and class names not tied to the component’s intent.
+
+Ask: Can this styling be scoped smaller, use an existing token/pattern, or avoid changing layout outside the intended element?
+
+### Config / Types / Docs
+
+Check for: broad config changes, weakened type safety, generated or lockfile churn without dependency intent, docs drifting from behavior, and examples that cannot run.
+
+Ask: Is this change necessary for the PR, and is the blast radius clear?
 
 ## Auto-Scale Review Depth
 
@@ -107,6 +182,13 @@ Use the **structured format** for self-review and standalone reviews:
 ```
 ## Code Review — [scope description]
 
+### Changed Hunk Coverage
+- Reviewed: [file/type areas, e.g. Component.vue template/script/style, useThing.ts, Component.spec.ts]
+- Lower confidence: [only if any hunk/file could not be fully inspected]
+- Unnecessary changes: ✅ None found
+  OR
+- ⚠️ [file:line] change appears unrelated to PR goal → revert or justify
+
 ### Layer 1 — Surface Correctness
 - ✅ No issues found
   OR
@@ -133,6 +215,7 @@ When replying directly to the user:
 - start with findings ordered by severity, each with file/line references
 - keep summaries brief and place them after the findings
 - include the layer grouping only when it adds clarity for the user or the workflow
+- include changed-hunk coverage evidence, even when there are no findings
 - if there are no findings, say so explicitly and mention any residual risk or testing gap
 
 ## PR Comment Format
@@ -182,9 +265,12 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 
 ## Rules
 
+- The Changed Hunk Pass is mandatory before the four layers.
+- Every changed hunk needs an internal `OK`, `finding`, `question`, or `unnecessary` decision.
 - Always run all 4 layers. Do not skip a layer because an earlier one had findings.
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
 - Do not suggest changes to files outside the PR diff.
+- Do not treat generated files, lockfiles, snapshots, docs, or styles as automatically safe; inspect their changed hunks too, then mark Layer 2 as N/A when appropriate.
 - Do not repeat findings already covered by lint or type-check errors.
 - Load `applying-coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.

@@ -14,7 +14,7 @@ This is a validator phase. Do not edit code, tests, snapshots, assets, PR metada
 
 ## Skill References
 
-Use `validating-ui` for PR UI validation, `figma-mcp` for Figma specs, `playwright-mcp` for browser measurement, `a11y-audit` for accessibility checks, and `linked-context-routing` for preview URL routing.
+Use `validating-ui` for PR UI validation, `figma-mcp` for Figma specs, `playwright-mcp` for browser measurement and preview URL inspection, and `a11y-audit` for accessibility checks.
 
 ## Inputs
 

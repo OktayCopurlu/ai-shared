@@ -14,7 +14,7 @@ Separate fix request files are not expected from this phase. If the intake canno
 
 ## Skill References
 
-Use the relevant context-reading skills when links or source types appear: `atlassian-mcp` for Jira/Confluence, `linked-context-routing` for URLs, `figma-mcp` for Figma, `contentful` for CMS entries, and `google-drive` for Google Docs/Sheets. If a required tool path is unavailable, record the access/tooling blocker.
+Use source-specific context-reading skills when links or source types appear: `atlassian-mcp` for Jira/Confluence, `figma-mcp` for Figma, `contentful` for CMS entries, and `google-drive` for Google Docs/Sheets. Use `playwright-mcp` only when the required context is a browser-only or authenticated web page. If a required tool path is unavailable, record the access/tooling blocker.
 
 ## Inputs
 

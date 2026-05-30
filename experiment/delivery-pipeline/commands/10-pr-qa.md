@@ -14,7 +14,7 @@ This is a validator phase. Do not edit code, tests, PR metadata, package files, 
 
 ## Skill References
 
-Use `manual-qa` for PR-environment QA structure, `github-mcp` for PR/preview metadata when available, `linked-context-routing` for preview URLs, and `playwright-mcp` for browser interaction. Use analytics tooling such as `amplitude-analytics` only when the ACs or linked specs require checking persisted analytics data; otherwise verify browser-side tracking through observable console or network evidence.
+Use `manual-qa` for PR-environment QA structure, `github-mcp` for PR/preview metadata when available, and `playwright-mcp` for browser interaction or preview URL inspection. Use analytics tooling such as `amplitude-analytics` only when the ACs or linked specs require checking persisted analytics data; otherwise verify browser-side tracking through observable console or network evidence.
 
 ## Inputs
 

@@ -60,7 +60,6 @@ That's it. All three tools now read from this repo.
 │   ├── github-mcp/             # GitHub operations via MCP
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
-│   ├── linked-context-routing/ # Route mixed linked resources to the right integration
 │   ├── manual-qa/              # Plan and execute manual QA from ticket and diff
 │   ├── playwright-mcp/         # Browser automation via Playwright
 │   ├── reviewing-code/         # 4-layer heuristic code review
@@ -285,7 +284,6 @@ graph LR
   S_MQA([manual-qa]):::skill
   S_EVOLVE([skill-evolution]):::skill
   S_FIGMA([figma-mcp]):::skill
-  S_LINK([linked-context-routing]):::skill
   S_PW([playwright-mcp]):::skill
   S_AMP([amplitude-analytics]):::skill
   S_ATLAS([atlassian-mcp]):::skill
@@ -416,11 +414,10 @@ flowchart TD
   QA["manual/browser QA"]:::action
 
   Impl --> Jira --> Atlas["skill: atlassian-mcp"]:::skill
-  Impl --> Context --> Link["skill: linked-context-routing"]:::skill
-  Link --> Figma["skill: figma-mcp"]:::skill
-  Link --> GDrive["skill: google-drive"]:::skill
-  Link --> Pw["skill: playwright-mcp"]:::skill
-  Link --> OnUrls["ref: on-frontend-urls.md"]:::ref
+  Impl --> Context --> Figma["skill: figma-mcp"]:::skill
+  Context --> GDrive["skill: google-drive"]:::skill
+  Context --> Pw["skill: playwright-mcp"]:::skill
+  Context --> OnUrls["ref: on-frontend-urls.md"]:::ref
   Impl --> Code --> Style["skill: applying-coding-style"]:::skill
   Code -. UI discovery .-> Search["ref: search-first.md"]:::ref
   Code -. forms/dialogs/menus/focus .-> A11y["skill: a11y-audit"]:::skill

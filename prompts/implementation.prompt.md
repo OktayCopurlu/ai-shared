@@ -7,7 +7,7 @@ description: "Implement a Jira ticket: code changes, quality gates, manual QA, a
 When the user provides the ticket key or link:
 
 1. read the full Jira detail via Atlassian MCP
-2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs. Use the `linked-context-routing` skill to pick the right tool, and `playwright-mcp` for authenticated browser flows. If the environment blocks access, stop and report the blocker. Extract implementation-relevant details before moving on.
+2. open and read the linked context required to implement or validate the change — Figma, Contentful, wiki pages, linked tickets, and any other relevant referenced URLs. Use the narrowest source-specific skill or tool for each URL: `atlassian-mcp` for Jira/Confluence, `figma-mcp` for Figma, `contentful` for CMS entries, `google-drive` for Google Docs/Sheets, and `playwright-mcp` only for browser-only or authenticated web flows. If the environment blocks access, stop and report the blocker. Extract implementation-relevant details before moving on.
 3. determine the target repository
 
 Proceed to implementation after all required linked context has been reviewed.
