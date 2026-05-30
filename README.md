@@ -11,7 +11,7 @@ One folder, three tools. Edit here, every agent picks it up:
 - **Prompts** — slash commands that orchestrate skills (`prompts/`)
 - **Agents** — custom agent modes (`agents/`)
 - **References** — shared checklists skills pull from (`references/`)
-- **Self-evolution** — scheduled jobs that mine PR feedback and research (`self-evolution/`)
+- **Self-evolution** — scheduled jobs that mine PR feedback, local sessions, and research (`self-evolution/`)
 
 ## Quick start
 
@@ -75,6 +75,10 @@ That's it. All three tools now read from this repo.
 │       │   ├── command.md          # Autonomous PR feedback self-evolution workflow
 │       │   ├── job.json            # Monday 10:00 scheduler + model config
 │       │   └── run-log.jsonl       # Run history and dedupe state
+│       ├── self-evolution-from-copilot-sessions/ # Local Copilot session mining
+│       │   ├── command.md          # Privacy-safe session self-evolution workflow
+│       │   ├── job.json            # Tue/Thu/Sat 09:30 scheduler + model config
+│       │   └── run-log.jsonl       # Watermark and run history
 │       ├── research/
 │       │   ├── command.md      # Autonomous research workflow
 │       │   ├── job.json        # Scheduler + model config
@@ -132,7 +136,7 @@ The physical folders are organized by primitive (`skills`, `prompts`, `agents`, 
 | --- | --- | --- | --- |
 | Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
 | Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
-| Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
+| Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/`, `self-evolution/jobs/self-evolution-from-copilot-sessions/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
 
 ## Content Hygiene
 

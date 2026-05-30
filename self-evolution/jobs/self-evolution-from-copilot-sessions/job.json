@@ -1,0 +1,14 @@
+{
+  "label": "com.ai-shared.self-evolution-from-copilot-sessions",
+  "description": "Three-times-weekly self-evolution from local VS Code Copilot sessions across workspaces; opens at most one privacy-safe ai-shared improvement PR.",
+  "target_dir": "~/.ai-shared",
+  "model": "github-copilot/gpt-5.5",
+  "variant": "xhigh",
+  "always_isolate": true,
+  "timeout": 3600,
+  "schedule": [
+    { "weekday": 2, "hour": 9, "minute": 30 },
+    { "weekday": 4, "hour": 9, "minute": 30 },
+    { "weekday": 6, "hour": 9, "minute": 30 }
+  ]
+}
