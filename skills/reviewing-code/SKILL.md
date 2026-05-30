@@ -1,6 +1,6 @@
 ---
 name: reviewing-code
-description: 'Proactive code review using line-by-line changed-hunk inspection, file-type lenses, and a 4-layer heuristic: surface correctness, test coverage gaps, bounded refactors, and architecture attention signals. USE FOR: reviewing PRs, review this PR for missing tests, self-review before creating a PR, evaluating changed files. Use when user says "review this", "check this PR", "anything I missed", "review my changes", or asks for line-by-line code review.'
+description: 'Proactive code review using a repo-local review ledger, line-by-line changed-hunk inspection, file-type lenses, and a 4-layer heuristic: surface correctness, test coverage gaps, bounded refactors, and architecture attention signals. USE FOR: reviewing PRs, review this PR for missing tests, self-review before creating a PR, evaluating changed files. Use when user says "review this", "check this PR", "anything I missed", "review my changes", or asks for line-by-line code review.'
 ---
 
 # Code Review — 4-Layer Heuristic
@@ -26,6 +26,46 @@ Do not review from the file list, diff summary, or intuition alone. For every ch
 Clean hunks do not need one comment each, but the final response must include brief evidence of coverage, such as `Reviewed changed hunks in: Component.vue template/script/style, useThing.ts, Component.spec.ts`.
 
 Do not claim a complete review if any changed hunk was not inspected. If the diff is too large for full confidence, say exactly which files or hunks received lower-confidence review.
+
+## Review Ledger
+
+Before the Changed Hunk Pass, create a scratch review ledger inside the repository being reviewed:
+
+`<repo-root>/tmp/code-review-YYYYMMDD-HHMMSS.md`
+
+Use the current repository/workspace root, not the customization repo, unless the customization repo is the review target. For example, review notes for `on-frontend` belong under `on-frontend/tmp/`; review notes for `content-service` belong under `content-service/tmp/`.
+
+If `tmp/` does not exist, create it in the review target repository. Do not stage or commit the ledger. If repo policy prevents creating local scratch files, fall back to `$TMPDIR` and state that limitation in the final response.
+
+Write the ledger while reviewing, not after the final answer. Keep one section per changed file, and one subsection per changed area when useful (`Template`, `Script`, `Style`, `Tests`, `Config`). Record hunk decisions using `OK`, `finding`, `question`, or `unnecessary`.
+
+Ledger format:
+
+```md
+# Code Review Ledger
+
+Scope: [PR/local diff]
+Mode: [review-only/self-review]
+Depth: [single pass/standard/deep/flag for split]
+
+## File: path/to/Component.vue
+
+### Template
+- L12-L24: OK — required markup change, matches local pattern
+- L31-L36: question — wrapper may be unnecessary for this layout
+
+### Script
+- L68-L83: unnecessary — unrelated cleanup; revert or justify
+- L101-L119: finding — loading branch can leave stale state
+
+### Style
+- L140-L152: OK
+
+## File: path/to/useThing.ts
+- L18-L35: finding — missing null/error branch coverage
+```
+
+The final response must include a clickable link to the ledger file when it was created inside the workspace, for example: `Review ledger: [tmp/code-review-20260530-143000.md](tmp/code-review-20260530-143000.md)`.
 
 ## Changed Hunk Pass
 
@@ -183,6 +223,7 @@ Use the **structured format** for self-review and standalone reviews:
 ## Code Review — [scope description]
 
 ### Changed Hunk Coverage
+- Review ledger: [path/to/tmp/code-review-*.md]
 - Reviewed: [file/type areas, e.g. Component.vue template/script/style, useThing.ts, Component.spec.ts]
 - Lower confidence: [only if any hunk/file could not be fully inspected]
 - Unnecessary changes: ✅ None found
@@ -215,6 +256,7 @@ When replying directly to the user:
 - start with findings ordered by severity, each with file/line references
 - keep summaries brief and place them after the findings
 - include the layer grouping only when it adds clarity for the user or the workflow
+- include the repo-local review ledger link when one was created
 - include changed-hunk coverage evidence, even when there are no findings
 - if there are no findings, say so explicitly and mention any residual risk or testing gap
 
@@ -266,6 +308,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 ## Rules
 
 - The Changed Hunk Pass is mandatory before the four layers.
+- The repo-local Review Ledger is mandatory unless repo policy prevents scratch files.
 - Every changed hunk needs an internal `OK`, `finding`, `question`, or `unnecessary` decision.
 - Always run all 4 layers. Do not skip a layer because an earlier one had findings.
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
