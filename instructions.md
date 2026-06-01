@@ -39,7 +39,7 @@ Skills in `~/.ai-shared/skills/` activate by task context:
 - **Quality**: `reviewing-code` (4-layer) before PRs, `manual-qa` (ticket/diff QA execution), `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
-- **Tools**: `atlassian-mcp` (Jira/Confluence), `github-mcp` (PRs/issues), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
+- **Tools**: `atlassian-mcp` (Jira/Confluence), `github` (PRs/issues via `gh` CLI), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
 - **Browser**: `playwright-mcp` (browser automation, authenticated reuse, console/network inspection), `validating-ui` + `a11y-audit` (UI quality)
 - **Authenticated Browser**: when the user says Chrome is already logged in or asks for Playwright MCP browser reuse, use extension-backed `playwright-mcp`; do not treat the VS Code simple browser as equivalent.
 - **References**: Checklists in `~/.ai-shared/references/` — load on demand, not upfront

@@ -19,7 +19,7 @@ The user provides:
 
 Collect all inputs before reviewing anything.
 
-1. Read the PR description, diff, and linked issues via the `github-mcp` skill.
+1. Read the PR description, diff, and linked issues via the `github` skill.
 2. Extract the Jira ticket ID from the PR title, description, or branch name. Read the full ticket via the `atlassian-mcp` skill — summary, description, acceptance criteria, and links. **If no ticket ID is found**, use the PR description and any linked wiki pages as the requirement source instead — still run step 2 against those requirements. Only mark AC coverage as "unavailable" if there are truly no requirements anywhere (no ticket, no PR description requirements, no wiki pages).
 3. If the ticket or PR links to Confluence wiki pages (tracking specs, solution designs, etc.), read them via `atlassian-mcp`. Extract relevant requirements.
 4. Find the preview environment URL: check PR deployment status, status checks, and PR comments (in that order). If multiple deployments exist, prefer the one matching the PR's head branch.

@@ -59,4 +59,4 @@ Same auth pattern — replace the URL and remove gid logic.
 
 - **401 Unauthorized**: Refresh token may have expired. Re-run the OAuth flow that originally created the token.
 - **403 Forbidden**: The authenticated account doesn't have access to the document. Check sharing permissions.
-- **Token file missing**: Expected at `~/.config/google-oauth/token.json`. Was originally created by a Google Docs MCP setup.
+- **Token file missing**: Expected at `~/.config/google-oauth/token.json`. Re-run the OAuth flow that originally created the token (an `authorized_user` token with documents/drive/spreadsheets scopes for the on-running.com account).

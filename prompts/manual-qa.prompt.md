@@ -19,7 +19,7 @@ Use the context provided by the user, then gather any missing local evidence nee
 - local `git diff` and changed files when working from the current checkout
 - feature flags, variants, URLs, and test data needed to exercise the change
 
-Single PR mode: when the user provides only a PR URL or PR number, treat that PR as the full QA source. Use the `github-mcp` skill to read the PR, derive linked Jira context when present, find the preview environment, create a temporary QA plan from the ticket plus PR diff, and execute it against the preview or another runnable environment. Do not require a local checkout unless the PR data is unavailable or local execution is the only runnable path.
+Single PR mode: when the user provides only a PR URL or PR number, treat that PR as the full QA source. Use the `github` skill to read the PR, derive linked Jira context when present, find the preview environment, create a temporary QA plan from the ticket plus PR diff, and execute it against the preview or another runnable environment. Do not require a local checkout unless the PR data is unavailable or local execution is the only runnable path.
 
 Create a temporary QA plan, execute it yourself, update the plan with results, and end with the `manual-qa` verdict format.
 

@@ -1,70 +1,49 @@
 ---
 name: contentful
-description: 'Read content from Contentful CMS via MCP server or CLI. USE FOR: reading content types, entries, assets, spaces, and environments. ALWAYS use when user asks about Contentful content, product data, or CMS entries. READ-ONLY — never create, update, or delete Contentful data. NOT FOR: modifying CMS content or managing Contentful configuration.'
+description: 'Read content from Contentful CMS via the `contentful` CLI and CMA API. USE FOR: reading content types, entries, assets, spaces, and environments. ALWAYS use when user asks about Contentful content, product data, or CMS entries. READ-ONLY — never create, update, or delete Contentful data. NOT FOR: modifying CMS content or managing Contentful configuration.'
 ---
 
 # Contentful — Read Content from CMS
 
 **NEVER create, update, or delete any Contentful data.** Read-only access only.
 
-## Tool Selection
+## Routing
 
-Check if Contentful MCP tools are available in your current session (e.g. `get_initial_context`, `list_content_types`). If available, use MCP. If not, use the CLI + curl fallback below.
+- **`contentful` CLI** for spaces, environments, and content types.
+- **CMA REST API via `curl`** for entries and assets (the CLI has no read commands for these).
 
-## Gotchas — Official Contentful MCP Server (`@contentful/mcp-server`)
+## Auth & config
 
-The official Contentful MCP server (v1.7+) exposes **both read and write tools**. **Our policy is read-only. Never call write tools.**
+- Token: `$CONTENTFUL_CMA_TOKEN` (set in `.zshrc`), also stored as `managementToken` in `~/.contentfulrc.json`.
+- Defaults: read `activeSpaceId` and `activeEnvironmentId` from `~/.contentfulrc.json` before asking the user.
+- Verify with `contentful space list` (lists accessible spaces; the active one is marked `[active]`).
 
-### Safe tools (read-only)
-
-| Category | Tools |
-|---|---|
-| Context | `get_initial_context` |
-| Content Types | `list_content_types`, `get_content_type` |
-| Entries | `search_entries`, `get_entry` |
-| Assets | `list_assets`, `get_asset` |
-| Spaces & Environments | `list_spaces`, `get_space`, `list_environments` |
-| Locales | `list_locales`, `get_locale` |
-| Tags | `list_tags` |
-| AI Actions | `get_ai_action`, `list_ai_actions`, `get_ai_action_invocation` |
-
-### Forbidden tools — do NOT call
-
-| Category | Tools | Why |
-|---|---|---|
-| Content Types | `create_content_type`, `update_content_type`, `publish_content_type`, `unpublish_content_type`, `delete_content_type` | Mutates content model |
-| Entries | `create_entry`, `update_entry`, `publish_entry`, `unpublish_entry`, `archive_entry`, `unarchive_entry`, `delete_entry` | Mutates content |
-| Assets | `upload_asset`, `update_asset`, `publish_asset`, `unpublish_asset`, `archive_asset`, `unarchive_asset`, `delete_asset` | Mutates assets |
-| Environments | `create_environment`, `delete_environment` | Destructive infrastructure change |
-| Locales | `create_locale`, `update_locale`, `delete_locale` | Mutates locale config |
-| Tags | `create_tag` | Mutates taxonomy |
-| AI Actions | `create_ai_action`, `update_ai_action`, `publish_ai_action`, `unpublish_ai_action`, `delete_ai_action`, `invoke_ai_action` | Mutates or triggers AI workflows |
-
-**Workflow**: Always call `get_initial_context` first — it initializes the connection and returns usage guidance from the server.
-
-## CLI + curl Fallback
-
-When no MCP tools are available:
+## Commands
 
 ```bash
-# Content types (CLI v3)
-contentful content-type list   # aliased as `ct list`
+# Spaces, environments, content types (CLI v3)
 contentful space list
 contentful environment list
+contentful content-type list            # aliased as `ct list`
+contentful content-type get --id <typeId>
 
-# Entries and assets (CLI v3 has no entry/asset commands — use CMA API)
-curl -s "https://api.contentful.com/spaces/{spaceId}/environments/{env}/entries?content_type={type}&limit=5" \
+# Entries and assets (no CLI read command — use the CMA API)
+SPACE=$(jq -r .activeSpaceId ~/.contentfulrc.json)
+ENV=$(jq -r .activeEnvironmentId ~/.contentfulrc.json)
+
+curl -s "https://api.contentful.com/spaces/$SPACE/environments/$ENV/entries?content_type=<type>&limit=5" \
+  -H "Authorization: Bearer $CONTENTFUL_CMA_TOKEN" | jq '.items[].fields'
+
+curl -s "https://api.contentful.com/spaces/$SPACE/environments/$ENV/assets?limit=5" \
   -H "Authorization: Bearer $CONTENTFUL_CMA_TOKEN" | jq '.items[].fields'
 ```
 
-- Token: `$CONTENTFUL_CMA_TOKEN` (set in `.zshrc`)
-- Space and environment: read from `~/.contentfulrc.json` (`activeSpaceId`, `activeEnvironmentId`)
-- Filter by field: add `&fields.key=someValue` to the query string
+- Filter entries by field: add `&fields.key=someValue` to the query string.
+- Fetch a single entry: `.../entries/{entryId}`.
 
 ## Rules
 
-- **Never** create, update, publish, or delete Contentful data — even if the MCP server offers those tools
-- Prefer MCP when available — structured data, no shell overhead
-- Call `get_initial_context` before other MCP tools to establish the connection
-- Read `~/.contentfulrc.json` for space/environment defaults before asking the user
-- Pipe curl output through `jq` for readability
+- **Never** create, update, publish, archive, or delete Contentful data — even though `$CONTENTFUL_CMA_TOKEN` is a management token with write scope. Only ever issue `GET` requests and read-only CLI subcommands.
+- Do not run `contentful` subcommands that mutate (e.g. `content-type create/update/delete`, `space create`, `merge`, `import`).
+- Read `~/.contentfulrc.json` for space/environment defaults before asking the user.
+- Pipe `curl` output through `jq` for readability.

@@ -57,7 +57,7 @@ That's it. All three tools now read from this repo.
 │   ├── documentation/          # ADRs, READMEs, technical docs
 │   ├── figma-mcp/              # Read Figma designs via MCP before browser fallback
 │   ├── git-workflow/           # Full git & PR pipeline
-│   ├── github-mcp/             # GitHub operations via MCP
+│   ├── github/                 # GitHub operations via `gh` CLI
 │   ├── google-drive/           # Fetch Google Sheets/Docs
 │   ├── jira-ticket/            # Write, review, update tickets
 │   ├── manual-qa/              # Plan and execute manual QA from ticket and diff
@@ -291,7 +291,7 @@ graph LR
   S_PW([playwright-mcp]):::skill
   S_AMP([amplitude-analytics]):::skill
   S_ATLAS([atlassian-mcp]):::skill
-  S_GH([github-mcp]):::skill
+  S_GH([github]):::skill
   S_CTF([contentful]):::skill
   S_GDRIVE([google-drive]):::skill
   %% ── Agents referenced by prompts ────────────────────
@@ -456,7 +456,7 @@ flowchart TD
   Validation["functional validation"]:::action
   Verdict["review verdict"]:::action
 
-  ReviewPr --> Context --> GH["skill: github-mcp"]:::skill
+  ReviewPr --> Context --> GH["skill: github"]:::skill
   Context --> Atlas["skill: atlassian-mcp"]:::skill
   Context --> Preview["preview URL + CI state"]:::action
   ReviewPr --> Coverage
@@ -526,7 +526,7 @@ flowchart TD
   Reviewers["assign human reviewers"]:::action
   Evolution["capture reusable learning"]:::action
 
-  Address --> Fetch --> GH["skill: github-mcp"]:::skill
+  Address --> Fetch --> GH["skill: github"]:::skill
   Address --> Triage
   Triage --> FixOrDismiss
   Address --> ExtraReview --> Reviewing["skill: reviewing-code"]:::skill
