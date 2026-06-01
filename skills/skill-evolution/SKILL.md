@@ -52,11 +52,12 @@ Prefer updating selection heuristics, workflow guidance, and representative exam
 2. Read the target skill from `~/.ai-shared/skills/<name>/SKILL.md`
 3. **Diff preview**: Show the user a clear before/after of the proposed change
 4. Apply the change after approval
-5. **Run repo checks from the repo root, in order**:
+5. **Eval gate**: If the change alters activation language or required workflow steps, add or update deterministic rows under `evals/` before validation. Use `skill-routing.tsv` for trigger coverage and `step-adherence.tsv` for must-follow steps; keep each row to one request and one expected rule.
+6. **Run repo checks from the repo root, in order**:
    1. `zsh validate.sh`
    2. `npx -y agnix .`
    3. `./setup.sh` if any skill folder was added or renamed
-6. **Commit & PR** — user reviews and merges
+7. **Commit & PR** — user reviews and merges
 
 When the change comes from runtime drift discovered while using a skill:
 
@@ -72,11 +73,12 @@ When the change comes from runtime drift discovered while using a skill:
 4. Create `~/.ai-shared/skills/<new-name>/SKILL.md` after approval
 5. Add cross-references in related skills' "See Also" sections
 6. Update Skill Awareness in `instructions.md` if the skill needs a trigger category
-7. **Run repo checks from the repo root, in order**:
+7. **Eval gate**: Add routing and adherence coverage for the new skill before validation. At minimum, add one `skill-routing.tsv` row for a realistic trigger and one `step-adherence.tsv` row for the most important non-skippable step.
+8. **Run repo checks from the repo root, in order**:
    1. `zsh validate.sh`
    2. `npx -y agnix .`
    3. `./setup.sh`
-8. **Commit & PR** — user reviews and merges
+9. **Commit & PR** — user reviews and merges
 
 ## Repo-specific footguns when codifying
 
@@ -84,6 +86,7 @@ These are things general LLM knowledge will not warn you about — they are spec
 
 - **Run the context audit for ai-shared content changes.** Before adding or substantially updating a skill, prompt, reference, agent, or instruction workflow, use `~/.ai-shared/docs/context-audit.md` to check for bloat, overlap, contradictions, stale links, and repo-only guidance that should not become a global skill.
 - **Description trigger phrase must satisfy two linters.** `validate.sh` accepts `use for` or `use when` (case-insensitive substring); agnix requires `Use when`. Use `Use when …` to satisfy both.
+- **Behavioral evals guard skill drift.** When activation text or required workflow steps change, update `evals/skill-routing.tsv` or `evals/step-adherence.tsv` in the same PR. Structural validation catches shape; eval rows catch the behavior agents are likely to skip.
 - **Folder name must equal the `name:` field.** Mismatch silently breaks loading. After any rename, run `./setup.sh` to refresh per-skill symlinks (Codex needs one symlink per skill).
 - **Validate before declaring done.** Run all three from repo root, in order:
   1. `zsh validate.sh` — repo-local rules (frontmatter, name == folder, cross-refs)
