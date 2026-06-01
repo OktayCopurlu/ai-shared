@@ -37,9 +37,11 @@ Use the current repository/workspace root, not the customization repo, unless th
 
 If `tmp/` does not exist, create it in the review target repository. Do not stage or commit the ledger. If repo policy prevents creating local scratch files, fall back to `$TMPDIR` and state that limitation in the final response.
 
-Write the ledger while reviewing, not after the final answer. Keep one section per changed file, and one subsection per changed area when useful (`Template`, `Script`, `Style`, `Tests`, `Config`). Record hunk decisions using `OK`, `finding`, `question`, or `unnecessary`.
+Write the ledger while reviewing, not after the final answer. Internally classify every changed hunk as `OK`, `finding`, `question`, or `unnecessary` (see the Changed Hunk Pass table), but **only write `finding`, `question`, and `unnecessary` hunks into the ledger**. Do not write `OK` hunks, per-line approvals, or praise — they add noise and slow reading. Keep one section per changed file, and one subsection per changed area only when that area has something to address (`Template`, `Script`, `Style`, `Tests`, `Config`).
 
-Ledger format:
+If a file has no actionable hunks, omit it from the ledger entirely. Coverage of clean hunks is proven by the single `Reviewed changed hunks in: …` line in the final response, not by listing them.
+
+Ledger format (actionable items only):
 
 ```md
 # Code Review Ledger
@@ -51,15 +53,11 @@ Depth: [single pass/standard/deep/flag for split]
 ## File: path/to/Component.vue
 
 ### Template
-- L12-L24: OK — required markup change, matches local pattern
 - L31-L36: question — wrapper may be unnecessary for this layout
 
 ### Script
 - L68-L83: unnecessary — unrelated cleanup; revert or justify
 - L101-L119: finding — loading branch can leave stale state
-
-### Style
-- L140-L152: OK
 
 ## File: path/to/useThing.ts
 - L18-L35: finding — missing null/error branch coverage
@@ -83,10 +81,12 @@ Use this hunk decision internally:
 
 | Decision | Meaning | Output |
 |---|---|---|
-| `OK` | Required, readable, locally consistent | Usually no per-line output |
+| `OK` | Required, readable, locally consistent | No output — not in ledger, not in response |
 | `finding` | Bug, risk, missing test, or concrete improvement | Report with severity and line |
 | `question` | Intent unclear or architecture signal | Ask a direct question |
 | `unnecessary` | Change does not support PR goal or adds noise | Ask to revert or justify |
+
+The ledger and the final response carry only `finding`, `question`, and `unnecessary` items. `OK` hunks are tracked only in your head to guarantee full coverage — never written out.
 
 ## File-Type Review Lenses
 
@@ -217,48 +217,31 @@ Questions only — never directives. Direct senior reviewer attention.
 
 ## Output Format
 
-Use the **structured format** for self-review and standalone reviews:
+Show only what needs to be addressed. Do not print "✅ No issues found", per-layer all-clear lines, or praise for clean code — the reader wants a short, scannable list of actionable items.
+
+Use this **structured format** for self-review and standalone reviews:
 
 ```
 ## Code Review — [scope description]
 
-### Changed Hunk Coverage
 - Review ledger: [path/to/tmp/code-review-*.md]
-- Reviewed: [file/type areas, e.g. Component.vue template/script/style, useThing.ts, Component.spec.ts]
+- Reviewed changed hunks in: [file/type areas, e.g. Component.vue template/script/style, useThing.ts, Component.spec.ts]
 - Lower confidence: [only if any hunk/file could not be fully inspected]
-- Unnecessary changes: ✅ None found
-  OR
-- ⚠️ [file:line] change appears unrelated to PR goal → revert or justify
 
-### Layer 1 — Surface Correctness
-- ✅ No issues found
-  OR
+### Findings
 - ⚠️ [file:line] issue description → fix description
-
-### Layer 2 — Test Coverage Gaps
-- ✅ All changed code has test coverage
-  OR
 - 🧪 [test-file] missing test for: scenario description
-
-### Layer 3 — Bounded Refactors
-- ✅ No duplication detected
-  OR
-- 🔧 [files involved] suggestion description
-
-### Layer 4 — Architecture Signals
-- ✅ No signals detected
-  OR
-- ❓ [file:line] question for senior reviewer
+- 🔧 [files involved] refactor suggestion
+- ❓ [file:line] architecture question for senior reviewer
 ```
 
-When replying directly to the user:
+Rules for the body:
 
-- start with findings ordered by severity, each with file/line references
-- keep summaries brief and place them after the findings
-- include the layer grouping only when it adds clarity for the user or the workflow
-- include the repo-local review ledger link when one was created
-- include changed-hunk coverage evidence, even when there are no findings
-- if there are no findings, say so explicitly and mention any residual risk or testing gap
+- list only `finding`, `question`, and `unnecessary` items, ordered by severity, each with file/line references
+- omit any layer that produced nothing — do not add a header just to say it is clean
+- include the one-line changed-hunk coverage evidence and the ledger link (this is the only proof of clean-hunk coverage)
+- if the whole review is clean, say so in one sentence and stop; do not pad with per-layer all-clear lines
+- mention residual risk or a testing gap only when one genuinely exists
 
 ## PR Comment Format
 
