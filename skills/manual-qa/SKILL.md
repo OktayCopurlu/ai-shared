@@ -46,7 +46,7 @@ When the QA includes Figma-vs-implementation fidelity, load `~/.ai-shared/refere
 5. Execute the plan yourself.
    - For visible UI impact, load `validating-ui` and execute browser validation as part of this QA run.
    - For forms, dialogs, menus, navigation, keyboard interaction, focus handling, or error states, load `a11y-audit` for the relevant checks.
-   - For browser interaction, load `playwright-mcp` and use the app directly where possible.
+   - For browser interaction, use the built-in VS Code integrated browser by default (load `playwright-mcp` for routing and tool details; use its extension-backed path only when an existing logged-in Chrome/SSO session must be reused); use the app directly where possible.
    - For feature flags or experiments, follow `validating-ui`'s experiment override protocol before trying cookies or storage values.
    - For tracking, verify event names, triggers, and payloads through browser console logs or network requests.
    - For non-UI work, exercise the observable behavior through the lightest runnable path: CLI, API, dev server, focused script, or existing test harness.

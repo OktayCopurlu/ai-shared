@@ -9,8 +9,8 @@ Prefer preventing accessibility problems during implementation over finding them
 
 ## Tooling
 
-- Use Playwright MCP browser tools when a real page or flow can be exercised.
-- Use Playwright MCP snapshots, console messages, or page evaluation when DOM, ARIA, or runtime behavior needs inspection.
+- Use browser tools when a real page or flow can be exercised — prefer the built-in VS Code integrated browser; use Playwright MCP when a logged-in Chrome/SSO session must be reused (see `playwright-mcp` for routing).
+- Use snapshots, console messages, or page evaluation when DOM, ARIA, or runtime behavior needs inspection.
 - Use code review when the UI cannot be run, but say clearly that the review is partial.
 - Do not claim exact color-contrast compliance unless it was actually measured.
 

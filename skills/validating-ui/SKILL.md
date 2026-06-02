@@ -69,8 +69,8 @@ Only when the ticket mentions analytics or tracking:
 ## How To Run
 
 1. Ensure local dev server is running.
-2. Use `playwright-mcp` tools to navigate, interact, and snapshot.
-3. For deeper inspection, use `browser_console_messages`, `browser_network_requests`, `browser_snapshot`, and `browser_evaluate`.
+2. Navigate, interact, and snapshot — prefer the built-in VS Code integrated browser; use `playwright-mcp` (extension-backed) when an existing logged-in Chrome/SSO session must be reused. Load `playwright-mcp` for routing and tool details.
+3. For deeper inspection, use console messages, network requests, snapshots, and page evaluation (integrated browser via `run_playwright_code`, or the `browser_*` equivalents under Playwright MCP).
 4. If a11y is relevant, load `a11y-audit` separately — do not mix a11y findings into this validation.
 5. If the change is behind a feature flag, experiment, or A/B test, follow the experiment override protocol below. Test both enabled/disabled or control/treatment states when they are controllable.
 
@@ -108,7 +108,7 @@ Use this when a UI change is gated by a feature flag, experiment, or A/B test.
 1. Identify the exact flag or experiment key, expected group names, assignment SDK/helper, and whether assignment is server-side or client-side. Use the ticket, PR description, diff, linked docs, and nearby source code.
 2. Look for supported QA override mechanisms before changing browser state: URL parameters, cookies, localStorage, sessionStorage, SDK debug APIs, preview flag endpoints, or documented browser extensions.
 3. Apply only a confirmed override. Do not guess cookie or storage keys from the experiment name.
-4. For cookie or storage overrides, use `playwright-mcp` to set the value directly on the current origin, then reload. If storage helper tools are unavailable, use browser evaluation with the confirmed cookie or storage key/value.
+4. For cookie or storage overrides, set the value directly on the current origin via the browser path in use (integrated browser `run_playwright_code`, or `playwright-mcp` tools), then reload. If storage helper tools are unavailable, use page evaluation with the confirmed cookie or storage key/value.
 5. Reload after applying the override and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored value alone is not enough evidence.
 6. For localhost-only validation, if the confirmed runtime override cannot be applied because assignment is server-side, extension-only, or unavailable in automation, temporarily hard-code or stub the confirmed flag/experiment return value in the local working tree. Remove the temporary change before finishing and label the evidence as local hard-code validation.
 7. If the only available switch is an extension or admin UI that automation cannot operate, and local hard-code validation is not suitable, mark that variant as awaiting user-assisted override and include the exact key/group the user should select.

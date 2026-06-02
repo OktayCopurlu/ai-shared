@@ -40,6 +40,6 @@ Skills in `~/.ai-shared/skills/` activate by task context:
 - **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
 - **Tools**: `atlassian-mcp` (Jira/Confluence), `github` (PRs/issues via `gh` CLI), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
-- **Browser**: `playwright-mcp` (browser automation, authenticated reuse, console/network inspection), `validating-ui` + `a11y-audit` (UI quality)
-- **Authenticated Browser**: when the user says Chrome is already logged in or asks for Playwright MCP browser reuse, use extension-backed `playwright-mcp`; do not treat the VS Code simple browser as equivalent.
+- **Browser**: default to the built-in VS Code integrated browser (`open_browser_page`, `run_playwright_code`, etc.) for most automation; load `playwright-mcp` for browser routing/tool details, plus `validating-ui` + `a11y-audit` (UI quality)
+- **Authenticated Browser**: when the user says Chrome is already logged in or asks to reuse an existing logged-in Chrome/SSO session that cannot be re-injected, use extension-backed `playwright-mcp`; the integrated browser runs a separate context and will not carry that session. When auth can be re-injected (basic auth, known cookie/token, forced headers), the integrated browser is sufficient.
 - **References**: Checklists in `~/.ai-shared/references/` — load on demand, not upfront

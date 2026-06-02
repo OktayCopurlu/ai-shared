@@ -12,7 +12,21 @@ The server organizes tools into **core** tools plus a small set of opt-in capabi
 ## Routing
 
 1. Prefer first-party integrations for structured systems such as Jira, GitHub, Figma, or Google Docs.
-2. Use Playwright MCP when browser interaction, authenticated browser reuse via `--extension`, repeated snapshots, console/network inspection, or longer stateful interaction matter.
+2. **Prefer the built-in VS Code integrated browser** (`open_browser_page`, `navigate_page`, `click_element`, `type_in_page`, `read_page`, `screenshot_page`, `run_playwright_code`) for most browser work. As of VS Code 1.122 it is a full Chromium (Electron) browser and supports arbitrary Playwright code via `run_playwright_code` — including `page.evaluate`, `setExtraHTTPHeaders`, network `route`, device emulation, and custom user-agents. It adds **zero** MCP tools (no impact on the ~128-tool limit) and needs no separate auth or `npx` process.
+3. **Use Playwright MCP (`--extension`) only when you need to attach to the user's already-logged-in Chrome/Edge session** — e.g. SSO/workspace-gated sites where re-injecting auth is not possible. The integrated browser runs its own Electron context and does NOT share the user's real Chrome cookies/SSO state, so that reuse is the one capability it cannot provide.
+
+### Integrated browser vs Playwright MCP
+
+| Need | Use |
+|------|-----|
+| Public page automation, clicks, forms, screenshots | Integrated browser |
+| Arbitrary Playwright JS (`page.evaluate`, etc.) | Integrated browser (`run_playwright_code`) |
+| Header injection (`setExtraHTTPHeaders`), network `route`, device emulation | Integrated browser (`run_playwright_code`) |
+| Console / network request inspection on a public or self-auth'd page | Integrated browser |
+| Reuse of the user's existing logged-in Chrome/SSO session | Playwright MCP `--extension` |
+| Persistent on-disk profile (`--user-data-dir`) | Playwright MCP |
+
+The rest of this skill documents the Playwright MCP surface; apply it once you have decided MCP (extension/session reuse) is the right path. For the integrated browser, the same Playwright concepts apply via `run_playwright_code` with the provided `page` object.
 
 ## Session Modes
 
@@ -26,7 +40,9 @@ The server organizes tools into **core** tools plus a small set of opt-in capabi
 If the target page may require login, paywall access, or workspace membership, prefer `--extension` when a suitable logged-in browser already exists.
 Do not assume persistent auth by default; persistence only exists when `--user-data-dir` or another explicit config provides it.
 If the page is still blocked, verify the attached tab and browser state before calling the page unreadable.
-Do not use the VS Code simple browser, `open_browser_page`, or `read_page` as a substitute for extension-backed Playwright MCP when the user expects reuse of a logged-in Chrome session.
+
+When the user expects reuse of an **existing logged-in Chrome session** (SSO/workspace membership that cannot be re-injected), use extension-backed Playwright MCP — the integrated browser runs a separate Electron context and will not carry those cookies.
+However, when auth can be **re-injected** (HTTP basic auth, a known cookie/token, forced headers), the integrated browser is sufficient: set credentials with `run_playwright_code` (`page.context().setExtraHTTPHeaders(...)` or `addCookies(...)`) rather than embedding them in the URL.
 
 ## Capability Groups
 
