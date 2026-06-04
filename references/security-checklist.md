@@ -51,6 +51,18 @@ Guards against maintainer-account hijacks and malicious version injections (e.g.
 - [ ] Never install "meeting app updates" prompted mid-call — known social-engineering vector for maintainer account takeover
 - [ ] On suspected compromise: `grep -E "<pkg>@<bad-version>" package-lock.json yarn.lock pnpm-lock.yaml`, then rotate tokens, revoke sessions, rebuild CI images from clean base
 
+## MCP Protocol Boundaries
+
+Use this pass when adding or reviewing MCP servers, clients, proxies, or one-click MCP install/config flows.
+
+- [ ] Local MCP server config shows the exact command, args, env, and filesystem/network reach before execution; reject hidden `npx`, shell pipes, broad home-directory access, or one-click installs without explicit consent
+- [ ] `roots` are least-privilege `file://` boundaries, not convenience access to the whole repo or home directory; servers validate every file operation against the current roots list
+- [ ] `elicitation` never asks for passwords, tokens, API keys, or secrets; prompts identify the requesting MCP server and allow accept, decline, and cancel paths
+- [ ] High-impact MCP tool calls are gated in server code, not prompt text; approvals are single-use, action-bound, time-bounded, and auditable before the mutation executes
+- [ ] OAuth proxy servers use per-client consent, exact redirect URI matching, single-use `state`, and no token passthrough; tokens must be issued for the MCP server audience
+- [ ] Streamable HTTP sessions use secure random session IDs, never as authentication; every request is authorized independently and session data is bound to the authenticated user
+- [ ] Server-side MCP clients validate OAuth discovery and redirect URLs to prevent SSRF, including private IP ranges, localhost, link-local metadata endpoints, and unsafe redirect chains
+
 ## API Security
 
 - [ ] SQL/NoSQL queries use parameterized queries — no string concatenation

@@ -33,6 +33,17 @@ Shape the work in this order:
 - Treat compacted history as lossy. When exact details matter, verify from source files, tickets, specs, or tests.
 - If the context is getting crowded, stop and create the next durable artifact instead of pushing through.
 
+## Context Budget Triage
+
+Use this before dumping bulky tool output, logs, search results, RAG chunks, or generated graphs into the main session.
+
+- Measure or estimate the input size before adding it to context; tool schemas, files, images, and long logs can cost more than plain text suggests.
+- Keep stable instructions, specs, and examples ahead of volatile per-request data so provider prompt caches have a chance to match repeated prefixes.
+- Prefer structured artifacts for large outputs: write the full result to a file, then bring back a short index, relevant excerpts, and the path.
+- Compress only when the original stays retrievable. Lossy summaries are fine for orientation, not for implementation facts, test output, or review evidence.
+- Do not compress dense source snippets, grep hits, failing assertions, or stack traces that already carry precise signal; preserve the exact text and trim surrounding noise instead.
+- When a compressed or summarized artifact becomes decision-critical, re-open the original source before coding, reviewing, or reporting the result.
+
 ## Human-In-Loop vs AFK
 
 Keep the human in the loop for:
