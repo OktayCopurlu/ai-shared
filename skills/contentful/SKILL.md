@@ -11,6 +11,7 @@ description: 'Read content from Contentful CMS via the `contentful` CLI and CMA 
 
 - **`contentful` CLI** for spaces, environments, and content types.
 - **CMA REST API via `curl`** for entries and assets (the CLI has no read commands for these).
+- **Contentful MCP server** only for read-only discovery when exposed in the current session. Current official MCP releases include broad create/update/publish/archive/delete tools; do not treat MCP confirmation prompts as permission to mutate.
 
 ## Auth & config
 
@@ -45,5 +46,7 @@ curl -s "https://api.contentful.com/spaces/$SPACE/environments/$ENV/assets?limit
 
 - **Never** create, update, publish, archive, or delete Contentful data — even though `$CONTENTFUL_CMA_TOKEN` is a management token with write scope. Only ever issue `GET` requests and read-only CLI subcommands.
 - Do not run `contentful` subcommands that mutate (e.g. `content-type create/update/delete`, `space create`, `merge`, `import`).
+- If a Contentful MCP delete tool returns a two-phase confirmation preview/token, stop there. Do not make the confirming second call unless the user explicitly changes this skill's read-only constraint for the current task.
+- Treat MCP `PROTECTED_ENVIRONMENTS` as defense in depth, not as the boundary. Unprotected environments can still accept writes, so this skill's read-only rule remains the controlling policy.
 - Read `~/.contentfulrc.json` for space/environment defaults before asking the user.
 - Pipe `curl` output through `jq` for readability.
