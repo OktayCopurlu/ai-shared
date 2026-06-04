@@ -57,6 +57,36 @@ describe('ComponentName', () => {
 | 5 | State transitions | Loading → success, loading → error |
 | 6 | Edge cases | Only when a bug proves the gap matters |
 
+## LLM Output And Prompt Evals
+
+Use this when the change affects prompts, agent instructions, RAG behavior, tool selection, generated copy, or LLM-mediated decisions.
+
+Start with error analysis, not a generic score. Review real traces or representative examples, identify the failure modes that actually matter, then write the cheapest eval that would catch those failures.
+
+Prefer evals in this order:
+
+1. **Deterministic assertions** — schema validity, required fields, forbidden strings, refusal behavior, tool-call shape, or executable output checks.
+2. **Domain-specific pass/fail labels** — one clear quality dimension per label, such as faithfulness, policy compliance, or correct tool choice.
+3. **LLM-as-judge** — only when the behavior is subjective or too variable for code assertions; validate the judge against human labels before trusting it.
+4. **Experiment harness** — for repeated prompt/model/retrieval changes; run the same labeled examples against each variant and track regressions over time.
+
+Do not start with broad metrics like "helpfulness", "quality", or similarity unless they are only exploration signals for finding traces to inspect. A high generic score is not evidence that the product behavior is correct.
+
+### Eval Data Rules
+
+- Keep labels binary where possible: pass/fail, win/lose/tie, or one failure category at a time.
+- Include enough fail cases to stress the behavior; a dataset that mostly passes is weak regression protection.
+- Prefer organic failures from production, QA, dogfooding, or smaller-model outputs before relying on synthetic defects.
+- When synthetic data is useful, generate structured scenario tuples first, then turn them into natural-language inputs so coverage does not collapse into repetitive examples.
+- Hold back a small test set when tuning an LLM judge or prompt, so improvements are not only overfit to the examples used during iteration.
+
+### When To Add An Eval
+
+- Add a cheap deterministic assertion as soon as the success condition is objective.
+- Add an LLM judge only after the failure mode recurs and cannot be fixed by clarifying the prompt, schema, retrieval, or tool contract.
+- Add a harness when the team expects to compare multiple prompts, models, retrieval settings, or agent policies over time.
+- Do not build eval infrastructure for a one-off issue that can be fixed and manually verified faster than the eval can be maintained.
+
 ## Accessibility Contracts
 
 When testing rendered UI, prefer queries that prove the user-facing accessibility contract instead of DOM structure.
