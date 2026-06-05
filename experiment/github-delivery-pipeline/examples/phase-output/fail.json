@@ -1,0 +1,25 @@
+{
+  "schema_version": "1",
+  "phase": "qa",
+  "status": "fail",
+  "summary": "Required-field QA scenario failed.",
+  "inputs_read": ["context-packet", "implementation-plan", "current-diff", "previous-verdicts"],
+  "artifacts_written": ["verdicts/06-qa.json", "fix-requests/QA-001.json"],
+  "evidence": [],
+  "fix_requests": [
+    {
+      "id": "QA-001",
+      "source_phase": "qa",
+      "severity": "high",
+      "acceptance_criteria": ["AC-2"],
+      "scenario": "User submits the form without required input.",
+      "expected": "Inline validation error appears and submit is blocked.",
+      "actual": "Form submits successfully.",
+      "reproduction": ["Open checkout", "Clear required field", "Click submit"],
+      "suggested_direction": "Implement required-field validation before submit."
+    }
+  ],
+  "blockers": [],
+  "stale_artifacts": [],
+  "next_recommendation": "fix"
+}

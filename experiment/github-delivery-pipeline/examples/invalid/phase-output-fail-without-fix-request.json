@@ -1,0 +1,13 @@
+{
+  "schema_version": "1",
+  "phase": "qa",
+  "status": "fail",
+  "summary": "This invalid example fails without a fix request or blocker.",
+  "inputs_read": [],
+  "artifacts_written": [],
+  "evidence": [],
+  "fix_requests": [],
+  "blockers": [],
+  "stale_artifacts": [],
+  "next_recommendation": "fix"
+}

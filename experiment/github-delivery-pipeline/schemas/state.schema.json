@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-shared.local/experiment/delivery-pipeline/state.schema.json",
+  "title": "Delivery Pipeline Run State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "status",
+    "current_phase",
+    "created_at",
+    "updated_at",
+    "input",
+    "ticket",
+    "target_repo",
+    "pr",
+    "phase_history",
+    "fix_loop_count",
+    "stale_from_phase",
+    "notification",
+    "retention"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["initialized", "running", "paused", "failed", "handoff-complete", "finished", "archived"]
+    },
+    "current_phase": { "type": ["string", "null"] },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "input": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["ticket", "target_repo"],
+      "properties": {
+        "ticket": { "type": "string" },
+        "target_repo": { "type": ["string", "null"] },
+        "start_phase": { "type": ["string", "null"] }
+      }
+    },
+    "ticket": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["key", "url"],
+      "properties": {
+        "key": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] }
+      }
+    },
+    "target_repo": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["path", "branch"],
+      "properties": {
+        "path": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] }
+      }
+    },
+    "pr": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["url", "number"],
+      "properties": {
+        "url": { "type": ["string", "null"] },
+        "number": { "type": ["integer", "null"] }
+      }
+    },
+    "phase_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["phase", "status", "started_at", "finished_at"],
+        "properties": {
+          "phase": { "type": "string" },
+          "status": { "type": "string" },
+          "started_at": { "type": "string" },
+          "finished_at": { "type": ["string", "null"] },
+          "output": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "fix_loop_count": { "type": "integer", "minimum": 0 },
+    "stale_from_phase": { "type": ["string", "null"] },
+    "stale_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "protocol_error_retries": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "resume_after_local_safety_loop": { "type": ["string", "null"] },
+        "last_decision": { "type": ["object", "null"] }
+      }
+    },
+    "notification": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["last_event", "last_sent_at"],
+      "properties": {
+        "last_event": { "type": ["string", "null"] },
+        "last_sent_at": { "type": ["string", "null"] }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["mode", "archive_path", "delete_after"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["active", "compact", "archived"] },
+        "archive_path": { "type": ["string", "null"] },
+        "delete_after": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
