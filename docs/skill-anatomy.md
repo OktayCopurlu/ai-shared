@@ -22,6 +22,18 @@ This repo intentionally supports two shapes of skills:
 
 Workflow skills benefit from richer self-check sections. Tool skills can stay lean if extra ceremony would not improve decisions.
 
+## Choosing the Right Primitive
+
+Before adding a new AI customization, choose the smallest primitive that matches how it should load:
+
+- **Always-on instructions**: use only for short project-wide rules that should affect nearly every request.
+- **File-based instructions**: use for language, framework, or directory conventions that apply only to matching files.
+- **Prompt files**: use for a lightweight, user-invoked task or slash command that sequences existing skills and context.
+- **Skills**: use for a reusable capability or multi-step workflow that should load on demand and may include references, examples, or scripts.
+- **Custom agents**: use when the task needs a persistent persona, different tool permissions, model preference, or handoff path.
+
+If the same guidance would be pasted into multiple prompts, extract it to a skill or reference and link to it. If it must run deterministically at a lifecycle point, it is a hook or validation script, not prose guidance.
+
 ## SKILL.md Format
 
 ### Frontmatter (Required)

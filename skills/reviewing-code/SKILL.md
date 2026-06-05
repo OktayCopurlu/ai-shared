@@ -237,6 +237,7 @@ Use this **structured format** for self-review and standalone reviews:
 
 Rules for the body:
 
+- start with findings ordered by severity; keep summaries or coverage notes secondary
 - list only `finding`, `question`, and `unnecessary` items, ordered by severity, each with file/line references
 - omit any layer that produced nothing — do not add a header just to say it is clean
 - include the one-line changed-hunk coverage evidence and the ledger link (this is the only proof of clean-hunk coverage)
