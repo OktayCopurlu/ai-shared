@@ -35,8 +35,14 @@ steps:
       set -euo pipefail
       rm -rf /tmp/exp-prev && mkdir -p /tmp/exp-prev
       gh run download "$PREV" --repo "$GITHUB_REPOSITORY" --dir /tmp/exp-prev || { echo "no prior artifact yet"; exit 0; }
-      tgz="$(find /tmp/exp-prev -name 'exp-state.tgz' | head -1)"
-      if [ -n "$tgz" ]; then tar -xzf "$tgz" -C . && echo "Restored .exp from $tgz"; ls -la .exp || true; else echo "exp-state.tgz not found"; fi
+      # gh run download creates a directory per artifact (e.g. /tmp/exp-prev/exp-state.tgz/),
+      # so target the actual FILE inside it, not the directory.
+      tgz="$(find /tmp/exp-prev -type f -name 'exp-state.tgz' | head -1)"
+      if [ -n "$tgz" ]; then
+        tar -xzf "$tgz" -C . && echo "Restored .exp from $tgz"; ls -la .exp || true
+      else
+        echo "exp-state.tgz file not found under /tmp/exp-prev; contents:"; find /tmp/exp-prev -maxdepth 3 || true
+      fi
 
 # Terminal step: just record what it received and stop. noop keeps the run from completing silently.
 safe-outputs:

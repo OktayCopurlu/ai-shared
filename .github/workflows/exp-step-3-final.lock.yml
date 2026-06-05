@@ -1,4 +1,4 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"7faefa2594a2827d377763b1c8354fbdb7278b2c086864377278c1c080299da8","body_hash":"5db69ae406b61f7e9f95cd0660858dbf1776b1407f68c1462a382e43e835bb23","compiler_version":"v0.78.1","strict":true,"agent_id":"copilot","agent_model":"claude-sonnet-4.6"}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"d6e1b177eda3c1c56d85d513be9a64e420cc9f616c0602aeca08aab200c71dc0","body_hash":"5db69ae406b61f7e9f95cd0660858dbf1776b1407f68c1462a382e43e835bb23","compiler_version":"v0.78.1","strict":true,"agent_id":"copilot","agent_model":"claude-sonnet-4.6"}
 # gh-aw-manifest: {"version":1,"secrets":["COPILOT_GITHUB_TOKEN","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/checkout","sha":"de0fac2e4500dabe0009e67214ff5f5447ce83dd","version":"v6.0.2"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"73ed520ae4ecd087a485e1991605595978b32ac1","version":"v0.78.1"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.25.58"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.3.22"},{"image":"ghcr.io/github/github-mcp-server:v1.1.0"},{"image":"node:lts-alpine","digest":"sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14","pinned_image":"node:lts-alpine@sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14"}]}
 #    ___                   _   _      
 #   / _ \                 | | (_)     
@@ -216,20 +216,20 @@ jobs:
         run: |
           bash "${RUNNER_TEMP}/gh-aw/actions/create_prompt_first.sh"
           {
-          cat << 'GH_AW_PROMPT_bc8f523a1a4677f6_EOF'
+          cat << 'GH_AW_PROMPT_90f83ca4a65ccdef_EOF'
           <system>
-          GH_AW_PROMPT_bc8f523a1a4677f6_EOF
+          GH_AW_PROMPT_90f83ca4a65ccdef_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/xpia.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/temp_folder_prompt.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/markdown.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/safe_outputs_prompt.md"
-          cat << 'GH_AW_PROMPT_bc8f523a1a4677f6_EOF'
+          cat << 'GH_AW_PROMPT_90f83ca4a65ccdef_EOF'
           <safe-output-tools>
           Tools: missing_tool, missing_data, noop
           </safe-output-tools>
-          GH_AW_PROMPT_bc8f523a1a4677f6_EOF
+          GH_AW_PROMPT_90f83ca4a65ccdef_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/mcp_cli_tools_prompt.md"
-          cat << 'GH_AW_PROMPT_bc8f523a1a4677f6_EOF'
+          cat << 'GH_AW_PROMPT_90f83ca4a65ccdef_EOF'
           <github-context>
           The following GitHub context information is available for this workflow:
           {{#if github.actor}}
@@ -258,12 +258,12 @@ jobs:
           {{/if}}
           </github-context>
           
-          GH_AW_PROMPT_bc8f523a1a4677f6_EOF
+          GH_AW_PROMPT_90f83ca4a65ccdef_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/github_mcp_tools_with_safeoutputs_prompt.md"
-          cat << 'GH_AW_PROMPT_bc8f523a1a4677f6_EOF'
+          cat << 'GH_AW_PROMPT_90f83ca4a65ccdef_EOF'
           </system>
           {{#runtime-import .github/workflows/exp-step-3-final.md}}
-          GH_AW_PROMPT_bc8f523a1a4677f6_EOF
+          GH_AW_PROMPT_90f83ca4a65ccdef_EOF
           } > "$GH_AW_PROMPT"
       - name: Interpolate variables and render templates
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -413,12 +413,7 @@ jobs:
           PREV: ${{ inputs.prev_run_id }}
         if: ${{ inputs.prev_run_id != '' }}
         name: Restore previous step state
-        run: |-
-          set -euo pipefail
-          rm -rf /tmp/exp-prev && mkdir -p /tmp/exp-prev
-          gh run download "$PREV" --repo "$GITHUB_REPOSITORY" --dir /tmp/exp-prev || { echo "no prior artifact yet"; exit 0; }
-          tgz="$(find /tmp/exp-prev -name 'exp-state.tgz' | head -1)"
-          if [ -n "$tgz" ]; then tar -xzf "$tgz" -C . && echo "Restored .exp from $tgz"; ls -la .exp || true; else echo "exp-state.tgz not found"; fi
+        run: "set -euo pipefail\nrm -rf /tmp/exp-prev && mkdir -p /tmp/exp-prev\ngh run download \"$PREV\" --repo \"$GITHUB_REPOSITORY\" --dir /tmp/exp-prev || { echo \"no prior artifact yet\"; exit 0; }\n# gh run download creates a directory per artifact (e.g. /tmp/exp-prev/exp-state.tgz/),\n# so target the actual FILE inside it, not the directory.\ntgz=\"$(find /tmp/exp-prev -type f -name 'exp-state.tgz' | head -1)\"\nif [ -n \"$tgz\" ]; then\n  tar -xzf \"$tgz\" -C . && echo \"Restored .exp from $tgz\"; ls -la .exp || true\nelse\n  echo \"exp-state.tgz file not found under /tmp/exp-prev; contents:\"; find /tmp/exp-prev -maxdepth 3 || true\nfi\n"
 
       - name: Configure Git credentials
         env:
@@ -491,9 +486,9 @@ jobs:
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
           mkdir -p "${RUNNER_TEMP}/gh-aw/safeoutputs/upload-artifacts"
-          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_44e7681bc1a079be_EOF'
+          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_2a18fc2d6d6e1456_EOF'
           {"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"report_incomplete":{},"upload_artifact":{"max-size-bytes":104857600,"max-uploads":1,"retention-days":7}}
-          GH_AW_SAFE_OUTPUTS_CONFIG_44e7681bc1a079be_EOF
+          GH_AW_SAFE_OUTPUTS_CONFIG_2a18fc2d6d6e1456_EOF
       - name: Generate Safe Outputs Tools
         env:
           GH_AW_TOOLS_META_JSON: |
@@ -663,7 +658,7 @@ jobs:
           
           mkdir -p /home/runner/.copilot
           GH_AW_NODE=$(which node 2>/dev/null || command -v node 2>/dev/null || echo node)
-          cat << GH_AW_MCP_CONFIG_fc3b8bb27bac59b1_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
+          cat << GH_AW_MCP_CONFIG_48e678790c55e2d5_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
           {
             "mcpServers": {
               "github": {
@@ -704,7 +699,7 @@ jobs:
               "payloadDir": "${MCP_GATEWAY_PAYLOAD_DIR}"
             }
           }
-          GH_AW_MCP_CONFIG_fc3b8bb27bac59b1_EOF
+          GH_AW_MCP_CONFIG_48e678790c55e2d5_EOF
       - name: Mount MCP servers as CLIs
         id: mount-mcp-clis
         continue-on-error: true
