@@ -1,0 +1,20 @@
+{
+  "schema_version": "1",
+  "phase": "ui-validation",
+  "status": "blocked",
+  "summary": "Figma node could not be accessed with the current credentials.",
+  "inputs_read": ["context-packet", "implementation-plan", "current-diff", "previous-verdicts"],
+  "artifacts_written": ["verdicts/07-ui-validation.json"],
+  "evidence": [],
+  "fix_requests": [],
+  "blockers": [
+    {
+      "type": "figma-access",
+      "message": "Figma returned an authentication error for the linked node.",
+      "needed_from_human": "Confirm access to the design file or provide an accessible node link.",
+      "attempts": ["Opened linked Figma URL", "Retried direct node URL"]
+    }
+  ],
+  "stale_artifacts": [],
+  "next_recommendation": "pause-for-human"
+}

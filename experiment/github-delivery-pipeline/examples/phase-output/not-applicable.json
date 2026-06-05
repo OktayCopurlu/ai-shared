@@ -1,0 +1,21 @@
+{
+  "schema_version": "1",
+  "phase": "ui-validation",
+  "status": "not-applicable",
+  "summary": "No UI impact or Figma target exists for this backend-only change.",
+  "inputs_read": ["context-packet", "implementation-plan", "current-diff", "previous-verdicts"],
+  "artifacts_written": ["verdicts/07-ui-validation.json"],
+  "evidence": [
+    {
+      "type": "scope-check",
+      "description": "Changed files are backend-only and no UI validation target is present.",
+      "path": "current-diff/changed-files.json",
+      "url": null,
+      "acceptance_criteria": []
+    }
+  ],
+  "fix_requests": [],
+  "blockers": [],
+  "stale_artifacts": [],
+  "next_recommendation": "continue"
+}
