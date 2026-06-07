@@ -35,7 +35,6 @@ github-delivery-pipeline/
     .github/workflows/               #   the same 11 workflows, pre-filled (real hosts, Figma wired)
   phases/                            # the 11 phase prompts + shared-preamble (imported bodies)
   schemas/                           # JSON verdict schemas (unchanged from local pipeline)
-  examples/                          # example phase outputs
   pipeline.json                      # phase order / config reference
 ```
 

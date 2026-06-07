@@ -1,6 +1,6 @@
 # Experimental Delivery Pipeline Design
 
-Last updated: 2026-05-24
+Last updated: 2026-06-07
 
 This is an isolated experiment design. It must not modify or depend on the production `prompts/`, `skills/`, `self-evolution/`, or global instruction files. Any prototype runner, command prompt, schema, or run artifact should live under `experiment/delivery-pipeline/` until the approach proves itself.
 
@@ -21,23 +21,26 @@ The important design choice is not the CLI. It is the contract:
 
 | # | Phase | Role Contract | Primary Model | Output |
 |---:|---|---|---|---|
-| 1 | Context Intake | read external context, write artifacts | GPT 5.5 xhigh | `context-packet` |
-| 2 | Implementation Planning | read artifacts/repo, write plan | GPT 5.5 xhigh | `implementation-plan` |
-| 3 | Implementation | edit code, run focused checks | Opus 4.7 or GPT 5.5 xhigh | `implementation-report` + diff |
-| 4 | Unit Test + Test Review | read/run tests, write verdict | GPT 5.5 xhigh | `test-verdict` |
-| 5 | AC-Aware Code Review | read diff, write findings | Opus 4.7 | `code-review-verdict` |
-| 6 | AC-Aware QA | run app/browser checks, write verdict | GPT 5.5 xhigh | `qa-verdict` |
-| 7 | AC + Figma UI Validation | browser/Figma validation, write verdict | GPT 5.5 xhigh | `ui-verdict` |
-| 8 | Create PR | git/GitHub write | GPT 5.5 xhigh | `pr-url` + PR metadata |
-| 9 | PR Code Review | read PR diff, write findings | Opus 4.7 | `pr-code-review-verdict` |
-| 10 | QA on PR | preview/browser QA, write verdict | GPT 5.5 xhigh | `pr-qa-verdict` |
-| 11 | UI Validation on PR | preview/Figma/browser validation | GPT 5.5 xhigh | `pr-ui-verdict` |
+| 1 | Context Intake | read external context, write artifacts | Claude Sonnet 4.6  medium | context-packet |
+| 2 | Implementation Planning | read artifacts/repo, write plan | Claude Opus 4.8 high | implementation-plan |
+| 3 | Implementation | edit code, run focused checks | Claude Opus 4.8 high | implementation-report + diff |
+| 4 | Unit Test + Test Review | read/run tests, write verdict | Claude Sonnet 4.6  medium | test-verdict |
+| 5 | AC-Aware Code Review | read diff, write findings | Claude Opus 4.8 high | code-review-verdict |
+| 6 | AC-Aware QA | run app/browser checks, write verdict | Claude Sonnet 4.6  high | qa-verdict |
+| 7 | AC + Figma UI Validation | browser/Figma validation, write verdict | Claude Sonnet 4.6  high | ui-verdict |
+| 8 | Create PR | git/GitHub write | Claude Sonnet 4.6 medium | pr-url + PR metadata |
+| 9 | PR Code Review | read PR diff, write findings | Claude Opus 4.8 high | pr-code-review-verdict |
+| 10 | QA on PR | preview/browser QA, write verdict | Claude Sonnet 4.6  high | pr-qa-verdict |
+| 11 | UI Validation on PR | preview/Figma/browser validation | Claude Sonnet 4.6  high | pr-ui-verdict |
 
-Model choice is intentionally phase-specific:
+Model choice is intentionally phase-specific and should start at the cheapest tier likely to do the job:
 
-- Use **GPT 5.5 xhigh** for tool-heavy execution, context synthesis, planning, QA, browser work, and PR creation.
-- Use **Opus 4.7** for judgment-heavy code review when available, especially phases 5 and 9.
-- Allow Implementation to choose either model. Use GPT 5.5 xhigh for tool reliability; use Opus 4.7 for dense refactors or tricky correctness work.
+- Use **GPT-5.4 mini** with `low` reasoning for mechanical, low-risk work such as PR creation.
+- Use **Claude Sonnet 4.6** with `medium` reasoning for synthesis and test review, and `high` reasoning for QA or UI validation where browser/Figma evidence needs careful interpretation.
+- Use **Claude Opus 4.8** with `high` reasoning for multi-file planning, complex implementation, unfamiliar domains, and judgment-heavy code review.
+- Use **Claude Opus 4.8** with `high` as the stable premium fallback when Claude Opus is unavailable.
+- Use **Gemini 3.5 Flash** (`gemini-3.5-flash`) as the stable low-cost fallback when GPT-5.4 mini is unavailable.
+- Reference model docs: [Claude models](https://platform.claude.com/docs/en/about-claude/models), [OpenAI models](https://developers.openai.com/api/docs/models), [Gemini models](https://ai.google.dev/gemini-api/docs/models).
 
 ## Phase Boundaries
 
@@ -652,23 +655,23 @@ experiment/delivery-pipeline/
 ```json
 {
   "phases": [
-    { "id": "context-intake", "command": "commands/01-context-intake.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "plan", "command": "commands/02-plan.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "implement", "command": "commands/03-implement.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": true },
-    { "id": "test-review", "command": "commands/04-test-review.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "code-review", "command": "commands/05-code-review.md", "model": "anthropic/claude-opus-4.7", "writes_code": false },
-    { "id": "qa", "command": "commands/06-qa.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "ui-validation", "command": "commands/07-ui-validation.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "create-pr", "command": "commands/08-create-pr.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": true },
-    { "id": "pr-code-review", "command": "commands/09-pr-code-review.md", "model": "anthropic/claude-opus-4.7", "writes_code": false },
-    { "id": "pr-qa", "command": "commands/10-pr-qa.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false },
-    { "id": "pr-ui-validation", "command": "commands/11-pr-ui-validation.md", "model": "github-copilot/gpt-5.5", "variant": "xhigh", "writes_code": false }
+    { "id": "context-intake", "command": "commands/01-context-intake.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "medium", "writes_code": false },
+    { "id": "plan", "command": "commands/02-plan.md", "model": "github-copilot/claude-opus-4.8", "variant": "high", "writes_code": false },
+    { "id": "implement", "command": "commands/03-implement.md", "model": "github-copilot/claude-opus-4.8", "variant": "high", "writes_code": true },
+    { "id": "test-review", "command": "commands/04-test-review.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "medium", "writes_code": false },
+    { "id": "code-review", "command": "commands/05-code-review.md", "model": "github-copilot/claude-opus-4.8", "variant": "high", "writes_code": false },
+    { "id": "qa", "command": "commands/06-qa.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "high", "writes_code": false },
+    { "id": "ui-validation", "command": "commands/07-ui-validation.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "high", "writes_code": false },
+    { "id": "create-pr", "command": "commands/08-create-pr.md", "model": "github-copilot/gpt-5.4-mini", "variant": "low", "writes_code": true },
+    { "id": "pr-code-review", "command": "commands/09-pr-code-review.md", "model": "github-copilot/claude-opus-4.8", "variant": "high", "writes_code": false },
+    { "id": "pr-qa", "command": "commands/10-pr-qa.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "high", "writes_code": false },
+    { "id": "pr-ui-validation", "command": "commands/11-pr-ui-validation.md", "model": "github-copilot/claude-sonnet-4.6", "variant": "high", "writes_code": false }
   ],
   "max_fix_loops": 3
 }
 ```
 
-Model identifiers may need adjustment to the local OpenCode provider names. The experiment should keep them configurable.
+Model identifiers may need adjustment to the local OpenCode provider names. The canonical API IDs are `claude-opus-4-8`, `claude-sonnet-4-6`, `gpt-5.4-mini`, `gemini-2.5-pro`, and `gemini-3.5-flash`. The experiment should keep them configurable.
 
 ## Full 11-Step Project Scope
 

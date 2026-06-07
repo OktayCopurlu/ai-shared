@@ -164,7 +164,7 @@ done
 phase="\$(printf '%s\n' "\$message" | sed -n 's/^PHASE=//p')"
 output_file="\$(printf '%s\n' "\$message" | sed -n 's/^Execute only this phase\. Write the required output JSON to \(.*\)\.\$/\1/p')"
 
-if [[ "\$model" == "anthropic/claude-opus-4.7" ]]; then
+if [[ "\$model" == "github-copilot/claude-opus-4.8" ]]; then
   echo "model unavailable" >&2
   exit 42
 fi
@@ -274,14 +274,14 @@ it_falls_back_to_default_model_when_primary_model_fails() {
 
   PATH="$LAST_STUB_DIR:$PATH" "$RUNNER" run-phase "$LAST_RUN_ID" code-review >/dev/null
 
-  grep -q -- '--model anthropic/claude-opus-4.7' "$LAST_RECORD_FILE" \
+  grep -q -- '--model github-copilot/claude-opus-4.8' "$LAST_RECORD_FILE" \
     || fail "primary model should be attempted first"
-  grep -q -- '--model github-copilot/gpt-5.5' "$LAST_RECORD_FILE" \
+  grep -q -- '--model github-copilot/claude-sonnet-4.6' "$LAST_RECORD_FILE" \
     || fail "fallback model should be attempted after primary failure"
 
   local meta_file="$run_dir/phases/05-code-review/command-meta.json"
   jq -e '.fallback_used == true' "$meta_file" >/dev/null || fail "command-meta must mark fallback_used"
-  jq -e '.effective_model == "github-copilot/gpt-5.5"' "$meta_file" >/dev/null \
+  jq -e '.effective_model == "github-copilot/claude-sonnet-4.6"' "$meta_file" >/dev/null \
     || fail "command-meta must record fallback effective model"
   jq -e '.attempts | length == 2' "$meta_file" >/dev/null || fail "command-meta must record both attempts"
   pass "run-phase falls back to the default model when primary model fails"
