@@ -2,8 +2,8 @@
   "label": "com.ai-shared.self-evolution-from-pr-feedback",
   "description": "Weekly self-evolution from PR feedback - mines Oktay's on-frontend PR feedback and opens at most one ai-shared improvement PR.",
   "target_dir": "~/.ai-shared",
-  "model": "github-copilot/gpt-5.5",
-  "variant": "xhigh",
+  "model": "github-copilot/gemini-3.5-flash",
+  "variant": "high",
   "always_isolate": true,
   "timeout": 3600,
   "schedule": [

@@ -2,14 +2,11 @@
   "label": "com.ai-shared.research",
   "description": "Research sweep for ai-shared — mines open-source repos and articles for patterns to improve AI config.",
   "target_dir": "~/.ai-shared",
-  "model": "github-copilot/gpt-5.5",
-  "variant": "xhigh",
+  "model": "github-copilot/gemini-3.5-flash",
+  "variant": "high",
   "timeout": 3600,
   "schedule": [
-    { "weekday": 1, "hour": 11, "minute": 0 },
     { "weekday": 2, "hour": 11, "minute": 0 },
-    { "weekday": 3, "hour": 11, "minute": 0 },
-    { "weekday": 4, "hour": 11, "minute": 0 },
-    { "weekday": 5, "hour": 11, "minute": 0 }
+    { "weekday": 4, "hour": 11, "minute": 0 }
   ]
 }

@@ -4,31 +4,13 @@
       "day": 1,
       "name": "monday",
       "focus": "repo-mining-agent-instructions",
-      "description": "Search GitHub for repos with real AI agent instruction files: `.github/copilot-instructions.md`, `.copilot/` skill folders, `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `CODEX.md`, `.copilot-codegeneration`. Read the actual files — not just READMEs. Extract constraint techniques, safety patterns, tool-use patterns, and workflow structures that could improve our skills, prompts, agents, or instructions.md. GitHub search queries: `path:.github/copilot-instructions.md`, `path:.copilot/ filename:SKILL.md`, `filename:AGENTS.md`, `filename:CLAUDE.md`, `filename:.cursorrules`, `filename:CODEX.md`."
-    },
-    {
-      "day": 2,
-      "name": "tuesday",
-      "focus": "repo-mining-mcp-and-tools",
-      "description": "Search GitHub for MCP server repos, AI tool configuration repos, and dev tool integration patterns. Check awesome-mcp-servers, modelcontextprotocol.io, and repos that combine multiple MCP servers. Look for new MCP server ideas, configuration patterns, and tool integration techniques that could become new skills or improve existing ones."
-    },
-    {
-      "day": 3,
-      "name": "wednesday",
-      "focus": "trending-discovery",
-      "description": "Discover novel AI/dev-tooling repos via GitHub Trending. Visit `https://github.com/trending?since=weekly` and the language-scoped variants relevant to our stack: `?since=weekly&language=typescript`, `?since=weekly&language=python`, `?since=weekly&language=javascript`, `?since=weekly&language=vue`. For each candidate that looks AI/agent/dev-tool relevant: read the actual repo files (README, SKILL.md/AGENTS.md/CLAUDE.md/.copilot-instructions if present, package.json/pyproject.toml, recent commits), not just the trending blurb. Trending is discovery-only — a trending listing alone is never sufficient evidence. Validate every candidate against Tier 1/2 sources (official docs, vendor blogs, release notes) before PR-ing. Improvements may update existing skills/prompts/references OR create new ones — prefer updates when overlap exists."
+      "description": "Search GitHub for repos with real AI agent instruction files: `.github/copilot-instructions.md`, `.copilot/` skill folders, `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `CODEX.md`, `.copilot-codegeneration`. Extract constraint techniques, safety patterns, tool-use patterns, and workflow structures that could improve our skills, prompts, agents, or instructions.md."
     },
     {
       "day": 4,
       "name": "thursday",
       "focus": "skill-health-and-updates",
-      "description": "Audit our existing skills/ for staleness. Check changelogs and release notes of the tools they cover (Contentful, Amplitude, Playwright, Atlassian, GitHub MCP, etc.). Also search GitHub for other repos with similar skills to see if they have better patterns or newer info. If a skill is outdated, update it."
-    },
-    {
-      "day": 5,
-      "name": "friday",
-      "focus": "articles-and-prompt-engineering",
-      "description": "Two-part Friday: (a) high-quality articles and blog posts about AI-assisted development workflows, agent patterns, testing strategies, security practices, and accessibility — sources include simonwillison.net, eugeneyan.com, dev.to, lobste.rs, Hacker News, InfoQ, Pragmatic Engineer; (b) prompt-engineering material — repos with `.prompt.md` files, prompt template collections, reusable command patterns, novel agent architectures, and articles about practical prompt engineering. Extract actionable improvements for our skills, references, or prompts/. Also pick up any high-score watchlist item from prior run-log entries that is now actionable (this is the promotion path that previously lived on Saturday's deep-dive)."
+      "description": "Audit our existing skills/ for staleness. Check changelogs and release notes of the tools they cover (Contentful, Amplitude, Playwright, GitHub MCP, etc.). Also search GitHub for other repos with similar skills to see if they have better patterns or newer info. If a skill is outdated, update it."
     }
   ]
 }
