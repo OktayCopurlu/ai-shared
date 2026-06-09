@@ -51,7 +51,7 @@ Write these files:
 - `verdicts/09-pr-code-review.json`
 - `phases/09-pr-code-review/output.json`
 - optional `phases/09-pr-code-review/notes.md`
-- optional fix request files under `fix-requests/`
+- optional fix request files under `fix-requests/` — each is a standalone object that must include `schema_version: "1"` plus every field required by `schemas/fix-request.schema.json` (`id`, `source_phase`, `severity`, `acceptance_criteria`, `scenario`, `expected`, `actual`, `reproduction`, `suggested_direction`). This is NOT the same shape as the inline `fix_requests[]` items in `output.json`, which omit `schema_version`.
 
 Required artifact list: `["verdicts/09-pr-code-review.json","phases/09-pr-code-review/output.json"]`.
 

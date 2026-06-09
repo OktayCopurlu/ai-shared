@@ -19,7 +19,7 @@ Usage:
   runner.sh start --ticket <ticket-or-url> [--repo <path>] [--start-phase <phase-id>] [--model <model>] [--variant <variant>] [--notify|--no-notify] [--dry-run]
   runner.sh resume <run-id> [--answer-file <path>] [--impact access|decision|scope-change] [--notify|--no-notify] [--dry-run]
   runner.sh run-phase <run-id> <phase-id> [--dry-run]
-  runner.sh status <run-id>
+  runner.sh status <run-id> [--json]
   runner.sh list
   runner.sh explain-transition <run-id> [--phase <phase-id>] [--status <status>]
   runner.sh cleanup [--dry-run] [--run-id <run-id>] [--older-than <days>d] [--include-stale-runs] [--explain]
@@ -638,13 +638,13 @@ What to send back:
 
 Write a short plain-language reply. Start the first line with one of:
 
-- `impact: access`
-- `impact: decision`
-- `impact: scope-change`
+- \`impact: access\`
+- \`impact: decision\`
+- \`impact: scope-change\`
 
 Example:
 
-`impact: access`
+\`impact: access\`
 The sheet is available now. Continue.
 
 Resume with:
@@ -722,6 +722,41 @@ phase_output_file() {
   local run_dir="$1"
   local phase_id="$2"
   printf '%s/phases/%s/output.json' "$run_dir" "$(phase_folder "$phase_id")"
+}
+
+# next_recommendation is advisory metadata only (routing is driven by phase
+# `status` plus the pipeline's next_on_pass/next_on_fail). Models frequently set
+# it to a phase name (e.g. "qa") instead of an allowed action word, which would
+# otherwise fail schema validation on an otherwise-passing phase. Normalize any
+# out-of-enum value deterministically from `status` before validation.
+normalize_phase_output() {
+  local output_file="$1"
+  [[ -f "$output_file" ]] || return 0
+
+  jq -e . "$output_file" >/dev/null 2>&1 || return 0
+
+  local needs_fix
+  needs_fix="$(jq -r '
+    (["continue","fix","pause-for-human","retry-phase","stop"]) as $allowed |
+    if (.next_recommendation == null) or (.next_recommendation | IN($allowed[]) | not)
+    then "yes" else "no" end
+  ' "$output_file" 2>/dev/null)"
+
+  [[ "$needs_fix" == "yes" ]] || return 0
+
+  local tmp="$output_file.norm.$$"
+  if jq '
+    .next_recommendation =
+      (if .status == "pass" then "continue"
+       elif .status == "fail" then "fix"
+       elif .status == "blocked" then "pause-for-human"
+       elif .status == "protocol-error" then "pause-for-human"
+       else "continue" end)
+  ' "$output_file" > "$tmp" 2>/dev/null; then
+    mv "$tmp" "$output_file"
+  else
+    rm -f "$tmp"
+  fi
 }
 
 stale_artifacts_from_phase() {
@@ -1134,6 +1169,23 @@ validate_artifact_schema() {
     return 0
   fi
 
+  # schema_version is a constant "1" with no information content. Models routinely
+  # omit it from standalone fix-request files, so inject it before validation
+  # rather than failing the phase on missing boilerplate.
+  case "$artifact_path" in
+    fix-requests/*.json)
+      local fr_file="$run_dir/$artifact_path"
+      if jq -e 'type == "object" and (has("schema_version") | not)' "$fr_file" >/dev/null 2>&1; then
+        local tmp_fr="$fr_file.tmp.$$"
+        if jq '{schema_version: "1"} + .' "$fr_file" > "$tmp_fr" 2>/dev/null; then
+          mv "$tmp_fr" "$fr_file"
+        else
+          rm -f "$tmp_fr"
+        fi
+      fi
+      ;;
+  esac
+
   local log_file="$run_dir/phases/$(phase_folder "$phase_id")/artifact-validation-error.log"
   if ! validate_schema "$schema_file" "$run_dir/$artifact_path" "$log_file"; then
     write_protocol_error_output "$run_dir" "$phase_id" "Artifact $artifact_path failed schema validation; see phases/$(phase_folder "$phase_id")/artifact-validation-error.log"
@@ -1377,8 +1429,11 @@ Execute only this phase. Write the required output JSON to $output_file."
     write_protocol_error_output "$run_dir" "$phase_id" "Phase did not write output.json"
   elif ! jq -e . "$output_file" >/dev/null 2>&1; then
     write_protocol_error_output "$run_dir" "$phase_id" "Phase wrote invalid JSON output"
-  elif ! validate_phase_output_schema "$output_file" "$phase_dir/validation-error.log"; then
-    write_protocol_error_output "$run_dir" "$phase_id" "Phase output failed schema validation; see phases/$(phase_folder "$phase_id")/validation-error.log"
+  else
+    normalize_phase_output "$output_file"
+    if ! validate_phase_output_schema "$output_file" "$phase_dir/validation-error.log"; then
+      write_protocol_error_output "$run_dir" "$phase_id" "Phase output failed schema validation; see phases/$(phase_folder "$phase_id")/validation-error.log"
+    fi
   fi
 
   local phase_status
@@ -2058,7 +2113,15 @@ latest_command_meta_summary() {
 }
 
 cmd_status() {
-  local run_id="${1:-}"
+  local run_id="" as_json="false"
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --json) as_json="true"; shift ;;
+      -*) echo "ERROR: unknown status argument: $1" >&2; exit 1 ;;
+      *) if [[ -z "$run_id" ]]; then run_id="$1"; else echo "ERROR: unexpected argument: $1" >&2; exit 1; fi; shift ;;
+    esac
+  done
+
   if [[ -z "$run_id" ]]; then
     echo "ERROR: status requires <run-id>" >&2
     exit 1
@@ -2073,7 +2136,47 @@ cmd_status() {
   local run_dir meta_summary
   run_dir="$BASE_DIR/runs/$run_id"
   meta_summary="$(latest_command_meta_summary "$run_dir")"
-  jq --argjson meta "$meta_summary" '. + {last_command_meta_summary:$meta}' "$state_file"
+
+  if [[ "$as_json" == "true" ]]; then
+    jq --argjson meta "$meta_summary" '. + {last_command_meta_summary:$meta}' "$state_file"
+    return 0
+  fi
+
+  local phases_map
+  phases_map="$(jq -c '[.phases[] | {id, number, label, model, variant}]' "$CONFIG_FILE" 2>/dev/null || printf '[]')"
+
+  jq -r --argjson meta "$meta_summary" --argjson phases "$phases_map" '
+    . as $s |
+    ($phases | length) as $total |
+    (first($phases[] | select(.id == ($s.current_phase // ""))) // {number: "?", label: ($s.current_phase // "-"), model: null, variant: null}) as $cp |
+    ($s.input.model_override // $cp.model) as $cp_model |
+    ($s.input.variant_override // $cp.variant) as $cp_variant |
+    (($meta.fallback_used // false) and ($meta.phase == ($s.current_phase // ""))) as $fb |
+    def sym(x):
+      if x == "pass" then "✓"
+      elif x == "fail" then "✗"
+      elif x == "protocol-error" then "⚠"
+      elif x == "running" then "▶"
+      elif (x == "blocked" or x == "paused") then "⏸"
+      else "•" end;
+    [
+      "Run      \($s.run_id)",
+      "Ticket   \($s.ticket.url // $s.input.ticket // "-")",
+      "Status   \(sym($s.status)) \($s.status)",
+      "Phase    \($cp.number)/\($total)  \($cp.label)  (\($s.current_phase // "-"))",
+      "Repo     \($s.target_repo.path // "-")",
+      "PR       \($s.pr.url // "-")",
+      "Updated  \($s.updated_at // "-")",
+      "Model    \($cp_model // "-")\(if (($cp_variant) // "") != "" then "  (\($cp_variant))" else "" end)\(if $fb then "  [fallback used]" else "" end)",
+      "",
+      "Phases:"
+    ]
+    + (($s.phase_history // []) | map("  \(sym(.status)) \(.phase)  [\(.status)]"))
+    + (if (($s.status == "paused" or $s.status == "blocked")) and (($s.transition.last_decision.human_message // "") != "")
+       then ["", "⏸ \($s.transition.last_decision.human_message)"]
+       else [] end)
+    | .[]
+  ' "$state_file"
 }
 
 cmd_list() {

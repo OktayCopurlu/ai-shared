@@ -65,6 +65,24 @@ Write these files:
 
 Required artifact list: `["context-packet/ticket.md","context-packet/acceptance-criteria.json","context-packet/linked-context.md","context-packet/figma-specs.json","context-packet/constraints.md","context-packet/open-questions.md","context-packet/validation-targets.md","phases/01-context-intake/output.json"]`.
 
+## Acceptance Criteria Shape
+
+`context-packet/acceptance-criteria.json` is a JSON array. Each item must use the field name `text` (not `description`) and must not include any properties outside the ones below, to satisfy `schemas/acceptance-criteria.schema.json`:
+
+```json
+[
+	{
+		"id": "AC-1",
+		"text": "Observable, testable requirement stated in the ticket.",
+		"source": "DSC-2327",
+		"priority": null,
+		"observable_behavior": null
+	}
+]
+```
+
+Required per item: `id` (matching `^AC-[0-9]+$`) and `text`. Optional: `source`, `priority`, `observable_behavior`. No other keys are allowed.
+
 ## Output Rules
 
 The final file must be valid JSON at `phases/01-context-intake/output.json` using `schemas/phase-output.schema.json`.

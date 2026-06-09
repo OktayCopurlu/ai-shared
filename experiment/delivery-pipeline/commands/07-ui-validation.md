@@ -56,7 +56,7 @@ Write these files:
 - `phases/07-ui-validation/output.json`
 - optional `phases/07-ui-validation/notes.md`
 - optional screenshots/traces under the run directory as secondary evidence
-- optional fix request files under `fix-requests/`
+- optional fix request files under `fix-requests/` — each is a standalone object that must include `schema_version: "1"` plus every field required by `schemas/fix-request.schema.json` (`id`, `source_phase`, `severity`, `acceptance_criteria`, `scenario`, `expected`, `actual`, `reproduction`, `suggested_direction`). This is NOT the same shape as the inline `fix_requests[]` items in `output.json`, which omit `schema_version`.
 
 Required artifact list: `["verdicts/07-ui-validation.json","phases/07-ui-validation/output.json"]`.
 
