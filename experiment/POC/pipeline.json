@@ -1,0 +1,185 @@
+{
+  "name": "experimental-delivery-pipeline",
+  "version": 1,
+  "description": "Phase order / config reference for the 11-phase delivery pipeline. The GitHub variant runs as gh-aw workflows and notifies via Jira ticket comments and GitHub issue/PR comments (no WhatsApp).",
+  "max_fix_loops": 3,
+  "default_timeout_seconds": 1800,
+  "default_model": {
+    "model": "anthropic/claude-opus-4.8",
+    "variant": "high"
+  },
+  "model_fallback": {
+    "enabled": true,
+    "model": "anthropic/claude-opus-4.6",
+    "variant": "high"
+  },
+  "opencode": {
+    "dangerously_skip_permissions": true
+  },
+  "notifications": {
+    "enabled": true,
+    "rate_limit_seconds": 900,
+    "events": ["pause-for-human", "blocked", "failed", "finished"],
+    "channels": [
+      {
+        "type": "local-log",
+        "mode": "append",
+        "required": false
+      }
+    ]
+  },
+  "retention": {
+    "active_runs_dir": "runs",
+    "archive_dir": "archive",
+    "tmp_dir": "tmp",
+    "handoff_complete_days": 7,
+    "keep_failed_days": 30,
+    "keep_paused_days": 30,
+    "partial_run_ttl_hours": 24,
+    "delete_bulky_artifacts_after_archive": true,
+    "bulky_artifact_patterns": [
+      "**/*.png",
+      "**/*.jpg",
+      "**/*.jpeg",
+      "**/*.webp",
+      "**/*.mp4",
+      "**/trace.zip",
+      "**/node_modules/**"
+    ]
+  },
+  "local_safety_loop": ["implement", "test-review", "code-review", "qa", "ui-validation"],
+  "phases": [
+    {
+      "number": 1,
+      "id": "context-intake",
+      "label": "Context Intake",
+      "command": "phases/01-context-intake.md",
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["context-packet/ticket.md", "context-packet/acceptance-criteria.json", "context-packet/linked-context.md", "context-packet/figma-specs.json", "context-packet/constraints.md", "context-packet/open-questions.md", "context-packet/validation-targets.md"],
+      "next_on_pass": "plan",
+      "next_on_fail": "pause-for-human"
+    },
+    {
+      "number": 2,
+      "id": "plan",
+      "label": "Implementation Planning",
+      "command": "phases/02-plan.md",
+      "model": "anthropic/claude-opus-4.8",
+      "variant": "high",
+      "writes_code": false,
+      "required_outputs": ["implementation-plan/plan.md", "implementation-plan/affected-files.json", "implementation-plan/validation-plan.json"],
+      "next_on_pass": "implement",
+      "next_on_fail": "pause-for-human"
+    },
+    {
+      "number": 3,
+      "id": "implement",
+      "label": "Implementation",
+      "command": "phases/03-implement.md",
+      "model": "anthropic/claude-opus-4.8",
+      "variant": "high",
+      "writes_code": true,
+      "required_outputs": ["current-diff/diff.patch", "current-diff/changed-files.json", "current-diff/summary.md"],
+      "next_on_pass": "test-review",
+      "next_on_fail": "implement"
+    },
+    {
+      "number": 4,
+      "id": "test-review",
+      "label": "Unit Test + Test Review",
+      "command": "phases/04-test-review.md",
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["verdicts/04-test-review.json"],
+      "next_on_pass": "code-review",
+      "next_on_fail": "implement"
+    },
+    {
+      "number": 5,
+      "id": "code-review",
+      "label": "AC-Aware Code Review",
+      "command": "phases/05-code-review.md",
+      "model": "anthropic/claude-opus-4.8",
+      "variant": "high",
+      "writes_code": false,
+      "required_outputs": ["verdicts/05-code-review.json"],
+      "next_on_pass": "qa",
+      "next_on_fail": "implement"
+    },
+    {
+      "number": 6,
+      "id": "qa",
+      "label": "AC-Aware QA",
+      "command": "phases/06-qa.md",
+      "model": "github-copilot/claude-opus-4.8",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["verdicts/06-qa.json"],
+      "next_on_pass": "ui-validation",
+      "next_on_fail": "implement"
+    },
+    {
+      "number": 7,
+      "id": "ui-validation",
+      "label": "AC + Figma UI Validation",
+      "command": "phases/07-ui-validation.md",
+      "model": "github-copilot/claude-opus-4.8",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["verdicts/07-ui-validation.json"],
+      "next_on_pass": "create-pr",
+      "next_on_fail": "implement"
+    },
+    {
+      "number": 8,
+      "id": "create-pr",
+      "label": "Create PR",
+      "command": "phases/08-create-pr.md",
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "medium",
+      "writes_code": true,
+      "required_outputs": ["pr/metadata.json", "pr/description.md"],
+      "next_on_pass": "pr-code-review",
+      "next_on_fail": "pause-for-human"
+    },
+    {
+      "number": 9,
+      "id": "pr-code-review",
+      "label": "PR Code Review",
+      "command": "phases/09-pr-code-review.md",
+      "model": "anthropic/claude-opus-4.8",
+      "variant": "high",
+      "writes_code": false,
+      "required_outputs": ["verdicts/09-pr-code-review.json"],
+      "next_on_pass": "pr-qa",
+      "next_on_fail": "pause-for-human"
+    },
+    {
+      "number": 10,
+      "id": "pr-qa",
+      "label": "QA on PR",
+      "command": "phases/10-pr-qa.md",
+      "model": "github-copilot/claude-opus-4.8",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["verdicts/10-pr-qa.json"],
+      "next_on_pass": "pr-ui-validation",
+      "next_on_fail": "pause-for-human"
+    },
+    {
+      "number": 11,
+      "id": "pr-ui-validation",
+      "label": "UI Validation on PR",
+      "command": "phases/11-pr-ui-validation.md",
+      "model": "github-copilot/claude-opus-4.8",
+      "variant": "medium",
+      "writes_code": false,
+      "required_outputs": ["verdicts/11-pr-ui-validation.json"],
+      "next_on_pass": "finished",
+      "next_on_fail": "pause-for-human"
+    }
+  ]
+}
