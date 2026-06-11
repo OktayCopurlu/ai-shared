@@ -20,11 +20,11 @@ Use source-specific context-reading skills when links or source types appear. Fo
 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time; MCP-backed skills also need their server configured in the workflow frontmatter `mcp-servers:`. Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import ../skills/atlassian-mcp/SKILL.md}}
-{{#runtime-import ../skills/figma-mcp/SKILL.md}}
-{{#runtime-import ../skills/contentful/SKILL.md}}
-{{#runtime-import ../skills/google-drive/SKILL.md}}
-{{#runtime-import ../skills/playwright-mcp/SKILL.md}}
+{{#runtime-import skills/atlassian-mcp/SKILL.md}}
+{{#runtime-import skills/figma-mcp/SKILL.md}}
+{{#runtime-import skills/contentful/SKILL.md}}
+{{#runtime-import skills/google-drive/SKILL.md}}
+{{#runtime-import skills/playwright-mcp/SKILL.md}}
 
 ## Inputs
 

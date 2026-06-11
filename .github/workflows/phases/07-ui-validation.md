@@ -20,10 +20,10 @@ Use `validating-ui` for browser-level UI validation, `a11y-audit` for accessibil
 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time; MCP-backed skills also need their server configured in the workflow frontmatter `mcp-servers:`. Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import ../skills/validating-ui/SKILL.md}}
-{{#runtime-import ../skills/a11y-audit/SKILL.md}}
-{{#runtime-import ../skills/figma-mcp/SKILL.md}}
-{{#runtime-import ../skills/playwright-mcp/SKILL.md}}
+{{#runtime-import skills/validating-ui/SKILL.md}}
+{{#runtime-import skills/a11y-audit/SKILL.md}}
+{{#runtime-import skills/figma-mcp/SKILL.md}}
+{{#runtime-import skills/playwright-mcp/SKILL.md}}
 
 ## Inputs
 
