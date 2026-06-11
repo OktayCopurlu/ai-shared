@@ -141,7 +141,7 @@ accumulated changes into a draft pull request, then hand off to the PR-review ch
    (the PR is opened by the safe-outputs job afterwards), so phase 9 resolves it by searching
    open PRs whose title starts with `[delivery] ` and contains the ticket.
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/shared-preamble.md@main}}
+{{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
@@ -150,4 +150,4 @@ accumulated changes into a draft pull request, then hand off to the PR-review ch
 > The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
 > **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/08-create-pr.md@main}}
+{{#runtime-import phases/08-create-pr.md}}
