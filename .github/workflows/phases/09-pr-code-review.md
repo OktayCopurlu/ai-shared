@@ -20,9 +20,9 @@ Use `github-mcp` to read PR metadata/diff when available and `reviewing-code` fo
 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. The `github-mcp` capability maps to the `github` skill and gh-aw's built-in GitHub tools. Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import OktayCopurlu/ai-shared/skills/github/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/reviewing-code/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/security-hardening/SKILL.md@main}}
+{{#runtime-import ../skills/github/SKILL.md}}
+{{#runtime-import ../skills/reviewing-code/SKILL.md}}
+{{#runtime-import ../skills/security-hardening/SKILL.md}}
 
 ## Inputs
 
