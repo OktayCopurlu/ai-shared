@@ -14,7 +14,6 @@ Separate fix request files are not expected from this phase. If the intake canno
 
 ## Skill References
 
-Use source-specific context-reading skills when links or source types appear. For Jira, read the pre-fetched `jira-in/ticket.json` described in the preamble's "Talking to the Jira Ticket" rather than calling an Atlassian MCP (you hold no Jira token in CI); the `atlassian-mcp` skill below is for understanding Jira field structure. Use `figma-mcp` for Figma, `contentful` for CMS entries, and `google-drive` for Google Docs/Sheets. Use `playwright-mcp` only when the required context is a browser-only or authenticated web page. If a required tool path is unavailable, record the access/tooling blocker.
 
 ### Skill imports (gh-aw)
 
@@ -22,8 +21,6 @@ In gh-aw a skill that is only mentioned is not read. Import the skills above so 
 
 {{#runtime-import OktayCopurlu/ai-shared/skills/atlassian-mcp/SKILL.md@main}}
 {{#runtime-import OktayCopurlu/ai-shared/skills/figma-mcp/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/contentful/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/google-drive/SKILL.md@main}}
 {{#runtime-import OktayCopurlu/ai-shared/skills/playwright-mcp/SKILL.md@main}}
 
 ## Inputs
