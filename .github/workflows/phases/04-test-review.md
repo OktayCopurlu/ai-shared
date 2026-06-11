@@ -20,8 +20,8 @@ Use local testing-pattern guidance, such as `references/testing-patterns.md` whe
 
 In gh-aw a skill or reference that is only mentioned is not read. Import the guidance below so its content is injected at compile time. Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import OktayCopurlu/ai-shared/references/testing-patterns.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/debugging/SKILL.md@main}}
+{{#runtime-import ../references/testing-patterns.md}}
+{{#runtime-import ../skills/debugging/SKILL.md}}
 
 ## Test Quality Rules
 

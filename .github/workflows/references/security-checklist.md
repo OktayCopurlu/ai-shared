@@ -1,0 +1,93 @@
+# Security Checklist
+
+Quick-reference for security review passes. Referenced by `reviewing-code` and `security-hardening`.
+
+## Input Validation
+
+- [ ] All user input validated at system boundaries (API routes, form handlers)
+- [ ] Allowlists preferred over denylists for accepted values
+- [ ] Input length, type, and range constrained before processing
+- [ ] File uploads validated by MIME type and size — never trust client-reported type alone
+- [ ] URL parameters and query strings sanitized before use in logic or rendering
+
+## Output Encoding
+
+- [ ] HTML output escaped to prevent XSS (Vue's `{{ }}` handles this — watch for `v-html`)
+- [ ] `v-html` only used with trusted, sanitized content — never with user input
+- [ ] JSON responses do not leak internal error details, stack traces, or system paths
+- [ ] Error messages are user-friendly and do not reveal implementation details
+
+## Authentication & Authorization
+
+- [ ] Auth checks on every protected route — both client-side guards and server-side middleware
+- [ ] Session tokens are HttpOnly, Secure, SameSite
+- [ ] No auth tokens stored in localStorage (use HttpOnly cookies or secure session management)
+- [ ] Role-based access verified server-side — never trust client-side role checks alone
+- [ ] Password reset and email change flows properly validated
+
+## Secrets & Configuration
+
+- [ ] No secrets, tokens, or API keys in source code or version control
+- [ ] Environment variables used for all secrets
+- [ ] `.env` files in `.gitignore`
+- [ ] No secrets in client-side bundles — verify with bundle analysis if unsure
+- [ ] No secrets logged to console, error tracking, or analytics
+
+## Dependencies
+
+- [ ] No dependencies with known vulnerabilities (`npm audit`, `yarn audit`)
+- [ ] Dependencies from trusted sources — check maintainer, last commit, open issues
+- [ ] Lock file committed (`package-lock.json` or `yarn.lock`)
+- [ ] New dependencies justified — prefer standard library and existing utilities
+
+## Supply Chain Compromise
+
+Guards against maintainer-account hijacks and malicious version injections (e.g. axios `1.14.1`/`0.30.4`, March 2026).
+
+- [ ] CI installs with `npm ci --ignore-scripts` (or `pnpm install --ignore-scripts`) — blocks postinstall RAT droppers
+- [ ] Cooldown gate configured: `min-release-age` (npm 11.10.0+), `minimumReleaseAge` (pnpm), or `npmMinimalAgeGate` (yarn) set to ≥3 days
+- [ ] Never use `@latest` or unpinned `npx` in CI/MCP configs — pin exact versions, prefer `npx --no --offline`
+- [ ] Red flags to reject in review: phantom deps (in manifest, never imported), npm version with no matching git tag, missing `_npmUser.trustedPublisher` (OIDC) on a project that normally publishes with provenance
+- [ ] Never install "meeting app updates" prompted mid-call — known social-engineering vector for maintainer account takeover
+- [ ] On suspected compromise: `grep -E "<pkg>@<bad-version>" package-lock.json yarn.lock pnpm-lock.yaml`, then rotate tokens, revoke sessions, rebuild CI images from clean base
+
+## MCP Protocol Boundaries
+
+Use this pass when adding or reviewing MCP servers, clients, proxies, or one-click MCP install/config flows.
+
+- [ ] Local MCP server config shows the exact command, args, env, and filesystem/network reach before execution; reject hidden `npx`, shell pipes, broad home-directory access, or one-click installs without explicit consent
+- [ ] `roots` are least-privilege `file://` boundaries, not convenience access to the whole repo or home directory; servers validate every file operation against the current roots list
+- [ ] `elicitation` never asks for passwords, tokens, API keys, or secrets; prompts identify the requesting MCP server and allow accept, decline, and cancel paths
+- [ ] High-impact MCP tool calls are gated in server code, not prompt text; approvals are single-use, action-bound, time-bounded, and auditable before the mutation executes
+- [ ] OAuth proxy servers use per-client consent, exact redirect URI matching, single-use `state`, and no token passthrough; tokens must be issued for the MCP server audience
+- [ ] Streamable HTTP sessions use secure random session IDs, never as authentication; every request is authorized independently and session data is bound to the authenticated user
+- [ ] Server-side MCP clients validate OAuth discovery and redirect URLs to prevent SSRF, including private IP ranges, localhost, link-local metadata endpoints, and unsafe redirect chains
+
+## API Security
+
+- [ ] SQL/NoSQL queries use parameterized queries — no string concatenation
+- [ ] GraphQL queries use variables — no string interpolation in query strings
+- [ ] Rate limiting on sensitive endpoints (login, registration, password reset)
+- [ ] CORS configured to allow only expected origins
+- [ ] API responses include proper security headers (CSP, X-Content-Type-Options, X-Frame-Options)
+
+## Data Handling
+
+- [ ] Sensitive data (PII, payment info) encrypted at rest and in transit
+- [ ] No sensitive data in URL parameters (visible in logs, browser history, referrer headers)
+- [ ] Form data submitted over HTTPS only
+- [ ] Client-side storage (cookies, sessionStorage) contains no sensitive data in plain text
+
+## Code Sweep
+
+Run this pass on any diff authored or heavily edited by a coding agent. Agents produce functionally-correct code far more reliably than secure code — the SUSVIBES benchmark found only 10.5% of SWE-Agent+Claude solutions were secure despite 61% functional correctness, and the Endor Labs AI Code Security Benchmark reports a 17.3% max security-correctness ceiling across 13 agent/model combos.
+
+- [ ] Every new boundary (route handler, form handler, message consumer, CLI arg) has explicit input validation — don't trust that the agent added it
+- [ ] Every new protected endpoint has an auth/authz check server-side — grep the diff for new routes and verify
+- [ ] No new `v-html`, `innerHTML`, `eval`, `Function(...)`, `dangerouslySetInnerHTML`, or string-interpolated SQL/shell commands
+- [ ] No secrets, API keys, or tokens inlined in the diff — scan with `scan-for-secrets` or equivalent before committing
+- [ ] New dependencies justified and vetted — agents frequently suggest unmaintained or typo-squatted packages
+- [ ] Error handling does not swallow security-relevant failures (auth failures, signature mismatches, decryption errors) silently
+- [ ] Logging added by the agent does not include tokens, passwords, session IDs, or full request bodies
+- [ ] Crypto primitives use library defaults — reject any hand-rolled key derivation, IV reuse, or custom hashing
+- [ ] Feature-request prompts with "vulnerability hints" are insufficient — do the sweep manually; hinted prompts did not measurably improve security in the SUSVIBES evaluation

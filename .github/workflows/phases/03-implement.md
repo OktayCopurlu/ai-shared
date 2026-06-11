@@ -20,11 +20,11 @@ Apply `applying-coding-style` for code edits. Use `test-driven-development` for 
 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import OktayCopurlu/ai-shared/skills/applying-coding-style/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/test-driven-development/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/a11y-audit/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/validating-ui/SKILL.md@main}}
-{{#runtime-import OktayCopurlu/ai-shared/skills/security-hardening/SKILL.md@main}}
+{{#runtime-import ../skills/applying-coding-style/SKILL.md}}
+{{#runtime-import ../skills/test-driven-development/SKILL.md}}
+{{#runtime-import ../skills/a11y-audit/SKILL.md}}
+{{#runtime-import ../skills/validating-ui/SKILL.md}}
+{{#runtime-import ../skills/security-hardening/SKILL.md}}
 
 ## Inputs
 

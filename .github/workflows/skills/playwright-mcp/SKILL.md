@@ -1,0 +1,230 @@
+---
+name: playwright-mcp
+description: 'Web automation via Playwright MCP browser tools. USE FOR: filling forms, clicking buttons, navigating pages, interacting with web UIs, browser automation tasks. ALWAYS use when user asks to automate browser actions, fill out a form, click through a wizard, or interact with a website.'
+---
+
+# Playwright Browser Automation
+
+Use this skill with the Playwright MCP server after deciding MCP is the right browser path.
+Exact function names can vary by host surface; examples below use Playwright MCP-style `browser_*` names when that surface is exposed.
+The server organizes tools into **core** tools plus a small set of opt-in capability groups enabled via `--caps`.
+
+## Routing
+
+1. Prefer first-party integrations for structured systems such as Jira, GitHub, Figma, or Google Docs.
+2. **Prefer the built-in VS Code integrated browser** (`open_browser_page`, `navigate_page`, `click_element`, `type_in_page`, `read_page`, `screenshot_page`, `run_playwright_code`) for most browser work. As of VS Code 1.122 it is a full Chromium (Electron) browser and supports arbitrary Playwright code via `run_playwright_code` — including `page.evaluate`, `setExtraHTTPHeaders`, network `route`, device emulation, and custom user-agents. It adds **zero** MCP tools (no impact on the ~128-tool limit) and needs no separate auth or `npx` process.
+3. **Use Playwright MCP (`--extension`) only when you need to attach to the user's already-logged-in Chrome/Edge session** — e.g. SSO/workspace-gated sites where re-injecting auth is not possible. The integrated browser runs its own Electron context and does NOT share the user's real Chrome cookies/SSO state, so that reuse is the one capability it cannot provide.
+
+### Integrated browser vs Playwright MCP
+
+| Need | Use |
+|------|-----|
+| Public page automation, clicks, forms, screenshots | Integrated browser |
+| Arbitrary Playwright JS (`page.evaluate`, etc.) | Integrated browser (`run_playwright_code`) |
+| Header injection (`setExtraHTTPHeaders`), network `route`, device emulation | Integrated browser (`run_playwright_code`) |
+| Console / network request inspection on a public or self-auth'd page | Integrated browser |
+| Reuse of the user's existing logged-in Chrome/SSO session | Playwright MCP `--extension` |
+| Persistent on-disk profile (`--user-data-dir`) | Playwright MCP |
+
+The rest of this skill documents the Playwright MCP surface; apply it once you have decided MCP (extension/session reuse) is the right path. For the integrated browser, the same Playwright concepts apply via `run_playwright_code` with the provided `page` object.
+
+## Session Modes
+
+- `--extension` connects to an existing Chrome or Edge browser through the Playwright MCP Bridge extension and reuses that browser state.
+- `--user-data-dir <path>` opts into a persistent profile on disk.
+- If `--user-data-dir` is omitted, the server creates a temporary user data directory.
+- `--isolated` keeps the browser profile in memory and does not save it to disk.
+
+## Authenticated Sites
+
+If the target page may require login, paywall access, or workspace membership, prefer `--extension` when a suitable logged-in browser already exists.
+Do not assume persistent auth by default; persistence only exists when `--user-data-dir` or another explicit config provides it.
+If the page is still blocked, verify the attached tab and browser state before calling the page unreadable.
+
+When the user expects reuse of an **existing logged-in Chrome session** (SSO/workspace membership that cannot be re-injected), use extension-backed Playwright MCP — the integrated browser runs a separate Electron context and will not carry those cookies.
+However, when auth can be **re-injected** (HTTP basic auth, a known cookie/token, forced headers), the integrated browser is sufficient: set credentials with `run_playwright_code` (`page.context().setExtraHTTPHeaders(...)` or `addCookies(...)`) rather than embedding them in the URL.
+
+## Capability Groups
+
+| Flag | Tools enabled | Use case |
+|------|--------------|----------|
+| *(core)* | click, close, console_messages, drag, drop, evaluate, file_upload, fill_form, handle_dialog, hover, navigate, navigate_back, network_request, network_requests, press_key, resize, run_code_unsafe, select_option, snapshot, tabs, take_screenshot, type, wait_for | Standard automation |
+| `--caps=config` | get_config | Inspect resolved server config |
+| `--caps=network` | network_state_set, route, route_list, unroute | Mock, block, or simulate network behavior |
+| `--caps=storage` | cookie_*, localstorage_*, sessionstorage_*, set_storage_state, storage_state | Inspect or modify browser storage |
+| `--caps=devtools` | annotate, highlight, hide_highlight, resume, start_tracing, stop_tracing, start_video, stop_video, video_chapter | Dashboard annotation, tracing, debugger control, video receipts |
+| `--caps=vision` | mouse_click_xy, mouse_down, mouse_drag_xy, mouse_move_xy, mouse_up, mouse_wheel | Coordinate-based interaction (canvas, maps) |
+| `--caps=pdf` | pdf_save | Save page as PDF |
+
+## Environment-Specific URLs
+
+If the task involves project-specific local/staging/production URL mapping or preview authentication, load the relevant project reference before navigating.
+
+## Core Workflow
+
+1. **Open or switch context** — use `browser_navigate` or `browser_tabs` first if needed
+2. **Snapshot first** — always run `browser_snapshot` before interacting to discover current refs
+3. **Identify refs** — find the correct `ref=eXXX` for the target element in the accessibility tree
+4. **Interact** — use the narrowest tool that fits: `browser_click`, `browser_fill_form`, `browser_type`, `browser_select_option`, `browser_press_key`, `browser_drag`
+5. **Verify** — inspect the next `browser_snapshot`, URL, visible state, or console/network output if relevant
+6. **Repeat** — after navigation or major DOM changes, take a fresh `browser_snapshot` before reusing refs
+
+## Tool Selection
+
+| Situation | Tool | Notes |
+|-----------|------|-------|
+| Open a page | `browser_navigate` | Use before the first snapshot |
+| Standard text inputs | `browser_fill_form` | Best default for normal inputs and textareas |
+| One-off text entry into focused/editable element | `browser_type` | Useful for fields that behave better with keystroke-style typing |
+| Single click actions | `browser_click` | Use refs from `browser_snapshot`; also accepts CSS selectors |
+| Native `<select>` | `browser_select_option` | Prefer over keyboarding when available |
+| Keyboard submission | `browser_press_key` | Useful for Enter, Escape, Tab, arrows |
+| Wait for UI updates | `browser_wait_for` | Prefer waiting for text/state changes over fixed delays |
+| Rich text editors / contenteditable | `browser_evaluate` or `browser_run_code_unsafe` | Use only when normal form tools cannot reach the editor; `run_code_unsafe` executes in the server process and is RCE-equivalent |
+| Drag and drop (between elements) | `browser_drag` | For sortable lists and draggable UIs |
+| Drop files/data onto element | `browser_drop` | External file drop; provide `paths` or MIME `data` |
+| File upload | `browser_file_upload` | Works for standard file inputs |
+| Hover-only UI | `browser_hover` | Helpful for menus, tooltips, hidden actions |
+| Dialogs / alerts / confirms | `browser_handle_dialog` | Use after an action triggers a browser dialog |
+| Debug page behavior | `browser_console_messages` / `browser_network_requests` / `browser_network_request` | Use `network_requests` for the numbered list, then `network_request` with an index for headers or bodies |
+| Visual verification | `browser_take_screenshot` | Use when snapshot semantics are not enough |
+| Video receipt / trace | `browser_start_video`, `browser_video_chapter`, `browser_stop_video`, `browser_start_tracing`, `browser_stop_tracing` | Requires `--caps=devtools`; useful for reviewer-visible UI verification |
+| Canvas / coordinate interaction | `browser_mouse_click_xy` | Requires `--caps=vision`; for non-accessible elements |
+| Save page as PDF | `browser_pdf_save` | Requires `--caps=pdf` |
+
+## Opt-in Tools (enabled via `--caps`)
+
+These tools are **not** in the default tool set. Check your server config before relying on them.
+
+**`--caps=vision`** — coordinate-based mouse: `browser_mouse_click_xy`, `browser_mouse_down`, `browser_mouse_up`, `browser_mouse_move_xy`, `browser_mouse_drag_xy`, `browser_mouse_wheel`. Use for canvas, maps, or anything the accessibility tree can't reach.
+
+**`--caps=pdf`** — `browser_pdf_save`.
+
+**`--caps=config`** — `browser_get_config`. Use when server behavior looks surprising and you need the merged CLI/env/config-file settings.
+
+**`--caps=network`** — `browser_network_state_set`, `browser_route`, `browser_route_list`, `browser_unroute`. Use for offline simulation or API mocking. Do not confuse these with the core read-only request inspection tools.
+
+**`--caps=storage`** — cookie, localStorage, sessionStorage, and storage-state tools. Use for auth/session setup only when normal login or `--storage-state` is not the better route.
+
+**`--caps=devtools`** — annotation, highlight, debugger resume, tracing, and video tools. Use video chapters for reviewer-visible UI receipts when screenshots are not enough.
+
+## Snapshot Rules
+
+- Treat `browser_snapshot` as the source of truth for current refs
+- Do not guess refs or reuse stale refs after navigation, tab switches, modal opens, or large DOM updates
+- Prefer refs with clear roles and labels over brittle visual guesses
+- If the page changes significantly, take a new snapshot before the next action
+
+## Common Patterns
+
+### Form filling
+
+```
+1. browser_navigate → target page
+2. browser_snapshot → find form field refs
+3. browser_fill_form → fill each field using refs
+4. browser_snapshot → verify values are set
+5. browser_click → submit button ref
+6. browser_snapshot → verify success state
+```
+
+### Multi-step wizard / checkout
+
+```
+1. Navigate to step 1
+2. For each step:
+   a. browser_snapshot → identify current step, find input refs
+   b. Fill / click as needed
+   c. browser_snapshot → confirm step advanced
+3. Verify final confirmation page
+```
+
+### Cookie consent / modal dismissal
+
+```
+1. browser_snapshot → look for dialog/modal refs
+2. browser_click → accept/dismiss button
+3. browser_snapshot → confirm modal is gone
+4. Continue with the actual task
+```
+
+### Experiment or feature-flag variant switch
+
+Use this only after the review or QA flow has identified a real flag/experiment key and supported override mechanism.
+
+```
+1. Confirm the exact key, group/value names, and storage or URL mechanism from source/docs/runtime state
+2. Navigate to the target page and snapshot the current variant
+3. Apply the confirmed override with the narrowest available tool:
+   - URL parameter: navigate to the URL with that parameter
+   - cookie/localStorage/sessionStorage: use storage-cap tools when enabled, or `browser_evaluate` when the host surface exposes it
+   - SDK/debug API: use the documented API only if visible in runtime state or source
+4. Reload the page
+5. Verify the active variant through UI, exposure/tracking payload, network response, or runtime state
+```
+
+For confirmed cookie or storage overrides, use an explicit, host-scoped write and then reload:
+
+```js
+// browser_evaluate on the already-open target page
+(() => {
+   document.cookie = '<COOKIE_NAME>=<ENCODED_VALUE>; Path=/; SameSite=Lax';
+   localStorage.setItem('<STORAGE_KEY>', '<VALUE>');
+   sessionStorage.setItem('<STORAGE_KEY>', '<VALUE>');
+})();
+```
+
+For localhost cookies, omit `Domain` so the browser scopes the cookie to the current host. For HTTPS preview cookies, include `Secure` only when the page is actually HTTPS. To clear a stale assignment, write the same cookie name with `Max-Age=0; Path=/` before setting the new value.
+
+If `browser_evaluate` is unavailable but `browser_run_code_unsafe` is available, use Playwright context cookies instead of clicking through extension UI:
+
+```js
+const url = new URL('/', page.url()).toString();
+await page.context().addCookies([
+   { name: '<COOKIE_NAME>', value: '<VALUE>', url, path: '/', sameSite: 'Lax' },
+]);
+await page.reload();
+```
+
+For localhost-only validation, if the real assignment path is server-side, extension-only, or otherwise unreachable through automation, it is acceptable to temporarily hard-code or stub the confirmed flag/experiment return value in the local working tree to capture screenshots or validate UI behavior. Keep that change minimal, announce it, remove it before finishing, and report the evidence as "validated with local hard-code" rather than production-equivalent allocation.
+
+Do not brute-force likely cookie names. If the only switch is the AB Flag Override extension or an admin-only/server-side assignment and no localhost hard-code is acceptable, report the exact manual switch needed and resume after the user confirms it.
+
+### Authenticated preview access (HTTP basic auth)
+
+If the target environment is protected by HTTP basic auth (common for staging/preview), embed credentials in the URL:
+
+```
+browser_navigate → https://<USER>:<PASS>@<preview-host>/<path>
+```
+
+Follow the project-specific reference for the actual credentials.
+
+### Debugging failed interactions
+
+When a click or fill doesn't work:
+1. `browser_console_messages` — check for JS errors blocking interaction
+2. `browser_network_requests` — list requests and find the failing request index
+3. `browser_network_request` — inspect that request's headers, body, or response details
+4. `browser_snapshot` — check if the element is still in the DOM
+5. Try `browser_wait_for` — the element may not be ready yet
+6. Try `browser_evaluate` — interact via JS as a fallback
+
+## Rules
+
+- Always snapshot before interacting — never guess refs
+- After navigation or DOM changes, take a fresh snapshot
+- Do not assume persistent state unless the session config makes it explicit
+- Prefer `--extension` for login-required pages when a suitable logged-in browser already exists
+- Use `browser_wait_for` instead of arbitrary delays
+- If the page is a login wall, verify whether the extension-managed browser state is correct before calling the page blocked
+- If a form has custom components (not native `<input>`), check if `browser_fill_form` works; fall back to `browser_type` or `browser_evaluate` if not
+- For authenticated preview or staging URLs, follow the project's documented access pattern instead of guessing credentials or hostnames
+- Use `browser_network_requests` with `filter` param to narrow results (e.g., `filter: "/api/.*"`), then call `browser_network_request` with the returned index for full request or response details
+- Use `browser_snapshot` with `depth` param when only top-level structure is needed (saves tokens)
+- Use `browser_take_screenshot` with `filename` when you want an artifact file; recent servers omit the base64 payload from the response in that case to save context
+- Use `browser_run_code_unsafe` only for complex multi-step Playwright operations that would be verbose with individual tool calls; it is unsafe because it can execute arbitrary JavaScript in the Playwright server process
+
+## See Also
+
+- project-specific environment references such as `~/.ai-shared/references/on-frontend-urls.md`

@@ -1,0 +1,209 @@
+---
+name: validating-ui
+description: "Frontend UI validation methodology after implementation. USE FOR: verifying visual correctness, runtime health, design comparison, regression checks, and deciding pass/fail after code changes. ALWAYS use when a ticket has UI impact and needs browser-level validation before PR."
+---
+
+# UI Validation
+
+Defines what to validate in the browser after frontend implementation and how to decide pass or fail.
+
+This skill does not explain how to use browser tools — load `playwright-mcp` for that. It does not cover accessibility — load `a11y-audit` for that.
+
+## When To Use
+
+- The change visibly affects rendered UI (component changes, layout, styling, new elements).
+- After implementation is complete and quality gates (lint, types, tests) have passed.
+- Before committing the final state or creating a PR.
+
+## Validation Checklist
+
+Run these checks in order. If a critical failure blocks the target UI, run the Validation Recovery Protocol before marking anything blocked or not verified.
+
+### 1. Page Load
+
+- Page loads without a blank screen or crash.
+- No unhandled errors in the console.
+- No failed network requests that block rendering (4xx/5xx on critical resources).
+- Hydration completes without mismatch warnings (check console for hydration errors).
+
+### 2. Visual Correctness
+
+- Test at both desktop (≥1280px) and mobile (375px) viewports. Both are mandatory unless the change is explicitly scoped to a single layout.
+- The changed UI renders as expected at each viewport.
+- Text content, images, and layout match what the ticket describes.
+- Interactive states work: hover, focus, active, disabled, loading, empty, error.
+- For multi-step flows or wizards, exercise forward and backward navigation. Verify previous selections/input are restored unless the ticket explicitly resets them, and confirm focus remains visible and is not clipped after each step transition.
+- No layout shifts, overlapping elements, or clipped content in the affected area.
+- Layout transitions between breakpoints do not break (no overlapping, collapsing, or hidden content).
+
+### 3. Design Comparison
+
+Only when a Figma reference exists in the ticket:
+
+- **Token-level fidelity check (required, not optional).** Follow `~/.ai-shared/references/ui-fidelity-check.md` — the three-way Figma / codebase / browser comparison, property list, viewport matrix, and shared-component consumer rule live there. Do not claim a UI change matches Figma without running it.
+- If the design shows multiple states (empty, loading, populated, error), verify each one that is reachable at both viewports.
+- If the ticket or Figma has multiple platform variants, select the web-specific design node before judging spacing or typography.
+- Screenshots are supporting evidence, not the primary check. Do not approve design fidelity on screenshots alone.
+- If visual polish, copy, or design intent remains subjective after the fidelity check, prepare a designer handoff with the exact preview URL or Storybook story, viewport, Figma node, and screenshots instead of claiming full design approval.
+
+### 4. Runtime Health
+
+- No new console errors or warnings introduced by the change.
+- Network requests relevant to the feature return expected data (check response payloads if needed).
+- GraphQL queries return the expected shape when the feature uses GraphQL.
+- No infinite loops, repeated requests, or excessive re-renders visible in console or network tab.
+
+### 5. Regression
+
+- Navigate to the page or flow that existed before the change.
+- Verify that existing behavior still works — especially adjacent UI that shares the same container or data source.
+- If the change affects a shared component, check at least one other consumer.
+
+### 6. Tracking
+
+Only when the ticket mentions analytics or tracking:
+
+- Verify that expected tracking events fire with correct payloads.
+- Use `amplitude-analytics` skill or network tab to confirm event names and properties.
+
+## How To Run
+
+1. Ensure local dev server is running.
+2. Navigate, interact, and snapshot — prefer the built-in VS Code integrated browser; use `playwright-mcp` (extension-backed) when an existing logged-in Chrome/SSO session must be reused. Load `playwright-mcp` for routing and tool details.
+3. For deeper inspection, use console messages, network requests, snapshots, and page evaluation (integrated browser via `run_playwright_code`, or the `browser_*` equivalents under Playwright MCP).
+4. If a11y is relevant, load `a11y-audit` separately — do not mix a11y findings into this validation.
+5. If the change is behind a feature flag, experiment, or A/B test, follow the experiment override protocol below. Test both enabled/disabled or control/treatment states when they are controllable.
+
+### Validation Recovery Protocol
+
+Use this when the expected UI is not immediately reachable: localhost will not open, the preview URL is missing, the route 404s, the changed section is not visible, the PDP/product data does not show the component, a locale/market differs, auth is missing, or a flag/experiment hides the UI.
+
+Do not mark UI validation as skipped, blocked, or not verified after a single failed attempt. First try concrete recovery paths and record what happened.
+
+1. Capture the failed attempt: URL, viewport, console/network symptom, screenshot or DOM observation, and why it did not reach the target UI.
+2. Verify the runtime path:
+	- confirm the dev server command and port from repo scripts/docs
+	- if localhost fails, try the PR preview when available
+	- if the preview is missing, try the PR branch locally
+	- if the route is unclear, search the app routes, navigation, ticket links, and changed files for the intended path
+3. Verify prerequisites before giving up:
+	- auth/session state
+	- locale, market, country, currency, or language path
+	- feature flag or experiment assignment
+	- product/test data, query parameters, or CMS/API data needed to render the section
+4. Try an alternate render surface when the production route cannot expose the UI:
+	- direct route or deep link from source code
+	- app navigation from a known working page
+	- Storybook, component playground, or docs page for the changed component
+	- local fixture, mock, or temporary hard-code only for validation evidence; remove it before finishing and label the evidence clearly
+5. Once the target DOM is reachable, rerun the required viewport and token-level checks. Do not stop at page-load evidence if the ticket requires design fidelity.
+6. Ask the user for help only after exhausting reasonable recovery paths or hitting a hard blocker such as missing credentials, unavailable environment access, or a build/runtime failure that prevents any browser surface from rendering.
+
+A blocked/not-verified verdict must include the recovery attempts, grouped by path tried. The minimum bar is: one environment check, one route/data/flag prerequisite check, and one alternate render-surface attempt, unless a hard blocker makes one of those categories impossible.
+
+### Experiment Override Protocol
+
+Use this when a UI change is gated by a feature flag, experiment, or A/B test.
+
+1. Identify the exact flag or experiment key, expected group names, assignment SDK/helper, and whether assignment is server-side or client-side. Use the ticket, PR description, diff, linked docs, and nearby source code.
+2. Look for supported QA override mechanisms before changing browser state: URL parameters, cookies, localStorage, sessionStorage, SDK debug APIs, preview flag endpoints, or documented browser extensions.
+3. Apply only a confirmed override. Do not guess cookie or storage keys from the experiment name.
+4. For cookie or storage overrides, set the value directly on the current origin via the browser path in use (integrated browser `run_playwright_code`, or `playwright-mcp` tools), then reload. If storage helper tools are unavailable, use page evaluation with the confirmed cookie or storage key/value.
+5. Reload after applying the override and verify the active variant through rendered UI, exposure/tracking payload, network response, or runtime state. A stored value alone is not enough evidence.
+6. For localhost-only validation, if the confirmed runtime override cannot be applied because assignment is server-side, extension-only, or unavailable in automation, temporarily hard-code or stub the confirmed flag/experiment return value in the local working tree. Remove the temporary change before finishing and label the evidence as local hard-code validation.
+7. If the only available switch is an extension or admin UI that automation cannot operate, and local hard-code validation is not suitable, mark that variant as awaiting user-assisted override and include the exact key/group the user should select.
+
+## Verdict
+
+After running the checklist, state one of:
+
+- **Pass**: All checks passed. No issues found.
+- **Pass with notes**: Minor issues exist but do not block the ticket. List them.
+- **Fail**: One or more checks failed. List the failures with evidence (console output, screenshot description, or observed behavior).
+
+## Verdict Format
+
+```md
+## UI Validation
+
+- Viewport(s) tested: <list>
+- Design reference compared: yes / no / not available
+- Token-level fidelity check: pass / pass with deviations / fail / not applicable
+- Tracking verified: yes / no / not applicable
+
+### Verdict: Pass | Pass with notes | Fail
+
+### Findings
+
+- [check name] result — evidence or note (for token deviations: `property`: Figma `X` → computed `Y`)
+
+### Not Verified
+
+- what was skipped and why
+```
+
+## Rules
+
+- Do not validate UI before quality gates pass — fix lint/type/test errors first.
+- Always test both desktop and mobile viewports. If skipping one, state the reason explicitly in the verdict.
+- Do not claim design match without actually comparing to Figma.
+- Do not use an app/native/mobile-platform design node as the source of truth for web UI unless the ticket explicitly says to.
+- Do not treat agent-side UI validation as designer or UX approval. Report the concrete evidence and any design handoff still needed.
+- Do not mix accessibility findings into this validation — use `a11y-audit` for that.
+- If the page cannot be loaded locally, run the Validation Recovery Protocol before listing anything as blocked or not verified.
+- Do not call a treatment variant blocked after arbitrary cookie attempts; first prove the supported override path or report that the variant needs user-assisted/server-side allocation.
+- Do not leave temporary localhost hard-codes or stubs in the final diff unless the user explicitly asks for that implementation change.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+|---|---|
+| "It looks fine on desktop, mobile is probably fine too" | Most layout bugs are viewport-specific. Both viewports are mandatory unless explicitly scoped. |
+| "It looks right next to the Figma" | Side-by-side visual comparison misses 4px, color, and font-weight drift. Read the computed style and compare to the Figma value. |
+| "The button shows up, design matches" | Visibility is not fidelity. Padding, font-size, color, and radius must match the Figma node values. |
+| "I'll skip the token check, it's a small change" | Reviewers and designers catch token drift on small changes too. Run the check or mark it not verified with a reason. |
+| "I checked Storybook, so design is approved" | Storybook/browser evidence helps reviewers, but subjective UX approval still needs the designer or UX owner when intent is ambiguous. |
+| "The tests pass, so the UI is correct" | Tests verify logic, not pixels. Visual regressions, layout shifts, and styling issues don't show up in unit tests. |
+| "Console warnings are not errors" | Hydration warnings, deprecation notices, and React/Vue warnings often indicate real bugs. Investigate each one. |
+| "I'll check regression later" | Adjacent UI sharing the same container or data source can break silently. Check it now. |
+| "The change is too small to need browser validation" | Even a one-line CSS change can cause layout shifts across viewports. Small changes are quick to validate. |
+| "Localhost did not open, so UI validation is skipped" | Try the preview, confirm the dev server/port, run the PR branch locally, or validate the changed component in Storybook before calling it blocked. |
+| "I did not see the section on the PDP" | Check locale, product data, flags, CMS/API state, route parameters, and alternate render surfaces before marking the section not verified. |
+
+## Red Flags
+
+- Verdict says "Pass" but only one viewport was tested
+- Design comparison claimed without a Figma link in the ticket
+- Design comparison claimed without a token-level computed-style check — only screenshots or visual side-by-side
+- Hardcoded numbers used when matching design-system tokens exist
+- Design feedback comes from a different platform node than the implemented web surface
+- Console errors dismissed as "pre-existing" without verification
+- No regression check on adjacent UI
+- Subjective UX or visual-polish questions are marked fully verified without designer handoff evidence
+- Validation done before quality gates passed
+- Tracking verification skipped when the ticket mentions analytics
+- UI validation marked skipped/blocked after one failed URL, route, or section lookup
+- No recovery attempts listed for a missing preview, broken localhost, hidden section, locale mismatch, or gated UI
+
+## Verification
+
+After completing UI validation:
+
+- [ ] Page loads without errors or blank screen
+- [ ] Both desktop (≥1280px) and mobile (375px) viewports tested
+- [ ] Design comparison done against Figma (if reference exists)
+- [ ] Token-level computed-style check completed for each changed/new component (spacing, sizing, typography, color, borders) — or marked not applicable with reason
+- [ ] Design-system tokens used instead of hardcoded values where available
+- [ ] Web-specific design node was used when multiple platform variants exist
+- [ ] Designer/UX handoff evidence was prepared when subjective visual approval is still needed
+- [ ] No new console errors or warnings
+- [ ] Regression check on adjacent UI completed
+- [ ] Tracking verified (if applicable)
+- [ ] Recovery protocol followed and attempts recorded when the target UI was not immediately reachable
+- [ ] Verdict stated with evidence
+
+## See Also
+
+- `a11y-audit` — accessibility validation (separate from UI validation)
+- `playwright-mcp` — browser automation for navigation and interaction
+- `~/.ai-shared/references/performance-checklist.md` — Core Web Vitals and frontend performance checks
