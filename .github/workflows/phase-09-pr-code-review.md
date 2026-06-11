@@ -57,6 +57,10 @@ safe-outputs:
 
 post-steps:
 
+  - name: Checkout ai-shared (base repo)
+    uses: actions/checkout@v4
+    with:
+      persist-credentials: false
   - name: Checkout on-frontend repository (POC)
     uses: actions/checkout@v4
     with:
