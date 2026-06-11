@@ -58,6 +58,10 @@ safe-outputs:
 # the read-side mirror of the jira-out/ write path. Skips quietly if the Jira secrets are unset.
 steps:
 
+  - name: Checkout ai-shared (base repo)
+    uses: actions/checkout@v4
+    with:
+      persist-credentials: false
   - name: Checkout on-frontend repository (POC)
     uses: actions/checkout@v4
     with:
@@ -95,6 +99,10 @@ steps:
 
 post-steps:
 
+  - name: Checkout ai-shared (base repo)
+    uses: actions/checkout@v4
+    with:
+      persist-credentials: false
   - name: Checkout on-frontend repository (POC)
     uses: actions/checkout@v4
     with:
