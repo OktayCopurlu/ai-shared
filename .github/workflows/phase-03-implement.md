@@ -118,7 +118,7 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
   `loop_count` = `${{ inputs.loop_count }}` (carry the counter forward unchanged).
 - On `status: "blocked"`, do not dispatch. Surface the blocker and call `noop`.
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/shared-preamble.md@main}}
+{{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
@@ -127,4 +127,4 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 > The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
 > **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/03-implement.md@main}}
+{{#runtime-import phases/03-implement.md}}

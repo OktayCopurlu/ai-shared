@@ -179,7 +179,7 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 - On `status: "blocked"`, do **not** dispatch. Report the blocker with `missing-data` (and
   `add-comment`/`create-issue` if useful) and call `noop` with a short reason.
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/shared-preamble.md@main}}
+{{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
@@ -188,4 +188,4 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 > The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
 > **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/01-context-intake.md@main}}
+{{#runtime-import phases/01-context-intake.md}}

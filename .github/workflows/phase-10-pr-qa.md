@@ -171,7 +171,7 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 5. Emit `dispatch-workflow` for **`phase-11-pr-ui-validation`**, passing `ticket`, the resolved
    `pr_number`, `prev_run_id` = `${{ github.run_id }}`, `loop_count` = `${{ inputs.loop_count }}`.
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/shared-preamble.md@main}}
+{{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
@@ -180,4 +180,4 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 > The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
 > **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/10-pr-qa.md@main}}
+{{#runtime-import phases/10-pr-qa.md}}

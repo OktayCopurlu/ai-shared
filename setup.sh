@@ -9,7 +9,7 @@ AI="$HOME/.ai-shared"
 echo "Setting up ai-shared symlinks..."
 
 # Create target directories
-mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references
+mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references ~/.gemini/antigravity-cli
 
 # Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
@@ -29,6 +29,7 @@ link() {
 link "$AI/instructions.md" ~/.github/copilot-instructions.md
 link "$AI/instructions.md" ~/.codex/instructions.md
 link "$AI/instructions.md" ~/.config/opencode/AGENTS.md
+link "$AI/instructions.md" ~/.gemini/antigravity-cli/instructions.md
 
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
@@ -38,6 +39,10 @@ link "$AI/prompts"          ~/.codex/prompts
 link "$AI/references"       ~/.copilot/references
 link "$AI/skills"           ~/.config/opencode/skills
 link "$AI/references"       ~/.config/opencode/references
+link "$AI/skills"           ~/.gemini/antigravity-cli/skills
+link "$AI/prompts"          ~/.gemini/antigravity-cli/prompts
+link "$AI/agents"           ~/.gemini/antigravity-cli/agents
+link "$AI/references"       ~/.gemini/antigravity-cli/references
 # agents/ not symlinked for OpenCode — incompatible frontmatter format
 
 # Codex per-skill symlinks (codex needs individual skill links)

@@ -121,7 +121,7 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 - If `loop_count` is already 3 and blockers remain, do **not** loop: post an `add-comment`
   summary of the unresolved blockers and call `noop`.
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/shared-preamble.md@main}}
+{{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
@@ -130,4 +130,4 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 > The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
 > **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
 
-{{#runtime-import OktayCopurlu/ai-shared/experiment/github-delivery-pipeline/phases/04-test-review.md@main}}
+{{#runtime-import phases/04-test-review.md}}
