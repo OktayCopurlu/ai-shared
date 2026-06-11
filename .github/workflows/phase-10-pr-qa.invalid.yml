@@ -1,5 +1,5 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"e4bf5649098e91366b73c162053faf92f788853126d92d41b573dc97c7e34334","body_hash":"3c73bfe75628818178401e4c53cf1b161b13c112279f5879ef1b11882b6879ba","compiler_version":"v0.78.1","strict":true,"agent_id":"copilot"}
-# gh-aw-manifest: {"version":1,"secrets":["COPILOT_GITHUB_TOKEN","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN","JIRA_API_TOKEN","JIRA_USER_EMAIL","ON_FRONTEND_PAT"],"actions":[{"repo":"actions/checkout","sha":"34e114876b0b11c390a56381ad16ebd13914f8d5","version":"v4"},{"repo":"actions/checkout","sha":"de0fac2e4500dabe0009e67214ff5f5447ce83dd","version":"v6.0.2"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"73ed520ae4ecd087a485e1991605595978b32ac1","version":"v0.78.1"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.25.58"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.3.22"},{"image":"ghcr.io/github/github-mcp-server:v1.1.0"},{"image":"mcr.microsoft.com/playwright/mcp","digest":"sha256:7b82f29c6ef83480a97f612d53ac3fd5f30a32df3fea1e06923d4204d3532bb2","pinned_image":"mcr.microsoft.com/playwright/mcp@sha256:7b82f29c6ef83480a97f612d53ac3fd5f30a32df3fea1e06923d4204d3532bb2"},{"image":"node:lts-alpine","digest":"sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14","pinned_image":"node:lts-alpine@sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14"}]}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"605cb64d93d0d363c0a40fd7c499a86b010e0387699888c865ba84183ffaee9f","body_hash":"3c73bfe75628818178401e4c53cf1b161b13c112279f5879ef1b11882b6879ba","compiler_version":"v0.78.1","strict":true,"agent_id":"copilot"}
+# gh-aw-manifest: {"version":1,"secrets":["COPILOT_GITHUB_TOKEN","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN","JIRA_API_TOKEN","JIRA_USER_EMAIL","ON_FRONTEND_PAT"],"actions":[{"repo":"actions/checkout","sha":"34e114876b0b11c390a56381ad16ebd13914f8d5","version":"34e114876b0b11c390a56381ad16ebd13914f8d5"},{"repo":"actions/checkout","sha":"de0fac2e4500dabe0009e67214ff5f5447ce83dd","version":"v6.0.2"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"73ed520ae4ecd087a485e1991605595978b32ac1","version":"v0.78.1"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.25.58"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.25.58"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.3.22"},{"image":"ghcr.io/github/github-mcp-server:v1.1.0"},{"image":"mcr.microsoft.com/playwright/mcp","digest":"sha256:7b82f29c6ef83480a97f612d53ac3fd5f30a32df3fea1e06923d4204d3532bb2","pinned_image":"mcr.microsoft.com/playwright/mcp@sha256:7b82f29c6ef83480a97f612d53ac3fd5f30a32df3fea1e06923d4204d3532bb2"},{"image":"node:lts-alpine","digest":"sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14","pinned_image":"node:lts-alpine@sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14"}]}
 #    ___                   _   _      
 #   / _ \                 | | (_)     
 #  | |_| | __ _  ___ _ __ | |_ _  ___ 
@@ -33,6 +33,7 @@
 #   - ON_FRONTEND_PAT
 #
 # Custom actions used:
+#   - actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 #   - actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 #   - actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 #   - actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -233,21 +234,21 @@ jobs:
         run: |
           bash "${RUNNER_TEMP}/gh-aw/actions/create_prompt_first.sh"
           {
-          cat << 'GH_AW_PROMPT_1d22a96e320da447_EOF'
+          cat << 'GH_AW_PROMPT_09ee79ef3d60f9ac_EOF'
           <system>
-          GH_AW_PROMPT_1d22a96e320da447_EOF
+          GH_AW_PROMPT_09ee79ef3d60f9ac_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/xpia.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/temp_folder_prompt.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/markdown.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/playwright_prompt.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/safe_outputs_prompt.md"
-          cat << 'GH_AW_PROMPT_1d22a96e320da447_EOF'
+          cat << 'GH_AW_PROMPT_09ee79ef3d60f9ac_EOF'
           <safe-output-tools>
           Tools: add_comment, dispatch_workflow, missing_tool, missing_data, noop
           </safe-output-tools>
-          GH_AW_PROMPT_1d22a96e320da447_EOF
+          GH_AW_PROMPT_09ee79ef3d60f9ac_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/mcp_cli_tools_prompt.md"
-          cat << 'GH_AW_PROMPT_1d22a96e320da447_EOF'
+          cat << 'GH_AW_PROMPT_09ee79ef3d60f9ac_EOF'
           <github-context>
           The following GitHub context information is available for this workflow:
           {{#if github.actor}}
@@ -276,14 +277,14 @@ jobs:
           {{/if}}
           </github-context>
           
-          GH_AW_PROMPT_1d22a96e320da447_EOF
+          GH_AW_PROMPT_09ee79ef3d60f9ac_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/github_mcp_tools_with_safeoutputs_prompt.md"
-          cat << 'GH_AW_PROMPT_1d22a96e320da447_EOF'
+          cat << 'GH_AW_PROMPT_09ee79ef3d60f9ac_EOF'
           </system>
           {{#runtime-import .github/workflows/phases/shared-preamble.md}}
           {{#runtime-import .github/workflows/phases/10-pr-qa.md}}
           {{#runtime-import .github/workflows/phase-10-pr-qa.md}}
-          GH_AW_PROMPT_1d22a96e320da447_EOF
+          GH_AW_PROMPT_09ee79ef3d60f9ac_EOF
           } > "$GH_AW_PROMPT"
       - name: Interpolate variables and render templates
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -434,23 +435,23 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Checkout ai-shared (base repo)
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           persist-credentials: false
       - name: Checkout on-frontend repository (POC)
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           path: on-frontend-workspace
           persist-credentials: false
           repository: onrunning/on-frontend
           token: ${{ secrets.ON_FRONTEND_PAT }}
       - env:
+          GH_AW_INPUTS_PREV_RUN_ID: ${{ inputs.prev_run_id }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREV_RUN_ID: ${{ inputs.prev_run_id }}
         if: ${{ inputs.prev_run_id != '' }}
         name: Download previous phase state
         run: |
-          gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
+          gh run download "$GH_AW_INPUTS_PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
           if [ -f pipeline-state.tgz.zip ]; then
             unzip -o pipeline-state.tgz.zip
           fi
@@ -464,7 +465,26 @@ jobs:
           TICKET_INPUT: ${{ inputs.ticket }}
         if: ${{ inputs.ticket != '' }}
         name: Pre-fetch the Jira ticket for the agent to read
-        run: "set -euo pipefail\nmkdir -p jira-in\nif [ -z \"${JIRA_BASE_URL:-}\" ] || [ -z \"${JIRA_USER_EMAIL:-}\" ] || [ -z \"${JIRA_API_TOKEN:-}\" ]; then\n  echo \"Jira not configured (need JIRA_BASE_URL + JIRA_USER_EMAIL + JIRA_API_TOKEN); the agent will use other context or report a blocker.\"\n  exit 0\nfi\nkey=\"$(printf '%s' \"$TICKET_INPUT\" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' | head -1 || true)\"\nif [ -z \"$key\" ]; then\n  echo \"No Jira key found in input '$TICKET_INPUT'; skipping pre-fetch.\"\n  exit 0\nfi\nfields=\"summary,description,status,issuetype,priority,labels,components,fixVersions,parent,assignee,reporter,issuelinks,subtasks,attachment,comment\"\nif curl -fsS -u \"$JIRA_USER_EMAIL:$JIRA_API_TOKEN\" -H \"Accept: application/json\" \\\n     \"$JIRA_BASE_URL/rest/api/2/issue/$key?fields=$fields\" -o jira-in/ticket.json; then\n  echo \"Pre-fetched Jira issue $key to jira-in/ticket.json ($(wc -c < jira-in/ticket.json) bytes).\"\nelse\n  echo \"Could not fetch Jira issue $key (check token/email/permissions); the agent will report a blocker.\"\n  rm -f jira-in/ticket.json\nfi\n"
+        run: |
+          set -euo pipefail
+          mkdir -p jira-in
+          if [ -z "${JIRA_BASE_URL:-}" ] || [ -z "${JIRA_USER_EMAIL:-}" ] || [ -z "${JIRA_API_TOKEN:-}" ]; then
+            echo "Jira not configured (need JIRA_BASE_URL + JIRA_USER_EMAIL + JIRA_API_TOKEN); the agent will use other context or report a blocker."
+            exit 0
+          fi
+          key="$(printf '%s' "$TICKET_INPUT" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' | head -1 || true)"
+          if [ -z "$key" ]; then
+            echo "No Jira key found in input '$TICKET_INPUT'; skipping pre-fetch."
+            exit 0
+          fi
+          fields="summary,description,status,issuetype,priority,labels,components,fixVersions,parent,assignee,reporter,issuelinks,subtasks,attachment,comment"
+          if curl -fsS -u "$JIRA_USER_EMAIL:$JIRA_API_TOKEN" -H "Accept: application/json" \
+               "$JIRA_BASE_URL/rest/api/2/issue/$key?fields=$fields" -o jira-in/ticket.json; then
+            echo "Pre-fetched Jira issue $key to jira-in/ticket.json ($(wc -c < jira-in/ticket.json) bytes)."
+          else
+            echo "Could not fetch Jira issue $key (check token/email/permissions); the agent will report a blocker."
+            rm -f jira-in/ticket.json
+          fi
 
       - name: Configure Git credentials
         env:
@@ -537,9 +557,9 @@ jobs:
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
           mkdir -p "${RUNNER_TEMP}/gh-aw/safeoutputs/upload-artifacts"
-          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_6c4294e3d3f067a7_EOF'
+          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_f41db6926df14504_EOF'
           {"add_comment":{"max":1,"target":"*"},"create_report_incomplete_issue":{},"dispatch_workflow":{"aw_context_workflows":["phase-11-pr-ui-validation"],"max":1,"workflow_files":{"phase-11-pr-ui-validation":".lock.yml"},"workflows":["phase-11-pr-ui-validation"]},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"report_incomplete":{},"upload_artifact":{"max-size-bytes":104857600,"max-uploads":1,"retention-days":14}}
-          GH_AW_SAFE_OUTPUTS_CONFIG_6c4294e3d3f067a7_EOF
+          GH_AW_SAFE_OUTPUTS_CONFIG_f41db6926df14504_EOF
       - name: Generate Safe Outputs Tools
         env:
           GH_AW_TOOLS_META_JSON: |
@@ -774,7 +794,7 @@ jobs:
           
           mkdir -p /home/runner/.copilot
           GH_AW_NODE=$(which node 2>/dev/null || command -v node 2>/dev/null || echo node)
-          cat << GH_AW_MCP_CONFIG_581f46d755d4422c_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
+          cat << GH_AW_MCP_CONFIG_4f1449cdcfe1cf26_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
           {
             "mcpServers": {
               "github": {
@@ -829,7 +849,7 @@ jobs:
               "payloadDir": "${MCP_GATEWAY_PAYLOAD_DIR}"
             }
           }
-          GH_AW_MCP_CONFIG_581f46d755d4422c_EOF
+          GH_AW_MCP_CONFIG_4f1449cdcfe1cf26_EOF
       - name: Mount MCP servers as CLIs
         id: mount-mcp-clis
         continue-on-error: true
@@ -1067,11 +1087,10 @@ jobs:
           token: ${{ secrets.ON_FRONTEND_PAT }}
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREV_RUN_ID: ${{ inputs.prev_run_id }}
         if: ${{ inputs.prev_run_id != '' }}
         name: Download previous phase state
         run: |
-          gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
+          gh run download "${{ inputs.prev_run_id }}" -n safe-outputs-upload-artifacts --dir . || true
           if [ -f pipeline-state.tgz.zip ]; then
             unzip -o pipeline-state.tgz.zip
           fi

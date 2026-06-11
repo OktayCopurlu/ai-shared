@@ -45,7 +45,6 @@ safe-outputs:
 # mcp-servers: see phase-01 and README "Auth in CI".
 
 post-steps:
-
   - name: Checkout ai-shared (base repo)
     uses: actions/checkout@v4
     with:
@@ -57,6 +56,20 @@ post-steps:
       token: ${{ secrets.ON_FRONTEND_PAT }}
       path: 'on-frontend-workspace'
       persist-credentials: false
+  - name: Download previous phase state
+    if: ${{ inputs.prev_run_id != '' }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PREV_RUN_ID: ${{ inputs.prev_run_id }}
+    run: |
+      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
+      if [ -f pipeline-state.tgz.zip ]; then
+        unzip -o pipeline-state.tgz.zip
+      fi
+      if [ -f pipeline-state.tgz ]; then
+        tar -xzf pipeline-state.tgz
+      fi
+
   - name: Comment on the Jira ticket if this phase wrote one
     if: ${{ !cancelled() && hashFiles('jira-out/comment.md') != '' }}
     env:

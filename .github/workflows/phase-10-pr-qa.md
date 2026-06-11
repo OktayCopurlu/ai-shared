@@ -57,7 +57,6 @@ safe-outputs:
 # without ever holding the token. jira-in/ is run-local scratch (not tarred, never committed),
 # the read-side mirror of the jira-out/ write path. Skips quietly if the Jira secrets are unset.
 steps:
-
   - name: Checkout ai-shared (base repo)
     uses: actions/checkout@v4
     with:
@@ -69,6 +68,20 @@ steps:
       token: ${{ secrets.ON_FRONTEND_PAT }}
       path: 'on-frontend-workspace'
       persist-credentials: false
+  - name: Download previous phase state
+    if: ${{ inputs.prev_run_id != '' }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PREV_RUN_ID: ${{ inputs.prev_run_id }}
+    run: |
+      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
+      if [ -f pipeline-state.tgz.zip ]; then
+        unzip -o pipeline-state.tgz.zip
+      fi
+      if [ -f pipeline-state.tgz ]; then
+        tar -xzf pipeline-state.tgz
+      fi
+
   - name: Pre-fetch the Jira ticket for the agent to read
     if: ${{ inputs.ticket != '' }}
     env:
@@ -98,7 +111,6 @@ steps:
       fi
 
 post-steps:
-
   - name: Checkout ai-shared (base repo)
     uses: actions/checkout@v4
     with:
@@ -110,6 +122,20 @@ post-steps:
       token: ${{ secrets.ON_FRONTEND_PAT }}
       path: 'on-frontend-workspace'
       persist-credentials: false
+  - name: Download previous phase state
+    if: ${{ inputs.prev_run_id != '' }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PREV_RUN_ID: ${{ inputs.prev_run_id }}
+    run: |
+      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
+      if [ -f pipeline-state.tgz.zip ]; then
+        unzip -o pipeline-state.tgz.zip
+      fi
+      if [ -f pipeline-state.tgz ]; then
+        tar -xzf pipeline-state.tgz
+      fi
+
   - name: Comment on the Jira ticket if this phase wrote one
     if: ${{ !cancelled() && hashFiles('jira-out/comment.md') != '' }}
     env:
