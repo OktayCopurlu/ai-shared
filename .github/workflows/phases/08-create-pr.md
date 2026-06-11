@@ -20,8 +20,8 @@ Use `git-workflow` for commit hygiene and PR body shape, and `github` for PR con
 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. PR delivery uses the gh-aw `create-pull-request` safe output (not direct `gh`/`git push`). Pin `@main` to a tag or SHA for reproducible runs.
 
-{{#runtime-import ../skills/git-workflow/SKILL.md}}
-{{#runtime-import ../skills/github/SKILL.md}}
+{{#runtime-import skills/git-workflow/SKILL.md}}
+{{#runtime-import skills/github/SKILL.md}}
 
 Preserve PR evidence from the local verdict artifacts only. Fold AC coverage, test evidence, QA evidence, UI validation evidence, known gaps, preview links, and spec gaps into the allowed template sections as concise reviewer-facing evidence. Do not include CI/lint/typecheck/test command summaries in the PR body; CI runs tests, and reviewer-visible evidence should come from artifacts, preview/baseline links, screenshots, reproductions, or linked specs. Do not include AI-assistant attribution in commit messages, PR text, or generated artifacts.
 
