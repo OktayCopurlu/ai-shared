@@ -60,6 +60,7 @@ Load the `reviewing-code` skill and run it on the PR diff.
 - Use `review-only` mode.
 - Scale depth based on diff size from step 1.
 - All 4 layers: surface correctness, test coverage gaps, bounded refactors, architecture signals.
+- Do not re-run unit tests, the type-checker, or the linter here — those gate in CI and are read as status in step 4. Review what those gates cannot prove: requirements coverage, logic, and behavior.
 
 ### 4. Functional Validation
 
@@ -179,3 +180,4 @@ Keep the block terse. The goal is a daily nudge toward senior-level behaviors, n
 - Do not mark UI/browser validation blocked after one failed attempt. Use the `validating-ui` recovery protocol and report the attempts.
 - Do not claim "events fire correctly" without showing payload evidence from console or network.
 - When the preview is not available, still complete steps 1–3 and try local/component fallback paths before marking functional validation blocked.
+- Do not re-run unit tests, type-check, or lint as a review step — they already passed in CI before the PR reached review (step 4 reads their status). Investigate a gate only when CI reports it failing.
