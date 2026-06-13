@@ -164,8 +164,7 @@ Use this when the input is local staged/unstaged changes, changed files in the w
 Behavior:
 
 - findings still come first
-- Layer 1 issues may be fixed inline when they are obvious and low-risk
-- Layer 2 may hand off to `test` or `test-driven-development`, or be fixed in the same pass when appropriate
+- do not automatically edit code or write tests; report all findings and proposed fixes first and wait for the user's explicit instruction to apply them
 - keep fixes scoped to the current change only
 
 ## Mode Selection Rules
@@ -181,7 +180,7 @@ Determine mode in this order:
 
 Scan every changed file for mechanical issues. Load `applying-coding-style` first — naming and comment rules come from there.
 
-**Output:** File, line, one-line fix. In `self-review`, apply directly when confident. In `review-only`, report the fix without editing. Flag when ambiguous.
+**Output:** File, line, one-line fix. Report findings and proposed fixes first; never apply fixes directly unless the user explicitly instructs you to do so. Flag when ambiguous.
 
 ## Layer 2 — Test Coverage Gaps
 
@@ -189,7 +188,7 @@ For every changed function/component, check the test file.
 
 **Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on, hand-rolled stub components that re-implement production logic, single `it` blocks with many unrelated assertions, hardcoded fixture values duplicated in expectations, optional chaining inside `expect(...).toBe(...)` that can pass as `undefined === undefined`.
 
-**Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `test-driven-development` when in scope.
+**Output:** `[file] missing test for: <scenario>`. Describe the gap; in both modes, do not write tests unless the user explicitly requests it.
 
 **When Layer 2 is N/A:** docs-only changes, formatting-only changes, generated files, config/types changes with no behavior impact, or explicitly temporary experiment code that should not drive new permanent coverage. State `N/A — no persistent behavior change to cover.`
 
