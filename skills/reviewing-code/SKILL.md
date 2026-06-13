@@ -297,7 +297,8 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
 - Do not suggest changes to files outside the PR diff.
 - Do not treat generated files, lockfiles, snapshots, docs, or styles as automatically safe; inspect their changed hunks too, then mark Layer 2 as N/A when appropriate.
-- Do not repeat findings already covered by lint or type-check errors.
+- Review reads the diff; it does not run gates. Do not run the linter, type-checker, or test suite as a review step — in `review-only` mode CI already passed them before the PR, and in `self-review` mode `git-workflow` runs them as a separate pre-commit step. Read the existing CI/gate status instead, and only dig into a gate that is actually failing.
+- Do not repeat findings already covered by lint or type-check errors — those gates own mechanical correctness; review covers what they cannot.
 - Load `applying-coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
 - When called from the `/address-review` prompt, run after triaging Copilot comments as an additional pass.
@@ -307,6 +308,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 | Rationalization | Reality |
 |---|---|
 | "The tests pass, so it's fine" | Tests don't catch naming issues, dead code, architecture drift, or security holes. |
+| "Let me run the tests, lint, and type-check first to be safe" | Those gates already passed in CI before the PR reached review — re-running them burns minutes and surfaces nothing new. Read CI status; spend the budget on what gates can't catch. |
 | "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling accumulate silently. |
 
 ## Red Flags
