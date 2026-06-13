@@ -28,6 +28,45 @@ All skills live in `~/.ai-shared/skills/`. Other repos see them via symlinks —
 
 Prune memory notes that have been codified, are stale (30+ days, no recurrence), or are project-specific.
 
+## Memory Lifecycle
+
+Memory notes in `/memories/` are durable but not eternal. Without a lifecycle, stale advice accumulates and starts to mislead — agents follow notes that describe tool surfaces, environments, or workflows that no longer exist.
+
+Three lightweight rules keep `/memories/` honest. They run during normal capture and pruning passes — no separate maintenance ritual is required.
+
+### Last-verified marker
+
+When you add or update a memory note that asserts something about a tool surface, command, configuration, or external service, append a trailing marker on the same bullet so future passes can age it:
+
+```
+- gh CLI `--web` flag opens the PR in the browser — verified 2026-05-13
+```
+
+Apply this to factual claims that can go stale: MCP tool names, CLI flags, API responses, environment URLs, file paths in other repos, OAuth quirks, version-pinned behavior.
+
+Do not bother marking subjective preferences ("user prefers short replies") or stable general principles ("never amend after approval"). The marker is a staleness signal, not a timestamp on everything.
+
+### Decay
+
+When you read a marked note that's older than ~90 days during a real task and you don't end up using it, do nothing — the marker stays. If you read it and the claim looks wrong now, treat it as drift:
+
+1. finish the user task first
+2. then either re-verify and refresh the marker date, or strike the note in the same pass
+
+Notes without a marker that haven't been touched in 30+ days and never recur in practice are pruning candidates. Don't sweep `/memories/` proactively — wait until you're already editing the file for another reason, then drop the dead lines.
+
+Codified notes — the ones that became a skill, prompt, or reference — should be removed from `/memories/` once the codified version is in place. Memory is the staging area; keeping a duplicate after codification fragments the source of truth.
+
+### Contradiction check
+
+Before writing a new memory note, scan the relevant file for any line that makes a competing claim about the same tool, behavior, or workflow. If you find one:
+
+- if the new observation supersedes the old: replace the old line, do not stack a contradictory note next to it
+- if the contexts are actually different: keep both, but make the scope of each explicit on the line itself
+- if you can't tell: ask the user before persisting either version
+
+Stacked contradictions in `/memories/` quietly poison future sessions — the agent will weight whichever line it reads first and act confidently on outdated advice.
+
 ## Tool Drift While Using Skills
 
 When using a tool-adapter skill such as `playwright-mcp`, `github-mcp`, or `atlassian-mcp`, watch for runtime drift:
