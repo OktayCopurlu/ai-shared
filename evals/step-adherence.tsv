@@ -10,3 +10,7 @@ ui-validation-multistep-flow|validating-ui|validate this multi-step wizard UI|fo
 playwright-snapshot-first|playwright-mcp|fill this web form|Always snapshot before interacting
 skill-drift-codify|skill-evolution|this skill's MCP tools drifted|Prefer updating selection heuristics.*representative examples over maintaining exhaustive tool inventories
 skill-evolution-eval-gate|skill-evolution|update an existing skill workflow step|If the change alters activation language or required workflow steps, add or update deterministic rows under `evals/`
+structure-default-one-pr|structuring-prs|should this be one PR or several|[Dd]efault to one PR
+structure-verify-identical|structuring-prs|split this PR into two|byte-identical
+structure-force-with-lease|structuring-prs|split this PR into two|force-with-lease
+structure-repoint-base|structuring-prs|split this PR into two|[Rr]e-point the feature PR

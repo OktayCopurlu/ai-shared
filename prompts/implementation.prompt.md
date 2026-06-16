@@ -39,7 +39,7 @@ If the ticket is a code workflow:
 
 ### Task Shape and Context
 
-For large, cross-layer, or under-specified tickets, follow `~/.ai-shared/references/work-shaping.md` to break work into vertical slices before implementing. Skip shaping for small, clear, single-slice work. Treat unresolved product/design/architecture choices as human-in-loop blockers, not details to invent.
+For large, cross-layer, or under-specified tickets, follow `~/.ai-shared/references/work-shaping.md` to break work into vertical slices before implementing. Skip shaping for small, clear, single-slice work. Treat unresolved product/design/architecture choices as human-in-loop blockers, not details to invent. Once the work is sliced, use the `structuring-prs` skill to decide how it lands as pull requests — one PR or a stack.
 
 ### Workspace and Branch Rules
 
