@@ -23,7 +23,7 @@ on:
 
 engine:
   id: copilot
-  model: gemini-3-flash
+  model: claude-opus-4.8?effort=high
 
 max-runs: 120
 max-effective-tokens: 8M

@@ -27,7 +27,7 @@ on:
 
 engine:
   id: copilot
-  model: gemini-3-flash
+  model: gemini-3.1-pro-preview
 
 max-runs: 80
 max-effective-tokens: 5M

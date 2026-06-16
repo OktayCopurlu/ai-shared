@@ -28,7 +28,7 @@ on:
 # Org-wide token is already provisioned, so the Copilot engine needs no extra secret.
 engine:
   id: copilot
-  model: gemini-3-flash
+  model: gemini-3.1-pro-preview
 
 # Keep exploratory phases from growing unbounded contexts. Override only when a
 # ticket proves this ceiling is too small for a specific phase.
