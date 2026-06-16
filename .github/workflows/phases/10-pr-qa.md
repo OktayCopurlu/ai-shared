@@ -14,7 +14,7 @@ This is a validator phase. Do not edit code, tests, PR metadata, package files, 
 
 ## Skill References
 
-Use `manual-qa` for PR-environment QA structure, `github-mcp` for PR/preview metadata when available, and `playwright-mcp` for browser interaction or preview URL inspection. Verify tracking/analytics through observable browser-side console or network evidence.
+Use `manual-qa` for PR-environment QA structure, `github-mcp` for PR/preview metadata when available, and `playwright-cli` from bash for browser interaction or preview URL inspection. Verify tracking/analytics through observable browser-side console or network evidence.
 
 ### Skill imports (gh-aw)
 
@@ -22,7 +22,6 @@ In gh-aw a skill that is only mentioned is not read. Import the skills above so 
 
 {{#runtime-import skills/manual-qa/SKILL.md}}
 {{#runtime-import skills/github/SKILL.md}}
-{{#runtime-import skills/playwright-mcp/SKILL.md}}
 
 ## Inputs
 

@@ -25,8 +25,15 @@ on:
         type: string
         default: "0"
 
-# Org-wide token is already provisioned, so the default Copilot engine needs no extra secret.
-engine: copilot
+# Org-wide token is already provisioned, so the Copilot engine needs no extra secret.
+engine:
+  id: copilot
+  model: gemini-3-flash
+
+# Keep exploratory phases from growing unbounded contexts. Override only when a
+# ticket proves this ceiling is too small for a specific phase.
+max-runs: 80
+max-effective-tokens: 5M
 
 # The agent runs read-only. All writes happen through safe-outputs, never the agent itself.
 # `actions: read` lets the agent download the previous phase's pipeline-state.tgz artifact.
@@ -116,6 +123,26 @@ steps:
       if curl -fsS -u "$JIRA_USER_EMAIL:$JIRA_API_TOKEN" -H "Accept: application/json" \
            "$JIRA_BASE_URL/rest/api/2/issue/$key?fields=$fields" -o jira-in/ticket.json; then
         echo "Pre-fetched Jira issue $key to jira-in/ticket.json ($(wc -c < jira-in/ticket.json) bytes)."
+        jq -r --arg key "$key" '
+          def text: if type == "string" then . else tostring end;
+          [
+            "# Jira Ticket Summary",
+            "",
+            "- Key: " + (.key // $key),
+            "- Summary: " + (.fields.summary // ""),
+            "- Status: " + (.fields.status.name // ""),
+            "- Issue type: " + (.fields.issuetype.name // ""),
+            "- Priority: " + (.fields.priority.name // ""),
+            "",
+            "## Description",
+            ((.fields.description // "") | text),
+            "",
+            "## Recent comments",
+            ((.fields.comment.comments // []) | .[-5:] | map("- " + ((.author.displayName // "unknown") + ": " + (((.body // "") | text) | gsub("\r"; "") | gsub("\n+"; " ")))) | join("\n"))
+          ] | join("\n")
+        ' jira-in/ticket.json > jira-in/ticket-summary.md
+        jq -r '.. | strings | scan("https?://[^[:space:]<>)\\\"]+")' jira-in/ticket.json | sort -u > jira-in/linked-urls.txt
+        echo "Wrote compact ticket summary and linked URL index for the agent."
       else
         echo "Could not fetch Jira issue $key (check token/email/permissions); the agent will report a blocker."
         rm -f jira-in/ticket.json
@@ -180,6 +207,7 @@ tools:
   github:
     toolsets: [repos, issues, pull_requests]
   playwright:
+    mode: cli
 
 timeout-minutes: 60
 ---

@@ -14,17 +14,13 @@ Separate fix request files are not expected from this phase. If the intake canno
 
 ## Skill References
 
-Use source-specific context-reading skills when links or source types appear. For Jira, read the pre-fetched `jira-in/ticket.json` described in the preamble's "Talking to the Jira Ticket" rather than calling an Atlassian MCP (you hold no Jira token in CI); the `atlassian-mcp` skill below is for understanding Jira field structure. Use `figma-mcp` for Figma, `contentful` for CMS entries, and `google-drive` for Google Docs/Sheets. Use `playwright-mcp` only when the required context is a browser-only or authenticated web page. If a required tool path is unavailable, record the access/tooling blocker.
+Use source-specific context-reading only when links or source types appear. For Jira, read the compact `jira-in/ticket-summary.md` and `jira-in/linked-urls.txt` first, then fall back to the pre-fetched `jira-in/ticket.json` only for fields missing from the summary. Do not call an Atlassian MCP or curl Jira yourself; you hold no Jira token in CI.
 
-### Skill imports (gh-aw)
+For linked sources, use the narrowest available route: Figma only for actual Figma links, Contentful only for Contentful entries, Google Drive only for Drive/Docs/Sheets links, and Playwright only for browser-only or authenticated web pages. If a required tool path is unavailable, record the access/tooling blocker.
 
-In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time; MCP-backed skills also need their server configured in the workflow frontmatter `mcp-servers:`. Pin `@main` to a tag or SHA for reproducible runs.
+### Prompt Size Policy
 
-{{#runtime-import skills/atlassian-mcp/SKILL.md}}
-{{#runtime-import skills/figma-mcp/SKILL.md}}
-{{#runtime-import skills/contentful/SKILL.md}}
-{{#runtime-import skills/google-drive/SKILL.md}}
-{{#runtime-import skills/playwright-mcp/SKILL.md}}
+Do not import full source-specific skill files into this always-on phase. This phase should stay cheap and extract facts, not learn every integration in advance. Use the compact routing guidance above and block with a precise missing-tool or missing-data reason when a specialized integration is required but unavailable.
 
 ## Inputs
 
@@ -34,12 +30,19 @@ ticket plus all linked context. See the artifact state contract in `shared-pream
 
 ## Required Work
 
-1. Read the ticket. In this gh-aw run a pre-step has already fetched it to `jira-in/ticket.json` (standard Jira REST v2 JSON): read the summary, description, status, comments, issue links, and attachments from that file. If it is missing or empty the fetch failed — keep the issue key from the `ticket` input and record a blocker if the ticket body is required. Do not call an Atlassian MCP or curl Jira yourself.
-2. Read all linked context required by the ticket: Figma, Contentful, Confluence/wiki pages, linked tickets, experiments, preview URLs, docs, and other URLs.
+1. Read the ticket. Prefer `jira-in/ticket-summary.md` and `jira-in/linked-urls.txt`; use `jira-in/ticket.json` (standard Jira REST v2 JSON) only for fields missing from the compact files. If both are missing or empty, keep the issue key from the `ticket` input and record a blocker if the ticket body is required.
+2. Read linked context required by the ticket: Figma, Contentful, Confluence/wiki pages, linked tickets, experiments, preview URLs, docs, and other URLs. Do not chase links that are not relevant to acceptance criteria, implementation constraints, or validation targets.
 3. For Figma links, extract structured specs. Do not pass only the URL. Include bounds, width, height, layout, spacing, typography, colors, borders, radius, effects, content, states, interactions, responsive behavior, and frame screenshots as secondary context when available.
 4. Normalize acceptance criteria into stable IDs such as `AC-1`, `AC-2`.
 5. Record constraints, non-goals, risks, rollout/flag details, and validation targets.
 6. If required linked context is inaccessible or a human-owned decision blocks progress, write a blocker and return `blocked`.
+
+## Exploration Limits
+
+- Do not inspect target repository implementation files unless the ticket explicitly names files/components or a linked context item cannot be understood without checking the code.
+- When repository inspection is necessary, use at most 3 targeted searches and read at most 5 source files. Prefer `rg` with file globs and line context over broad `find | xargs grep` scans.
+- Batch related shell reads into as few turns as possible. Stop exploring once acceptance criteria, linked context, constraints, and validation targets can be written.
+- Record uncertain implementation details as planning inputs for phase 2 rather than investigating them here.
 
 ## Phase Checklist
 

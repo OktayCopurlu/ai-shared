@@ -28,7 +28,12 @@ on:
         type: boolean
         default: true
 
-engine: copilot
+engine:
+  id: copilot
+  model: gemini-3-flash
+
+max-runs: 80
+max-effective-tokens: 5M
 
 permissions:
   contents: read
@@ -113,6 +118,7 @@ tools:
   github:
     toolsets: [repos, issues, pull_requests]
   playwright:
+    mode: cli
 
 timeout-minutes: 60
 ---

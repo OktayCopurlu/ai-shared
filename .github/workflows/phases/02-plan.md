@@ -14,17 +14,11 @@ This phase is read-only. Do not change source files, tests, package files, or gi
 
 ## Skill References
 
-Read guidance from `applying-coding-style`, `test-driven-development`, `a11y-audit`, `security-hardening`, and `validating-ui` as planning inputs only when the ticket touches those domains. Treat that guidance as constraints to carry into the plan, affected-files, and validation artifacts: expected coding style, test coverage, accessibility, security, UI fidelity, and recovery requirements. Do not run implementation, test-writing, review, browser validation, security-hardening, or fixer workflows in this phase.
+Use domain guidance as compact planning constraints only when the ticket touches those domains: coding style, test coverage, accessibility, security, UI fidelity, and recovery requirements. Do not run implementation, test-writing, review, browser validation, security-hardening, or fixer workflows in this phase.
 
-### Skill imports (gh-aw)
+### Prompt Size Policy
 
-In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. Pin `@main` to a tag or SHA for reproducible runs.
-
-{{#runtime-import skills/applying-coding-style/SKILL.md}}
-{{#runtime-import skills/test-driven-development/SKILL.md}}
-{{#runtime-import skills/a11y-audit/SKILL.md}}
-{{#runtime-import skills/security-hardening/SKILL.md}}
-{{#runtime-import skills/validating-ui/SKILL.md}}
+Do not import full implementation, testing, accessibility, security, or UI-validation skill files into this planning phase. The implementer and validators import the detailed domain skills when they actually execute the work. Keep this phase focused on a compact plan and explicit validation targets.
 
 ## Inputs
 
@@ -44,6 +38,14 @@ plus target repository instructions, scripts, nearby code, and existing tests wh
 5. Decide the test strategy, including domain invariants and business rules that should fail if broken.
 6. Decide QA and UI validation targets from the ACs, linked context, and Figma specs.
 7. Identify unresolved product/design/architecture decisions. Do not invent answers.
+
+## Exploration Limits
+
+- Start from `.pipeline/context-packet/` and the ticket-derived validation targets before searching the repository.
+- Read repo instructions and package scripts once, then use targeted `rg` searches. Avoid broad full-repo scans unless a targeted search fails.
+- Inspect the smallest representative set of files needed for a plan: normally no more than 10 source/test files. If more context is necessary, explain why in `implementation-plan/notes.md`.
+- Prefer identifying likely files/modules and validation commands over proving the full implementation path. Save detailed code reading for phase 3.
+- Batch file reads and searches to reduce model turns.
 
 ## Phase Checklist
 
