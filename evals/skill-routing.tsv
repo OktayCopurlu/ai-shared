@@ -8,3 +8,6 @@ amplitude-event|amplitude-analytics|check whether this Amplitude event fired|Amp
 contentful-entry|contentful|read this Contentful entry|Contentful CMS.*CMS entries.*READ-ONLY
 ui-validation|validating-ui|validate the UI changes in browser before PR|Frontend UI validation.*UI impact.*browser-level validation
 browser-automation|playwright-mcp|click through this wizard on a website|Web automation.*clicking buttons.*website
+pr-one-or-many|structuring-prs|should this ticket be one PR or several|one PR or a stack
+plan-multi-pr|structuring-prs|plan this ticket as multiple PRs|planning a ticket as multiple PRs
+split-existing-pr|structuring-prs|can you split this PR into two|split.*PR.*refactor

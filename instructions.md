@@ -37,7 +37,7 @@ Skills in `~/.ai-shared/skills/` activate by task context:
 
 - **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first), `debugging` (breakage)
 - **Quality**: `reviewing-code` (4-layer) before PRs, `manual-qa` (ticket/diff QA execution), `security-hardening` (input/auth/deps)
-- **Deliver**: `git-workflow` (PR pipeline), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
+- **Deliver**: `git-workflow` (PR pipeline), `structuring-prs` (one PR vs a stack: plan multi-PR work or split a big PR), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
 - **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
 - **Tools**: `atlassian-mcp` (Jira/Confluence), `github` (PRs/issues via `gh` CLI), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
 - **Browser**: default to the built-in VS Code integrated browser (`open_browser_page`, `run_playwright_code`, etc.) for most automation; load `playwright-mcp` for browser routing/tool details, plus `validating-ui` + `a11y-audit` (UI quality)

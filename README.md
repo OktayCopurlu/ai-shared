@@ -65,6 +65,7 @@ That's it. All three tools now read from this repo.
 │   ├── reviewing-code/         # 4-layer heuristic code review
 │   ├── security-hardening/     # OWASP, auth, secrets, dependencies
 │   ├── skill-evolution/        # Learn, stage, codify reusable skills
+│   ├── structuring-prs/        # One PR vs a stack: plan multi-PR work or split a big PR
 │   ├── test-driven-development/ # Test-driven development cycle
 │   └── validating-ui/          # Browser-level UI validation
 ├── self-evolution/       # Internal research automation and run history
