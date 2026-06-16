@@ -26,7 +26,7 @@ engine:
   model: claude-opus-4.8?effort=high
 
 max-runs: 120
-max-effective-tokens: 8M
+max-effective-tokens: 25M
 
 permissions:
   contents: read

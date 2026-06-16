@@ -33,7 +33,7 @@ engine:
   model: claude-opus-4.8?effort=high
 
 max-runs: 80
-max-effective-tokens: 5M
+max-effective-tokens: 15M
 
 permissions:
   contents: read
@@ -116,8 +116,6 @@ tools:
   web-fetch:
   github:
     toolsets: [repos, issues, pull_requests]
-  playwright:
-    mode: cli
 
 timeout-minutes: 60
 ---

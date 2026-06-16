@@ -206,8 +206,6 @@ tools:
   web-fetch:
   github:
     toolsets: [repos, issues, pull_requests]
-  playwright:
-    mode: cli
 
 timeout-minutes: 60
 ---
