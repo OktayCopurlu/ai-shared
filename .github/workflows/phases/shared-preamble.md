@@ -64,6 +64,25 @@ a `.pipeline/workspace.patch` snapshot of all accumulated code changes.
   longer exist; the ticket arrives as the `ticket` workflow input and prior state arrives
   via the downloaded artifact.
 
+## Token Discipline — Read Only What the Ticket Needs
+
+Your context window is re-sent on every turn, so every file you open is paid for again
+and again. Wasteful reads are the single biggest cause of runaway token usage in this
+pipeline. Keep your footprint tight:
+
+- **Work only in the target.** All code analysis and edits happen in the checked-out
+  product repo (for the POC, `./on-frontend-workspace`) and under `.pipeline/`. Go there
+  directly — do not explore to "find" it.
+- **Never open this pipeline's own machinery.** Do not read `*.lock.yml`, the
+  `.github/workflows/` sources, or the `experiment/` directory of the `ai-shared` repo.
+  They are large generated/meta files with nothing to do with the ticket and will blow
+  your budget.
+- **No broad filesystem scans.** Do not run `find` / `ls -R` / `grep -r` across the repo
+  root, `/home/runner`, `node_modules`, or build output. Scope every search to the one
+  directory you actually need.
+- **Read each file once.** Do not re-open a file you have already read this run; rely on
+  what you already have in context.
+
 ## Output Contract
 
 - Every phase writes `.pipeline/verdicts/<NN>-<phase-id>.json` before it ends, and that file must validate against the imported `phase-output.schema.json`.

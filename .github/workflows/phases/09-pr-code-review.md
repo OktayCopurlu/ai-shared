@@ -14,11 +14,11 @@ This is a validator phase. Do not edit files or mutate the PR. Required changes 
 
 ## Skill References
 
-Use `github-mcp` to read PR metadata/diff when available and `reviewing-code` for the 4-layer review. Add `security-hardening` when the PR touches sensitive boundaries.
+Use the `gh` CLI (see the `github` skill) to read PR metadata/diff and `reviewing-code` for the 4-layer review. Add `security-hardening` when the PR touches sensitive boundaries.
 
 ### Skill imports (gh-aw)
 
-In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. The `github-mcp` capability maps to the `github` skill and gh-aw's built-in GitHub tools. Pin `@main` to a tag or SHA for reproducible runs.
+In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. GitHub reads use the `gh` CLI (the `github` skill) via bash — no GitHub MCP server is configured. Pin `@main` to a tag or SHA for reproducible runs.
 
 {{#runtime-import skills/github/SKILL.md}}
 {{#runtime-import skills/reviewing-code/SKILL.md}}

@@ -25,7 +25,13 @@ on:
         type: string
         default: "0"
 
-engine: copilot
+engine:
+  id: copilot
+  model: gemini-3.1-pro-preview
+
+max-runs: 80
+max-turns: 18
+max-effective-tokens: 5M
 
 permissions:
   contents: read
@@ -163,10 +169,9 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  web-fetch:
-  github:
-    toolsets: [repos, issues, pull_requests]
+  github: false
   playwright:
+    mode: cli
 
 timeout-minutes: 60
 ---

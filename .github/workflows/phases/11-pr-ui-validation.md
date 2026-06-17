@@ -14,7 +14,7 @@ This is a validator phase. Do not edit code, tests, snapshots, assets, PR metada
 
 ## Skill References
 
-Use `validating-ui` for PR UI validation, `figma-mcp` for Figma specs, `playwright-mcp` for browser measurement and preview URL inspection, and `a11y-audit` for accessibility checks.
+Use `validating-ui` for PR UI validation, `figma-mcp` for Figma specs, `playwright-cli` from bash for browser measurement and preview URL inspection, and `a11y-audit` for accessibility checks.
 
 ### Skill imports (gh-aw)
 
@@ -22,7 +22,6 @@ In gh-aw a skill that is only mentioned is not read. Import the skills above so 
 
 {{#runtime-import skills/validating-ui/SKILL.md}}
 {{#runtime-import skills/figma-mcp/SKILL.md}}
-{{#runtime-import skills/playwright-mcp/SKILL.md}}
 {{#runtime-import skills/a11y-audit/SKILL.md}}
 
 ## Inputs

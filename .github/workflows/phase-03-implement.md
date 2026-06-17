@@ -21,7 +21,13 @@ on:
         type: string
         default: "0"
 
-engine: copilot
+engine:
+  id: copilot
+  model: claude-opus-4.8?effort=high
+
+max-runs: 120
+max-turns: 25
+max-effective-tokens: 25M
 
 permissions:
   contents: read
@@ -98,10 +104,9 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  web-fetch:
-  github:
-    toolsets: [repos, issues, pull_requests]
+  github: false
   playwright:
+    mode: cli
 
 timeout-minutes: 60
 ---

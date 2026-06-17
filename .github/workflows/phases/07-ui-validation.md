@@ -14,7 +14,7 @@ This is a validator phase. Do not edit code, tests, snapshots, assets, package f
 
 ## Skill References
 
-Use `validating-ui` for browser-level UI validation, `a11y-audit` for accessibility semantics and keyboard/focus behavior, `figma-mcp` for Figma specs, and `playwright-mcp` for browser interaction and measurement.
+Use `validating-ui` for browser-level UI validation, `a11y-audit` for accessibility semantics and keyboard/focus behavior, `figma-mcp` for Figma specs, and `playwright-cli` from bash for browser interaction and measurement.
 
 ### Skill imports (gh-aw)
 
@@ -23,7 +23,6 @@ In gh-aw a skill that is only mentioned is not read. Import the skills above so 
 {{#runtime-import skills/validating-ui/SKILL.md}}
 {{#runtime-import skills/a11y-audit/SKILL.md}}
 {{#runtime-import skills/figma-mcp/SKILL.md}}
-{{#runtime-import skills/playwright-mcp/SKILL.md}}
 
 ## Inputs
 
@@ -39,7 +38,7 @@ context packet (`acceptance-criteria.json`, `figma-specs.json`, `validation-targ
 1. Determine whether UI validation applies. It applies when UI changed, layout/styling changed, a component changed, or Figma exists.
 2. Use browser automation for local UI validation when a surface is available.
 3. Validate desktop and mobile when the UI is responsive or user-facing.
-4. Do not skip mobile after one failed attempt. Use Playwright viewport/device emulation and record recovery attempts.
+4. Do not skip mobile after one failed attempt. Use `playwright-cli` viewport/device emulation and record recovery attempts.
 5. Figma validation must use extracted specs: bounds, dimensions, spacing, typography, colors, borders, radius, layout, responsive behavior, content, states, and interactions.
 6. Screenshots may support evidence but must not be the source of truth. Do not compare by eye as the primary method.
 7. Compare rendered computed styles, DOM/layout measurements, and behavior against Figma specs and ACs.
