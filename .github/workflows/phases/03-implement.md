@@ -38,7 +38,7 @@ repository instructions and relevant code/tests.
 ## Required Work
 
 1. Verify the target repository and branch are correct before editing.
-2. Read the relevant existing code and tests before changing files.
+2. Start from `implementation-plan/affected-files.json` and open those files first; read the relevant existing code and tests before changing them. Trust the plan's file list — do not re-explore the repository from scratch. Widen the search only when a file you genuinely need is missing from the plan, and keep it targeted (no broad `find`/`grep -r` across the repo root).
 3. Apply the implementation plan and any unresolved fix requests.
 4. Follow local coding style and existing patterns.
 5. For behavior changes, add or update tests unless the plan explicitly marks the change as short-lived experiment code and explains why test updates are intentionally skipped.

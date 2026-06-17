@@ -22,10 +22,11 @@ on:
 
 engine:
   id: copilot
-  model: claude-opus-4.8?effort=high
+  model: gemini-3.1-pro-preview
 
 max-runs: 80
-max-effective-tokens: 15M
+max-turns: 18
+max-effective-tokens: 10M
 
 permissions:
   contents: read
@@ -102,9 +103,7 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  web-fetch:
-  github:
-    toolsets: [repos, issues, pull_requests]
+  github: false
 
 timeout-minutes: 60
 ---

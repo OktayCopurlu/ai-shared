@@ -33,6 +33,7 @@ engine:
 # Keep exploratory phases from growing unbounded contexts. Override only when a
 # ticket proves this ceiling is too small for a specific phase.
 max-runs: 80
+max-turns: 18
 max-effective-tokens: 5M
 
 # The agent runs read-only. All writes happen through safe-outputs, never the agent itself.
@@ -203,9 +204,8 @@ tools:
   # plumbing (download artifact, git apply, tar). Narrow to an explicit allowlist if fixed.
   bash: [":*"]
   edit:
+  github: false
   web-fetch:
-  github:
-    toolsets: [repos, issues, pull_requests]
 
 timeout-minutes: 60
 ---

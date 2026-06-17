@@ -44,9 +44,9 @@ Automates the full flow from local changes to a reviewed pull request.
 
 ### 4. Create PR
 
-- Use available GitHub MCP tools to create the pull request
+- Use the `gh` CLI to create the pull request (`gh pr create`)
 - Title format: `Brief description` (e.g., `Add product franchise chips to PDP purchase pod`) — the ticket ID is prepended automatically from the branch name
-- Assign the PR to `OktayCopurlu` using the appropriate GitHub MCP issue or pull request management tool
+- Assign the PR to `OktayCopurlu` using the `gh` CLI (`gh pr edit --add-assignee OktayCopurlu`)
 - Before drafting or updating the PR body, read the Jira ticket when available and read the current PR body when it already exists; use those sources plus current repo evidence to keep real links and preserve valid generated or user-added instructions
 - Keep the Preview and Jira ticket links in the format described in step 5
 - For preview or Storybook links, use the current repo's real host and path format from one of these sources: the existing PR body, a recent PR in the same repo, repo docs/workflows, or a repo-specific URL reference. Do not hardcode one repo's URL pattern into this shared skill
@@ -83,7 +83,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 
 ### 6. Request Review
 
-- Use available GitHub MCP tools to request Copilot review and fetch review comments
+- Use the `gh` CLI to request Copilot review and fetch review comments
 - To address review feedback, use the `/address-review` prompt
 
 ## Guardrails

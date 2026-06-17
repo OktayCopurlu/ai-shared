@@ -33,6 +33,7 @@ engine:
   model: claude-opus-4.8?effort=high
 
 max-runs: 80
+max-turns: 18
 max-effective-tokens: 15M
 
 permissions:
@@ -113,9 +114,7 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  web-fetch:
-  github:
-    toolsets: [repos, issues, pull_requests]
+  github: false
 
 timeout-minutes: 60
 ---

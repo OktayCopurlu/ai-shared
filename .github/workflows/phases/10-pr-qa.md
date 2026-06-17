@@ -14,11 +14,11 @@ This is a validator phase. Do not edit code, tests, PR metadata, package files, 
 
 ## Skill References
 
-Use `manual-qa` for PR-environment QA structure, `github-mcp` for PR/preview metadata when available, and `playwright-cli` from bash for browser interaction or preview URL inspection. Verify tracking/analytics through observable browser-side console or network evidence.
+Use `manual-qa` for PR-environment QA structure, the `gh` CLI (see the `github` skill) for PR/preview metadata, and `playwright-cli` from bash for browser interaction or preview URL inspection. Verify tracking/analytics through observable browser-side console or network evidence.
 
 ### Skill imports (gh-aw)
 
-In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time; MCP-backed skills also need their server configured in the workflow frontmatter `mcp-servers:`. The `github-mcp` capability maps to the `github` skill and gh-aw's built-in GitHub tools. Pin `@main` to a tag or SHA for reproducible runs.
+In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. GitHub reads use the `gh` CLI (the `github` skill) via bash — no GitHub MCP server is configured. Pin `@main` to a tag or SHA for reproducible runs.
 
 {{#runtime-import skills/manual-qa/SKILL.md}}
 {{#runtime-import skills/github/SKILL.md}}
