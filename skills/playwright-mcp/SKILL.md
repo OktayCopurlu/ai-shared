@@ -200,6 +200,25 @@ browser_navigate → https://<USER>:<PASS>@<preview-host>/<path>
 
 Follow the project-specific reference for the actual credentials.
 
+### Cloudflare Zero Trust staging (`*.stg.int.on.com`)
+
+Some previews are gated by Cloudflare Access (Zero Trust), not basic auth. Embedding `user:pass@`
+does NOT work here. Do not send the service token as a request header (it leaks to every origin).
+Use a domain-scoped `CF_Authorization` cookie minted from the permanent service token:
+
+```
+1. Mint/refresh the cookie (reads the token from ~/.ai-shared/.secrets):
+   ~/.ai-shared/skills/playwright-mcp/scripts/refresh-cf-cookie.sh "https://on-shop-<PR>.stg.int.on.com/"
+2. Apply it: either restart the Playwright MCP server (it reads --storage-state from mcp.json),
+   or inject into the live context with page.context().addCookies(...) — no restart.
+3. browser_navigate → the Zero Trust URL, then snapshot. A real page title (not a CF login
+   screen) confirms access.
+```
+
+The cookie is scoped to the wildcard parent `.stg.int.on.com`, so one cookie covers every PR.
+It expires ~24h; re-run the helper when navigation starts hitting the CF login page.
+See `~/.ai-shared/references/on-frontend-urls.md` for full details.
+
 ### Debugging failed interactions
 
 When a click or fill doesn't work:
