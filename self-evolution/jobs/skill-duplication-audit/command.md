@@ -48,7 +48,7 @@ Audit these surfaces only:
 
 Do **not** touch:
 - `agents/*.agent.md` (composition layer, intentional reuse)
-- `decisions/`, `wins/` (personal logs)
+- `decisions/` (personal logs)
 - `self-evolution/` (runtime configs)
 - `evals/`, `docs/` (different lifecycles)
 

@@ -78,8 +78,7 @@ Experimental reference for the complete delivery pipeline step list. This captur
 | 3.44 | Manual QA | Rerun gates after QA fixes | If QA fixes changed code, rerun quality gates. | Clean result. |
 | 3.45 | Blocker | Stop on real blockers | Pause for contradictory requirements, inaccessible context, repo ambiguity, unsafe repo state, or missing credentials. | `pause-for-human`. |
 | 3.46 | Implement Output | Report implementation result | Summarize implementation, gates, QA, and any spec gaps. | Implementation result. |
-| 3.47 | Implement Output | Add Senior Reflection | Add a short 3-4 bullet senior reflection. | Reflection. |
-| 3.48 | Implement Output | Add wins or decision nudges | Add wins-log and decision-journal nudges when appropriate. | Closing note. |
+| 3.47 | Implement Output | Add decision nudge | Add a decision-journal nudge when appropriate. | Closing note. |
 | 4.1 | Open PR | Load git workflow | Apply commit, push, and PR rules. | PR workflow active. |
 | 4.2 | Open PR | Commit changes | Commit staged changes with a clear message. | Commit. |
 | 4.3 | Open PR | Push branch | Push the ticket branch. | Remote branch. |
@@ -87,7 +86,6 @@ Experimental reference for the complete delivery pipeline step list. This captur
 | 4.5 | Open PR | Write PR body | Use the git-workflow PR Description Template exactly. | Reviewer-ready PR body. |
 | 4.6 | Open PR | Avoid extra sections | Do not add standalone sections unless the repo documents them as convention. | Template discipline. |
 | 4.7 | Open PR | Request Copilot review | Ask Copilot to review the PR. | Automated review starts. |
-| 4.8 | Open PR | Add wins-log nudge | Remind the user to add a wins entry when the PR is non-trivial. | Closing note. |
 | 5.1 | Self-review | Identify PR input | Use PR URL or number and repo. | Review target. |
 | 5.2 | Self-review | Read GitHub context | Read PR description, diff, and linked issues. | PR context. |
 | 5.3 | Self-review | Extract Jira ID | Find the ticket ID from title, body, or branch name. | Requirement source. |
@@ -117,7 +115,6 @@ Experimental reference for the complete delivery pipeline step list. This captur
 | 5.27 | A/B Review | Verify control and treatment | Check variant rendering and variant tracking properties. | Variant verdict. |
 | 5.28 | Self-review Output | Write review report | Include context, AC table, code review, validation, recovery, tracking, and variants. | Full PR review. |
 | 5.29 | Self-review Output | Give verdict | Mark Pass, Pass with notes, or Fail. | Review result. |
-| 5.30 | Self-review Output | Add Senior Reflection | Add a short reviewer-lens reflection. | Closing note. |
 | 6.1 | Address Feedback | Fetch PR comments | Fetch Copilot review comments. | Comment list. |
 | 6.2 | Address Feedback | Read each comment | Read comment text and the referenced code context. | Evaluation context. |
 | 6.3 | Address Feedback | Evaluate comment validity | Decide whether the comment is valid, invalid, or partially valid. | Triage decision. |

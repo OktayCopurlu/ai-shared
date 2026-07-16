@@ -134,31 +134,9 @@ Pause for: contradictory requirements, inaccessible linked context, repository a
 
 Do not pause only because the correct implementation touches multiple files or shared interfaces.
 
-## Senior Reflection
-
-After reporting the implementation result, append a short **"🎯 Senior Reflection"** block at the very end of the response — 3–4 bullets max, rotating the lens based on the ticket type. Pull questions from `~/.ai-shared/references/senior-fundamentals.md`. Do not answer the questions yourself; surface them so the user can act on them as the human owner of the work.
-
-Default rotation for implementation work — pick the lenses that fit:
-
-- **Ownership** — Which metric will this move? Where and when will you check it post-ship (Sentry, analytics, user feedback)?
-- **Problem Framing** — Did the implementation surface anything that suggests we're solving the wrong problem, or solving it the wrong way?
-- **Spec Gaps** — Were there behaviors I had to invent because the spec was silent? Worth flagging back to the ticket?
-- **Technical Communication** — Does the PR description explain *why*, alternatives considered, and trade-offs — not just *what* changed?
-- **Scope / Saying No** — Did scope creep during implementation? Anything that should be a follow-up ticket instead of bundled here?
-
-Keep the block terse. The goal is a daily nudge toward senior-level behaviors, not a checklist ceremony.
-
-## Wins Log Nudge
-
-After the Senior Reflection block, append a single-line prompt:
-
-> 📝 **Wins log?** If this shipped something with real impact, glue work, or mentorship — add 1 line to `~/.ai-shared/wins/{year}.md`. Format: `YYYY-MM-DD — did X, with Y impact`. See `~/.ai-shared/references/wins-log.md`.
-
-Do not write the entry yourself — the user owns what counts as a win. Skip this nudge if the implementation was trivial (typo fix, dependency bump, no observable outcome).
-
 ## Decision Journal Nudge
 
-If the implementation involved a non-trivial technical decision (picked one tool/pattern over another, took a deliberate shortcut, diverged from convention, designed a contract other code will rely on), append a single-line prompt after the Wins Log nudge:
+If the implementation involved a non-trivial technical decision (picked one tool/pattern over another, took a deliberate shortcut, diverged from convention, designed a contract other code will rely on), append a single-line prompt:
 
 > 🧭 **Decision journal?** This involved a real trade-off. Consider 5 lines in `~/.ai-shared/decisions/{year}.md` (What / Context / Alternatives / Trade-off / Revisit). See `~/.ai-shared/references/decision-journal.md`.
 
