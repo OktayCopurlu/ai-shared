@@ -24,15 +24,19 @@ Be direct. Challenge vague or incomplete tickets. Prefer actionable rewrites ove
 
 ## Ticket Structure (small/medium tickets)
 
-**Context → Acceptance Criteria → Links (e.g. Figma, Confluence, Jira, PR etc.) (inline link) → Dev Note**
+**Context → Acceptance Criteria → inline Links → Dev Note**
 
-This is the default. Do not add extra sections unless they materially improve execution.
+This is the default for every engineering ticket. Keep relevant Figma, Confluence, Jira, PR, Contentful, and other resources as inline link lines after Acceptance Criteria; do not add a separate `Links` heading.
 
 - No separate "Goal" section — Context + ACs already cover it
 - No separate "Requirements" or "What to build" sections — fold into AC
 - Keep links inline (e.g. `**Design**: [label](url)`) — no separate "Links" or "Used by" section
 - Don't add "Depends on" lists — use Jira's issue links feature instead
 - Don't repeat the solution design doc in the ticket
+- Do not add `Open Questions`; ask the user concise questions before drafting when a decision blocks execution
+- Ticket titles must start with exactly one owning-platform prefix: `[FE]`, `[BE]`, or `[APP]`
+- Add the matching Jira label on creation or update: `Frontend`, `Backend`, or `App`
+- When it improves scanability, use a small number of emoji or color-emphasized headings/callouts for an important context, decision, risk, or spike outcome. Keep the same body order and do not add decoration by default.
 
 ```
 ## Context
@@ -46,6 +50,7 @@ This is the default. Do not add extra sections unless they materially improve ex
 - 4-7 items max for a small ticket
 
 **Design**: [Figma label](figma-url)
+**Related**: [DSC-1234](jira-url), [PR #123](pr-url)
 
 ## Dev Note
 - short, actionable engineering hints
@@ -54,7 +59,18 @@ This is the default. Do not add extra sections unless they materially improve ex
 - related PRs or tickets linked inline, e.g. "ShoeGrid is built in [DSC-2036](jira-link)"
 ```
 
-**Large/cross-team tickets** may add: Goal, Scope, Non-Goals, Dependencies/Risks. But don't force these on small tickets.
+For larger tickets, keep scope boundaries, dependencies, and risks concise in Context or Dev Note; do not introduce extra body sections.
+
+### Visual emphasis
+
+Use visual emphasis sparingly when it conveys meaning, following tickets such as [DSC-2493](https://onrunning.atlassian.net/browse/DSC-2493):
+
+- A blue/info callout or `💡` for important context or a design constraint
+- A yellow/warning callout or `⚠️` for a risk, dependency, or decision needed before implementation
+- A green/success callout or `✅` for a confirmed outcome or rollout condition
+- A `🔬` marker for a spike's investigation scope or expected result
+
+Do not use multiple colors or emojis merely to decorate the ticket. The core sections remain Context, Acceptance Criteria, inline Links, and Dev Note.
 
 ---
 
@@ -101,29 +117,10 @@ Do NOT use Dev Note for: acceptance criteria, scope, product decisions, open que
 
 ---
 
-## Open Questions (optional, only if needed)
-
-If the ticket has genuine ambiguity that blocks execution, add an **Open Questions** section below Dev Note:
-
-```
-## Open Questions
-- Should the warning appear for all locales or only EU?
-- What copy should we use when stock = 0 but the size still renders?
-```
-
-**Rules:**
-
-- **Only include if there are real, blocking ambiguities.** No forced content, no "just in case" questions.
-- **If everything is clear, omit the section entirely.** Do not add a placeholder.
-- **Flag, don't guess.** If something is unclear, surface it as an open question rather than inventing an answer in AC or Dev Note.
-- Each question should be answerable by PM, design, or another stakeholder — not something the engineer can resolve alone.
-
----
-
 ## Decision Policy
 
 - If core context is missing, ask up to 3 concise follow-up questions before drafting.
-- If the user explicitly wants a draft despite missing context, produce one with a clear **Missing Information** section.
+- If the user explicitly wants a draft despite missing context, preserve the three-section structure and state the unresolved decision briefly in Context.
 - If reviewing, do not fill factual gaps with assumptions.
 - If updating, preserve confirmed intent and flag conflicts before rewriting.
 
@@ -156,8 +153,21 @@ Be explicit: "This is too vague", "This needs scope boundaries", "This acceptanc
 
 ## Title Guidance
 
-**Good:** "Add low-stock messaging to PDP size selection and cart surfaces"
-**Bad:** "Improve stock logic", "Fix issue", "Update cart"
+Start every engineering ticket with its owning platform and use a concrete outcome:
+
+- **Good:** `[FE] Add low-stock messaging to PDP size selection and cart surfaces`
+- **Good:** `[BE] Return fallback recommendations when no exact match exists`
+- **Good:** `[APP] Show the no-recommendation result state`
+- **Bad:** `Add low-stock messaging to PDP size selection and cart surfaces`
+- **Bad:** `Improve stock logic`, `Fix issue`, `Update cart`
+
+When creating or updating a ticket, set the corresponding Jira label:
+
+| Title prefix | Required label |
+|---|---|
+| `[FE]` | `Frontend` |
+| `[BE]` | `Backend` |
+| `[APP]` | `App` |
 
 ---
 
@@ -182,7 +192,7 @@ Suggest splitting when:
 
 ## Response Rules
 
-- **Write**: produce a clean Jira-ready ticket, include testable AC, ask follow-up questions or add Missing Information if context is lacking.
+- **Write**: produce a clean Jira-ready ticket using Context, Acceptance Criteria, and optional Dev Note; set the matching platform title prefix and label.
 - **Update**: preserve confirmed intent, update only needed sections, call out conflicts, summarize changes.
 - **Review**: clear verdict first, separate blocking from non-blocking, suggest concrete rewrites.
 - **"Is this good enough?"**: answer yes/no/almost, give the main reason, the most important fix, and whether it's ready.

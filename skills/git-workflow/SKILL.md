@@ -52,7 +52,7 @@ Automates the full flow from local changes to a reviewed pull request.
 - For preview or Storybook links, use the current repo's real host and path format from one of these sources: the existing PR body, a recent PR in the same repo, repo docs/workflows, or a repo-specific URL reference. Do not hardcode one repo's URL pattern into this shared skill
 - Body structure (top to bottom):
   1. **Description** — One or two sentences: what changed and why
-  2. **Verification** (optional) — Include only for UI changes and bug fixes. See "Verification evidence" below
+  2. **Verification** (exceptional) — Omit by default, including for UI changes and bug fixes. Include only when the user requests it or concrete evidence is essential to explain an unusual validation result.
   3. **Test Instructions** — Bullet list: preview links, design links, and brief notes on what reviewers should verify
   4. **Note** (optional) — Temporary caveats, mock data flags, follow-up ticket links
 - Do NOT add extra standalone sections such as "Key Changes" or "Risks" by default; use the four-section body contract, and only preserve extra sections already present or documented by the current repo
@@ -65,7 +65,7 @@ Automates the full flow from local changes to a reviewed pull request.
 
 #### Verification evidence
 
-The Verification section is optional. Include it only when the PR changes UI or fixes a bug; otherwise omit it. CI passing is necessary but not sufficient for those change types — it shows nothing broke, not that the new behavior actually works. Use only these evidence prompts:
+`Verification` is exceptional, not a standard UI or bug-fix section. Add it only when the user requests it or when a concise, concrete result materially helps reviewers understand an unusual validation result. Never use it for routine browser checks, CI status, or generic test completion.
 
 - **UI change** — attach a before/after screenshot, or a short screen capture for interactions; say which viewport
 - **Bug fix** — show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test
@@ -123,7 +123,7 @@ The Verification section is optional. Include it only when the PR changes UI or 
 - PR includes secrets, debug logs, or `console.log` statements
 - Review comments resolved without corresponding commits
 - PR description promises behavior the code doesn't deliver
-- UI-change or bug-fix PR body omits author-side verification evidence — "CI is green" is not proof the new behavior works, only that nothing obvious broke
+- PR body includes routine `Verification` prose that duplicates test instructions or CI status
 
 ## Verification
 
@@ -136,8 +136,7 @@ Before marking the PR workflow complete:
 - [ ] Only ticket-relevant files are staged
 - [ ] Commit messages are imperative and descriptive
 - [ ] Test instructions use concrete repo-valid links and comparisons where applicable
-- [ ] PR body has Description, Test Instructions, optional Verification, and optional Note
-- [ ] For UI changes and bug fixes, Verification contains UI evidence or bug-fix reproduction evidence
+- [ ] PR body has Description, Test Instructions, optional Note, and Verification only when exceptional evidence is needed
 - [ ] PR is assigned and review is requested
 
 ## See Also
@@ -157,9 +156,9 @@ Before marking the PR workflow complete:
 
 One or two sentences: what changed and why.
 
-### Verification (optional; UI changes and bug fixes only)
+### Verification (exceptional; omit by default)
 
-Omit this section for other change types. For UI changes, attach a before/after screenshot or short screen capture and say which viewport. For bug fixes, show the failing reproduction before the fix and the same reproduction passing after, or link the new regression test.
+Include only when requested or when a concise, concrete result materially helps reviewers understand an unusual validation result. Do not use it for routine browser checks, CI status, or generic test completion.
 
 ### Test Instructions
 

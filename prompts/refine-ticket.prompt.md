@@ -20,6 +20,7 @@ Evaluate the ticket against these dimensions:
 - are acceptance criteria present, testable, and implementation-free?
 - is there a design link (Figma) if the ticket has UI impact?
 - is there a dev note with enough engineering hints to start work?
+- does the title start with `[FE]`, `[BE]`, or `[APP]`, and does the ticket have the matching `Frontend`, `Backend`, or `App` label?
 
 ### Scope
 
