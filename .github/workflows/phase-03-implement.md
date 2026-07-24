@@ -1,6 +1,6 @@
 ---
 # Source workflow for GitHub Agentic Workflows (gh-aw) — Phase 3 of 11 (Implementation).
-# POC WORKFLOW: Runs in ai-shared, targets onrunning/on-frontend. Then run: gh aw compile
+# Self-delivery pipeline: runs in and targets this repository. Then run: gh aw compile
 # Chain: 01 -> 02 -> 03 -> 04 -> 05 -> 06 -> 07 -> 08(opens PR) -> 09 -> 10 -> 11
 # Phase 3 is also the fix-loop landing spot: validators (04-07) dispatch back here on fail.
 on:
@@ -12,9 +12,8 @@ on:
         type: string
       prev_run_id:
         description: "Run ID of the previous phase to download state from"
-        required: false
+        required: true
         type: string
-        default: ""
       loop_count:
         description: "Fix-loop counter (incremented each time a validator sends work back here)"
         required: false
@@ -23,17 +22,17 @@ on:
 
 engine:
   id: copilot
-  model: claude-opus-4.8?effort=high
+model: claude-sonnet-5
 
-max-runs: 120
-max-turns: 25
-max-effective-tokens: 25M
+max-turns: 60
+max-ai-credits: 2500
 
 permissions:
   contents: read
   pull-requests: read
   issues: read
   actions: read
+  copilot-requests: write
 
 network:
   allowed:
@@ -51,32 +50,19 @@ safe-outputs:
 
 # mcp-servers: see phase-01 and README "Auth in CI".
 
-post-steps:
-  - name: Checkout ai-shared (base repo)
+pre-steps:
+  - name: Checkout workflow helpers
     uses: actions/checkout@v4
     with:
       persist-credentials: false
-  - name: Checkout on-frontend repository (POC)
-    uses: actions/checkout@v4
-    with:
-      repository: 'onrunning/on-frontend'
-      token: ${{ secrets.ON_FRONTEND_PAT }}
-      path: 'on-frontend-workspace'
-      persist-credentials: false
-  - name: Download previous phase state
-    if: ${{ inputs.prev_run_id != '' }}
+  - name: Verify and fetch previous phase state
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PREV_RUN_ID: ${{ inputs.prev_run_id }}
-    run: |
-      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
-      if [ -f pipeline-state.tgz.zip ]; then
-        unzip -o pipeline-state.tgz.zip
-      fi
-      if [ -f pipeline-state.tgz ]; then
-        tar -xzf pipeline-state.tgz
-      fi
+      EXPECTED_PREVIOUS_WORKFLOWS: .github/workflows/phase-02-plan.lock.yml,.github/workflows/phase-04-test-review.lock.yml,.github/workflows/phase-05-code-review.lock.yml,.github/workflows/phase-06-qa.lock.yml,.github/workflows/phase-07-ui-validation.lock.yml
+    run: bash .github/scripts/restore-pipeline-state.sh
 
+post-steps:
   - name: Comment on the Jira ticket if this phase wrote one
     if: ${{ !cancelled() && hashFiles('jira-out/comment.md') != '' }}
     env:
@@ -104,7 +90,8 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  github: false
+  github:
+    toolsets: [default]
   playwright:
     mode: cli
 
@@ -135,9 +122,10 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 
 ## Hand-off
 
-- When changes are staged and the patch is refreshed, emit `dispatch-workflow` for
-  **`phase-04-test-review`**, passing `ticket`, `prev_run_id` = `${{ github.run_id }}`,
-  `loop_count` = `${{ inputs.loop_count }}` (carry the counter forward unchanged).
+- When changes are staged and the patch is refreshed, call the exact `phase_04_test_review`
+  safe-output tool (never the generic `dispatch_workflow` tool), passing `ticket`,
+  `prev_run_id` = `${{ github.run_id }}`, `loop_count` = `${{ inputs.loop_count }}`
+  (carry the counter forward unchanged).
 - On `status: "blocked"`, do not dispatch. Surface the blocker and call `noop`.
 
 {{#runtime-import phases/shared-preamble.md}}
@@ -145,8 +133,8 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 ## Phase work
 
 > [!IMPORTANT]
-> **POC ENVIRONMENT:** You are running in the `ai-shared` repository, but your target is `on-frontend`.
-> The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
-> **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
+> **Self-delivery:** you are running in and targeting this repository.
+> Its files are checked out in the working tree at the repository root.
+> **Edit the product code in the working tree (repo root); never touch `.github/workflows/` or `*.lock.yml`.**
 
 {{#runtime-import phases/03-implement.md}}

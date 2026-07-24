@@ -1,6 +1,6 @@
 ---
 # Source workflow for GitHub Agentic Workflows (gh-aw) — Phase 9 of 11 (PR Code Review).
-# POC WORKFLOW: Runs in ai-shared, targets onrunning/on-frontend. Then run: gh aw compile
+# Self-delivery pipeline: runs in and targets this repository. Then run: gh aw compile
 #
 # Phases 9-11 review the *live* PR opened in phase 8. They run linearly (no loop back to the
 # build); a blocking finding is posted as a requested change on the PR.
@@ -19,9 +19,8 @@ on:
         default: ""
       prev_run_id:
         description: "Run ID of the previous phase to download state from"
-        required: false
+        required: true
         type: string
-        default: ""
       loop_count:
         description: "Fix-loop counter"
         required: false
@@ -30,17 +29,17 @@ on:
 
 engine:
   id: copilot
-  model: claude-opus-4.8?effort=high
+model: claude-sonnet-5
 
-max-runs: 80
-max-turns: 18
-max-effective-tokens: 15M
+max-turns: 50
+max-ai-credits: 1500
 
 permissions:
   contents: read
   pull-requests: read
   issues: read
   actions: read
+  copilot-requests: write
 
 network:
   allowed:
@@ -61,32 +60,41 @@ safe-outputs:
 
 # mcp-servers: see phase-01 and README "Auth in CI".
 
-post-steps:
-  - name: Checkout ai-shared (base repo)
+pre-steps:
+  - name: Wait for PR CI checks to finish before reviewing (CI builds the env)
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_NUMBER: ${{ inputs.pr_number }}
+    run: |
+      # The PR-review chain reviews the live PR; give CI time to build the env/checks
+      # before reviewing. Resolve the just-opened [delivery] PR, wait for its checks to
+      # register, then watch them to completion (capped, non-fatal on timeout/failure).
+      prnum="$PR_NUMBER"
+      if [ -z "$prnum" ]; then
+        prnum=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --json number,title,createdAt --jq '[.[]|select(.title|startswith("[delivery]"))]|sort_by(.createdAt)|last|.number // empty')
+      fi
+      if [ -z "$prnum" ]; then echo "no [delivery] PR found; skipping CI wait"; exit 0; fi
+      echo "Waiting for CI checks on PR #$prnum to register (up to ~3m)..."
+      for w in $(seq 1 6); do
+        n=$(gh pr checks "$prnum" --repo "$GITHUB_REPOSITORY" --json state --jq 'length' 2>/dev/null || echo 0)
+        [ "${n:-0}" -gt 0 ] && break
+        sleep 30
+      done
+      echo "Watching CI checks on PR #$prnum to completion (cap 30m)..."
+      timeout 1800 gh pr checks "$prnum" --repo "$GITHUB_REPOSITORY" --watch --interval 30 || true
+      echo "CI settled; proceeding with review."
+  - name: Checkout workflow helpers
     uses: actions/checkout@v4
     with:
       persist-credentials: false
-  - name: Checkout on-frontend repository (POC)
-    uses: actions/checkout@v4
-    with:
-      repository: 'onrunning/on-frontend'
-      token: ${{ secrets.ON_FRONTEND_PAT }}
-      path: 'on-frontend-workspace'
-      persist-credentials: false
-  - name: Download previous phase state
-    if: ${{ inputs.prev_run_id != '' }}
+  - name: Verify and fetch previous phase state
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PREV_RUN_ID: ${{ inputs.prev_run_id }}
-    run: |
-      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
-      if [ -f pipeline-state.tgz.zip ]; then
-        unzip -o pipeline-state.tgz.zip
-      fi
-      if [ -f pipeline-state.tgz ]; then
-        tar -xzf pipeline-state.tgz
-      fi
+      EXPECTED_PREVIOUS_WORKFLOWS: .github/workflows/phase-08-create-pr.lock.yml
+    run: bash .github/scripts/restore-pipeline-state.sh
 
+post-steps:
   - name: Comment on the Jira ticket if this phase wrote one
     if: ${{ !cancelled() && hashFiles('jira-out/comment.md') != '' }}
     env:
@@ -114,7 +122,8 @@ post-steps:
 tools:
   bash: [":*"]
   edit:
-  github: false
+  github:
+    toolsets: [default]
 
 timeout-minutes: 60
 ---
@@ -152,16 +161,17 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 4. Post your review summary on the PR with the `add-comment` safe output (it supports any PR;
    include the resolved PR number in the tool call). State a clear verdict — approve-equivalent
    or specific requested changes with reproduction and AC references. Never post secrets.
-5. Emit `dispatch-workflow` for **`phase-10-pr-qa`**, passing `ticket`, the resolved
-   `pr_number`, `prev_run_id` = `${{ github.run_id }}`, `loop_count` = `${{ inputs.loop_count }}`.
+5. Call the exact `phase_10_pr_qa` safe-output tool (never the generic `dispatch_workflow` tool),
+    passing `ticket`, the resolved `pr_number`, `prev_run_id` = `${{ github.run_id }}`,
+    `loop_count` = `${{ inputs.loop_count }}`.
 
 {{#runtime-import phases/shared-preamble.md}}
 
 ## Phase work
 
 > [!IMPORTANT]
-> **POC ENVIRONMENT:** You are running in the `ai-shared` repository, but your target is `on-frontend`.
-> The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
-> **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
+> **Self-delivery:** you are running in and targeting this repository.
+> Its files are checked out in the working tree at the repository root.
+> **Edit the product code in the working tree (repo root); never touch `.github/workflows/` or `*.lock.yml`.**
 
 {{#runtime-import phases/09-pr-code-review.md}}

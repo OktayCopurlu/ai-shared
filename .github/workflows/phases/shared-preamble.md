@@ -18,9 +18,9 @@ work, then hands off to the next phase by dispatching another workflow.
 
 - This run executes exactly one phase. Do not attempt later or earlier phases.
 - Do this phase's work, write this phase's verdict and artifacts, then hand off.
-- The hand-off is a `dispatch-workflow` safe output that starts the next phase's
-  workflow as a separate run with a fresh context. You never run the next phase
-  yourself.
+- The hand-off calls the exact phase-specific safe-output tool named in this phase's
+  hand-off instructions. That tool starts the next workflow as a separate run with
+  a fresh context. You never run the next phase yourself.
 
 ## State Travels Between Runs as an Artifact
 
@@ -30,7 +30,7 @@ tarball artifact named `pipeline-state.tgz` that contains the `.pipeline/` direc
 a `.pipeline/workspace.patch` snapshot of all accumulated code changes.
 
 - **Inbound (do this first when `prev_run_id` is non-empty).**
-  1. `gh run download "<prev_run_id>" --dir /tmp/prev` (you have `actions: read`).
+  1. Prior state is ALREADY downloaded to `/tmp/prev` by a pre-step (you have NO `gh` auth in the sandbox — do NOT run `gh run download`; it will 404). The pre-step accepts only a successful bot-dispatched run from the expected predecessor workflow on the same repository, branch, and commit. It verifies the artifact SHA-256 digest and rejects unsafe ZIP/TAR entries before exposing the tarball.
   2. `tar -xzf "$(find /tmp/prev -type f -name pipeline-state.tgz | head -1)" -C .` to restore
      `.pipeline/`. Use `-type f`: `gh run download` creates a *directory* named after the
      artifact (`/tmp/prev/pipeline-state.tgz/`) with the real tarball inside it, so matching
@@ -40,13 +40,19 @@ a `.pipeline/workspace.patch` snapshot of all accumulated code changes.
   After this, treat everything already under `.pipeline/` as immutable input.
 - **Outbound (do this last, before emitting safe outputs).**
   1. Make your phase's changes (edit code and/or write `.pipeline/` files).
-  2. `git add -A && git diff --staged > .pipeline/workspace.patch` to capture every
-     accumulated change as one cumulative patch.
-  3. `tar -czf pipeline-state.tgz .pipeline` and emit the `upload-artifact` safe output for
-     `pipeline-state.tgz`.
-- **Hand-off.** Emit the `dispatch-workflow` safe output for the next phase and pass
-  `prev_run_id` equal to this run's ID (provided to you as `RUN_ID` in the workflow body),
-  plus the unchanged `ticket`, the current `loop_count`, and `pr_number` once a PR exists.
+  2. `git add -A && git diff --staged -- ':!.pipeline' ':!.github' > .pipeline/workspace.patch`
+     to capture every accumulated **product** change as one cumulative patch (pipeline
+     bookkeeping under `.pipeline/` and the workflow machinery under `.github/` are excluded).
+  3. `mkdir -p /tmp/gh-aw && tar -czf /tmp/gh-aw/pipeline-state.tgz .pipeline`, then emit the
+     `upload-artifact` safe output with the **absolute path** `/tmp/gh-aw/pipeline-state.tgz`.
+     gh-aw auto-copies that absolute path into the upload staging area. Do **NOT** pass a bare
+     filename like `pipeline-state.tgz` — bare names are looked up only in the (empty) staging
+     dir and fail with `path does not exist in staging directory`. Do not use `$VAR` in the path.
+- **Hand-off.** Call the exact phase-specific safe-output tool named in this phase's
+  hand-off instructions. Pass `prev_run_id` equal to this run's ID (provided to you as
+  `RUN_ID` in the workflow body), plus the unchanged `ticket`, the current `loop_count`,
+  and `pr_number` once a PR exists. Pass these as top-level tool arguments, not as an
+  `inputs` object, and never call the generic `dispatch_workflow` tool.
 
 ## Working Directory
 
@@ -70,13 +76,11 @@ Your context window is re-sent on every turn, so every file you open is paid for
 and again. Wasteful reads are the single biggest cause of runaway token usage in this
 pipeline. Keep your footprint tight:
 
-- **Work only in the target.** All code analysis and edits happen in the checked-out
-  product repo (for the POC, `./on-frontend-workspace`) and under `.pipeline/`. Go there
-  directly — do not explore to "find" it.
-- **Never open this pipeline's own machinery.** Do not read `*.lock.yml`, the
-  `.github/workflows/` sources, or the `experiment/` directory of the `ai-shared` repo.
-  They are large generated/meta files with nothing to do with the ticket and will blow
-  your budget.
+- **Work only in the target.** All code analysis and edits happen on this repository's own
+  files in the working tree (the repo root) and under `.pipeline/`. Do not explore to "find" it.
+- **Never open this pipeline's own machinery.** Do not read `*.lock.yml` or the
+  `.github/workflows/` sources. They are large generated/meta files with nothing to do
+  with the ticket and will blow your budget.
 - **No broad filesystem scans.** Do not run `find` / `ls -R` / `grep -r` across the repo
   root, `/home/runner`, `node_modules`, or build output. Scope every search to the one
   directory you actually need.
@@ -175,8 +179,9 @@ Rules:
 ## Writes Happen Through Safe Outputs
 
 - The agent runs with a read-only GitHub token. It does not push branches, open PRs, or dispatch workflows directly — those happen through safe outputs after the agent ends.
-- To carry state forward, emit `upload-artifact` for `pipeline-state.tgz` (the tarball of `.pipeline/`).
-- To advance the chain, emit `dispatch-workflow` for the next phase.
+- To carry state forward, `tar -czf /tmp/gh-aw/pipeline-state.tgz .pipeline` and emit `upload-artifact` with the absolute path `/tmp/gh-aw/pipeline-state.tgz` (the tarball of `.pipeline/`).
+- To advance the chain, call the exact phase-specific safe-output tool named in the current
+  phase's hand-off instructions. Never call the generic `dispatch_workflow` tool.
 - To deliver code (phase 8 only), request PR creation via the `create-pull-request` safe output. Exclude `.pipeline/` and `jira-out/` from the PR commit so only real product changes ship.
 - To comment on or review a PR, use the `add-comment` safe output with the resolved PR number — never post directly.
 - If a run reaches a stop condition with no GitHub action to take, call the `noop` safe output with a short explanation so the run does not complete silently.

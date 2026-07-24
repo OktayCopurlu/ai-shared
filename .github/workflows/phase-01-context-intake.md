@@ -1,6 +1,6 @@
 ---
 # Source workflow for GitHub Agentic Workflows (gh-aw) — Phase 1 of 11 (Context Intake).
-# POC WORKFLOW: Runs in ai-shared, targets onrunning/on-frontend. Then run: gh aw compile
+# Self-delivery pipeline: runs in and targets this repository. Then run: gh aw compile
 #
 # This is the FIRST phase in a per-phase dispatch chain. Each phase is its own workflow =
 # its own run = its own fresh agent context. A phase does one phase's work, snapshots state
@@ -14,11 +14,6 @@ on:
         description: "Jira ticket key or URL (e.g. DSC-1234)"
         required: true
         type: string
-      prev_run_id:
-        description: "Run ID of the previous phase to download state from (empty for phase 1)"
-        required: false
-        type: string
-        default: ""
       loop_count:
         description: "Fix-loop counter (0 on the first build pass)"
         required: false
@@ -28,21 +23,20 @@ on:
 # Org-wide token is already provisioned, so the Copilot engine needs no extra secret.
 engine:
   id: copilot
-  model: gemini-3.1-pro-preview
+model: claude-sonnet-5
 
 # Keep exploratory phases from growing unbounded contexts. Override only when a
 # ticket proves this ceiling is too small for a specific phase.
-max-runs: 80
-max-turns: 18
-max-effective-tokens: 5M
+max-turns: 50
+max-ai-credits: 500
 
 # The agent runs read-only. All writes happen through safe-outputs, never the agent itself.
-# `actions: read` lets the agent download the previous phase's pipeline-state.tgz artifact.
 permissions:
   contents: read
   pull-requests: read
   issues: read
   actions: read
+  copilot-requests: write
 
 # Scope outbound network. `defaults` covers infra + GitHub. Add ticket/design/preview
 # hosts the early phases need (Jira, Figma, preview env) as explicit domains.
@@ -76,31 +70,10 @@ safe-outputs:
 # without ever holding the token. jira-in/ is run-local scratch (not tarred, never committed),
 # the read-side mirror of the jira-out/ write path. Skips quietly if the Jira secrets are unset.
 steps:
-  - name: Checkout ai-shared (base repo)
+  - name: Checkout repository
     uses: actions/checkout@v4
     with:
       persist-credentials: false
-  - name: Checkout on-frontend repository (POC)
-    uses: actions/checkout@v4
-    with:
-      repository: 'onrunning/on-frontend'
-      token: ${{ secrets.ON_FRONTEND_PAT }}
-      path: 'on-frontend-workspace'
-      persist-credentials: false
-  - name: Download previous phase state
-    if: ${{ inputs.prev_run_id != '' }}
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PREV_RUN_ID: ${{ inputs.prev_run_id }}
-    run: |
-      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
-      if [ -f pipeline-state.tgz.zip ]; then
-        unzip -o pipeline-state.tgz.zip
-      fi
-      if [ -f pipeline-state.tgz ]; then
-        tar -xzf pipeline-state.tgz
-      fi
-
   - name: Pre-fetch the Jira ticket for the agent to read
     if: ${{ inputs.ticket != '' }}
     env:
@@ -150,31 +123,6 @@ steps:
       fi
 
 post-steps:
-  - name: Checkout ai-shared (base repo)
-    uses: actions/checkout@v4
-    with:
-      persist-credentials: false
-  - name: Checkout on-frontend repository (POC)
-    uses: actions/checkout@v4
-    with:
-      repository: 'onrunning/on-frontend'
-      token: ${{ secrets.ON_FRONTEND_PAT }}
-      path: 'on-frontend-workspace'
-      persist-credentials: false
-  - name: Download previous phase state
-    if: ${{ inputs.prev_run_id != '' }}
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PREV_RUN_ID: ${{ inputs.prev_run_id }}
-    run: |
-      gh run download "$PREV_RUN_ID" -n safe-outputs-upload-artifacts --dir . || true
-      if [ -f pipeline-state.tgz.zip ]; then
-        unzip -o pipeline-state.tgz.zip
-      fi
-      if [ -f pipeline-state.tgz ]; then
-        tar -xzf pipeline-state.tgz
-      fi
-
   - name: Comment on the Jira ticket if this phase wrote one
     if: ${{ !cancelled() && hashFiles('jira-out/comment.md') != '' }}
     env:
@@ -204,7 +152,8 @@ tools:
   # plumbing (download artifact, git apply, tar). Narrow to an explicit allowlist if fixed.
   bash: [":*"]
   edit:
-  github: false
+  github:
+    toolsets: [default]
   web-fetch:
 
 timeout-minutes: 60
@@ -218,24 +167,22 @@ phase 2.
 
 - Ticket: `${{ inputs.ticket }}`
 - This run's ID (`RUN_ID`, pass as `prev_run_id` to the next phase): `${{ github.run_id }}`
-- Previous run ID to restore state from: `${{ inputs.prev_run_id }}` (empty on the first run)
 - Fix-loop counter: `${{ inputs.loop_count }}`
 
 ## State in / state out
 
 Follow the artifact state contract in the imported `shared-preamble.md`:
 
-1. **Restore (only if `prev_run_id` above is non-empty):** download and extract
-   `pipeline-state.tgz` from that run, then `git apply .pipeline/workspace.patch` if present.
-   On the very first run there is no prior state — create a fresh `.pipeline/` directory.
+1. **Initialize:** create a fresh `.pipeline/` directory. Phase 1 never accepts prior state.
 2. Do this phase's work and write `.pipeline/verdicts/01-context-intake.json`.
 3. **Snapshot:** `git add -A && git diff --staged > .pipeline/workspace.patch`, then
    `tar -czf pipeline-state.tgz .pipeline`, and emit the `upload-artifact` safe output for it.
 
 ## Hand-off
 
-- On `status: "pass"`, emit the `dispatch-workflow` safe output for **`phase-02-plan`**, passing
-  inputs: `ticket` = the ticket above, `prev_run_id` = `${{ github.run_id }}`, `loop_count` = `0`.
+- On `status: "pass"`, call the exact `phase_02_plan` safe-output tool (never the generic
+  `dispatch_workflow` tool), passing `ticket` = the ticket above,
+  `prev_run_id` = `${{ github.run_id }}`, `loop_count` = `0`.
 - On `status: "blocked"`, do **not** dispatch. Report the blocker with `missing-data` (and
   `add-comment`/`create-issue` if useful) and call `noop` with a short reason.
 
@@ -244,8 +191,8 @@ Follow the artifact state contract in the imported `shared-preamble.md`:
 ## Phase work
 
 > [!IMPORTANT]
-> **POC ENVIRONMENT:** You are running in the `ai-shared` repository, but your target is `on-frontend`.
-> The `on-frontend` repository has been checked out into the `./on-frontend-workspace` directory.
-> **All code analysis and modifications MUST be done inside `./on-frontend-workspace`.**
+> **Self-delivery:** you are running in and targeting this repository.
+> Its files are checked out in the working tree at the repository root.
+> **Edit the product code in the working tree (repo root); never touch `.github/workflows/` or `*.lock.yml`.**
 
 {{#runtime-import phases/01-context-intake.md}}
