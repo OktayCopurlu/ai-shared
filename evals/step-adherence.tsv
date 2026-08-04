@@ -14,3 +14,9 @@ structure-default-one-pr|structuring-prs|should this be one PR or several|[Dd]ef
 structure-verify-identical|structuring-prs|split this PR into two|byte-identical
 structure-force-with-lease|structuring-prs|split this PR into two|force-with-lease
 structure-repoint-base|structuring-prs|split this PR into two|[Rr]e-point the feature PR
+yagni-necessity|applying-coding-style|add a new helper|Does this need to exist
+yagni-codebase-reuse|applying-coding-style|add a new helper|Is it already in the codebase
+yagni-standard-library|applying-coding-style|add a new helper|Can the standard library do it
+yagni-native-platform|applying-coding-style|add a new helper|Can the native platform do it
+yagni-installed-dependency|applying-coding-style|add a new helper|Is an installed dependency suitable
+yagni-smallest-local|applying-coding-style|add a new helper|Can the smallest local implementation do it

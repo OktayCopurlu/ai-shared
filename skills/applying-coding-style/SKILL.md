@@ -53,6 +53,19 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 ## Code Shape
 
+### YAGNI Decision Ladder
+
+Before adding code, evaluate these options in order and stop at the first one that satisfies the requirement:
+
+1. **Does this need to exist?** If the request does not require a change, do not add one.
+2. **Is it already in the codebase?** Use the existing behavior, component, utility, or configuration.
+3. **Can the standard library do it?** Prefer it over new code or a dependency.
+4. **Can the native platform do it?** Prefer browser, framework, or runtime primitives.
+5. **Is an installed dependency suitable?** Use it before adding another dependency.
+6. **Can the smallest local implementation do it?** Keep it inline when it has one caller; extract only when the third caller appears.
+
+This ladder reduces unnecessary code. It never permits skipping validation, error handling, security, or accessibility requirements.
+
 - **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
 
