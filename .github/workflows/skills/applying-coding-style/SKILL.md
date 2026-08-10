@@ -89,7 +89,7 @@ This ladder reduces unnecessary code. It never permits skipping validation, erro
 |---|---|
 | "The comment explains what the code does" | Rename the variable or extract a function instead. |
 | "I'll clean up the naming later" | Later never comes. Name it right now. |
-| "This helper might be useful elsewhere" | Inline it. Extract only when the third caller appears. |
+| "This helper might be useful elsewhere" | Keep it local. Extract when actual reuse or a clear domain boundary makes the abstraction simpler; three callers is the default threshold. |
 
 ## Red Flags
 
