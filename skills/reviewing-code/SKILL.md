@@ -320,7 +320,6 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 ## See Also
 
 - `applying-coding-style` — naming and comment rules used in Layer 1
-- `debugging` — when a review uncovers a bug that needs triage
 - `~/.ai-shared/references/security-checklist.md` — for security-focused review passes
 - `~/.ai-shared/references/testing-patterns.md` — for evaluating test quality in Layer 2
 - `~/.ai-shared/references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4

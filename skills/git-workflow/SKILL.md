@@ -143,7 +143,7 @@ Before marking the PR workflow complete:
 
 - `reviewing-code` — run all 4 layers before creating the PR
 - `applying-coding-style` — naming and comment rules applied during pre-commit checks
-- `debugging` — when quality gates fail and need structured triage
+- `test-driven-development` — test-first behavior changes and regression fixes
 - `structuring-prs` — decide one PR vs a stack, or split an oversized PR into a reviewable stack
 
 ## PR Description Template

@@ -17,7 +17,7 @@ skills/
 
 This repo intentionally supports two shapes of skills:
 
-- **Workflow skills**: structured processes the agent should follow step by step. Examples: `debugging`, `reviewing-code`, `test-driven-development`, `git-workflow`.
+- **Workflow skills**: structured processes the agent should follow step by step. Examples: `reviewing-code`, `test-driven-development`, `git-workflow`, `manual-qa`.
 - **Tool skills**: focused adapters for a specific MCP server, CLI, or browser tool. Examples: `contentful`, `playwright-mcp`, `atlassian-mcp`.
 
 Workflow skills benefit from richer self-check sections. Tool skills can stay lean if extra ceremony would not improve decisions.
@@ -287,7 +287,7 @@ Product-repo rules should live closest to that repo by default. Put them in ai-s
 Reference other skills by name:
 
 ```markdown
-Follow the `debugging` skill if the build breaks.
+Follow `test-driven-development` when the task requires a test-first change.
 Apply `applying-coding-style` to all code written during implementation.
 ```
 

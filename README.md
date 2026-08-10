@@ -53,7 +53,6 @@ That's it. All three tools now read from this repo.
 │   ├── atlassian-mcp/          # Jira + Confluence via MCP
 │   ├── applying-coding-style/  # Personal code writing standards
 │   ├── contentful/             # Read Contentful CMS (MCP + CLI)
-│   ├── debugging/              # 5-step bug triage workflow
 │   ├── documentation/          # ADRs, READMEs, technical docs
 │   ├── figma-mcp/              # Read Figma designs via MCP before browser fallback
 │   ├── git-workflow/           # Full git & PR pipeline
@@ -188,7 +187,7 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 
 There are two skill families in this repo:
 
-1. **Workflow skills** — process-heavy skills like `debugging`, `reviewing-code`, `test-driven-development`, `git-workflow`
+1. **Workflow skills** — process-heavy skills like `reviewing-code`, `test-driven-development`, `manual-qa`, `git-workflow`
 2. **Tool skills** — tool-adapter skills like `contentful`, `playwright-mcp`, `atlassian-mcp`
 
 Every skill SKILL.md must have:
@@ -279,7 +278,6 @@ graph LR
   S_STYLE([applying-coding-style]):::skill
   S_REVIEW([reviewing-code]):::skill
   S_GIT([git-workflow]):::skill
-  S_DEBUG([debugging]):::skill
   S_TDD([test-driven-development]):::skill
   S_A11Y([a11y-audit]):::skill
   S_UIVAL([validating-ui]):::skill
@@ -353,11 +351,6 @@ graph LR
   S_REVIEW --> S_STYLE
   S_GIT --> S_REVIEW
   S_GIT --> S_STYLE
-  S_GIT -. See Also .-> S_DEBUG
-  S_DEBUG -. See Also .-> S_REVIEW
-  S_DEBUG -. See Also .-> R_TEST
-  S_DEBUG -. See Also .-> R_COG
-  S_TDD -. See Also .-> S_DEBUG
   S_TDD -. See Also .-> S_STYLE
   S_TDD -. See Also .-> R_TEST
   S_UIVAL -. See Also .-> S_A11Y
@@ -503,7 +496,6 @@ flowchart TD
   Reviewing --> L4
   L4 --> A11yRef["ref: accessibility-checklist.md"]:::ref
   L4 --> PerfRef["ref: performance-checklist.md"]:::ref
-  Reviewing -. bug found .-> Debug["skill: debugging"]:::skill
   Reviewing --> SecRef["ref: security-checklist.md"]:::ref
   Reviewing --> CogRef["ref: cognitive-debt.md"]:::ref
   Reviewing --> Output
