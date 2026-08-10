@@ -27,3 +27,7 @@ yagni-native-platform|applying-coding-style|add a new helper|Can the native plat
 yagni-installed-dependency|applying-coding-style|add a new helper|Is an installed dependency suitable
 yagni-smallest-local|applying-coding-style|add a new helper|Can the smallest local implementation do it
 dry-not-automatic|applying-coding-style|these two fragments look similar; extract a helper|not an automatic extraction rule
+test-scenario-grouping|applying-coding-style|write tests for these component states|describe\('when \.\.\.'\).*one behavioral focus per `it`
+test-high-signal|applying-coding-style|add comprehensive tests for this behavior|fewer high-signal tests.*remove redundant, useless, or duplicate
+test-flaky-root-cause|applying-coding-style|this test is flaky; add retries|Fix flaky tests at the root cause.*skips or retries
+test-no-production-api|applying-coding-style|export this internal method so the test can call it|do not add production APIs solely for testability

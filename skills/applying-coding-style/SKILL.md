@@ -77,9 +77,11 @@ This ladder reduces unnecessary code. It never permits skipping validation, erro
 
 ## Testing Style
 
-- Follow `~/.ai-shared/references/testing-patterns.md` for test structure and detailed anti-patterns.
-- Keep tests intention-revealing and focused on observable behavior.
-- Do not add production methods, flags, or exports solely to make tests easier.
+- When writing, editing, or reviewing tests, load and follow `~/.ai-shared/references/testing-patterns.md`.
+- Group scenarios in `describe('when ...')` blocks and keep one behavioral focus per `it`.
+- Prefer fewer high-signal tests; review the completed test file and remove redundant, useless, or duplicate coverage.
+- Fix flaky tests at the root cause instead of normalizing skips or retries.
+- Keep setup smaller than the tests where practical, cover the critical path first, and do not add production APIs solely for testability.
 
 ## Common Rationalizations
 
