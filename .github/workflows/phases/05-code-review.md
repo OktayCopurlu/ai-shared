@@ -21,6 +21,7 @@ Use `reviewing-code` in `review-only` mode for the 4-layer review. This phase re
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. Pin `@main` to a tag or SHA for reproducible runs.
 
 {{#runtime-import skills/reviewing-code/SKILL.md}}
+{{#runtime-import references/testing-patterns.md}}
 {{#runtime-import skills/security-hardening/SKILL.md}}
 {{#runtime-import skills/a11y-audit/SKILL.md}}
 

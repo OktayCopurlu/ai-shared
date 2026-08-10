@@ -164,8 +164,7 @@ Use this when the input is local staged/unstaged changes, changed files in the w
 Behavior:
 
 - findings still come first
-- Layer 1 issues may be fixed inline when they are obvious and low-risk
-- Layer 2 may hand off to `test` or `test-driven-development`, or be fixed in the same pass when appropriate
+- do not automatically edit code or write tests; report all findings and proposed fixes first and wait for the user's explicit instruction to apply them
 - keep fixes scoped to the current change only
 
 ## Mode Selection Rules
@@ -181,7 +180,7 @@ Determine mode in this order:
 
 Scan every changed file for mechanical issues. Load `applying-coding-style` first — naming and comment rules come from there.
 
-**Output:** File, line, one-line fix. In `self-review`, apply directly when confident. In `review-only`, report the fix without editing. Flag when ambiguous.
+**Output:** File, line, one-line fix. Report findings and proposed fixes first; never apply fixes directly unless the user explicitly instructs you to do so. Flag when ambiguous.
 
 ## Layer 2 — Test Coverage Gaps
 
@@ -189,7 +188,7 @@ For every changed function/component, check the test file.
 
 **Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on, hand-rolled stub components that re-implement production logic, single `it` blocks with many unrelated assertions, hardcoded fixture values duplicated in expectations, optional chaining inside `expect(...).toBe(...)` that can pass as `undefined === undefined`.
 
-**Output:** `[file] missing test for: <scenario>`. In `review-only`, describe what's missing and do not write the tests. In `self-review`, either describe the gap or address it via `test` or `test-driven-development` when in scope.
+**Output:** `[file] missing test for: <scenario>`. Describe the gap; in both modes, do not write tests unless the user explicitly requests it.
 
 **When Layer 2 is N/A:** docs-only changes, formatting-only changes, generated files, config/types changes with no behavior impact, or explicitly temporary experiment code that should not drive new permanent coverage. State `N/A — no persistent behavior change to cover.`
 
@@ -298,7 +297,8 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 - Layer 1–3 findings are actionable. Layer 4 findings are informational.
 - Do not suggest changes to files outside the PR diff.
 - Do not treat generated files, lockfiles, snapshots, docs, or styles as automatically safe; inspect their changed hunks too, then mark Layer 2 as N/A when appropriate.
-- Do not repeat findings already covered by lint or type-check errors.
+- Review reads the diff; it does not run gates. Do not run the linter, type-checker, or test suite as a review step — in `review-only` mode CI already passed them before the PR, and in `self-review` mode `git-workflow` runs them as a separate pre-commit step. Read the existing CI/gate status instead, and only dig into a gate that is actually failing.
+- Do not repeat findings already covered by lint or type-check errors — those gates own mechanical correctness; review covers what they cannot.
 - Load `applying-coding-style` before running Layer 1 — naming and comment rules come from there.
 - When called from `git-workflow`, run before creating the PR. Offer to fix Layer 1 issues inline.
 - When called from the `/address-review` prompt, run after triaging Copilot comments as an additional pass.
@@ -308,6 +308,7 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 | Rationalization | Reality |
 |---|---|
 | "The tests pass, so it's fine" | Tests don't catch naming issues, dead code, architecture drift, or security holes. |
+| "Let me run the tests, lint, and type-check first to be safe" | Those gates already passed in CI before the PR reached review — re-running them burns minutes and surfaces nothing new. Read CI status; spend the budget on what gates can't catch. |
 | "Layer 4 is just noise" | Architecture signals are the highest-value findings. Skipping them lets coupling accumulate silently. |
 
 ## Red Flags
@@ -319,9 +320,8 @@ Multi-file diffs use: `<file>:L<line>: <severity> <problem>. <fix>.`
 ## See Also
 
 - `applying-coding-style` — naming and comment rules used in Layer 1
-- `debugging` — when a review uncovers a bug that needs triage
 - `~/.ai-shared/references/security-checklist.md` — for security-focused review passes
-- `~/.ai-shared/references/testing-patterns.md` — for evaluating test quality in Layer 2
+- imported `references/testing-patterns.md` — for evaluating test quality in Layer 2
 - `~/.ai-shared/references/accessibility-checklist.md` — for accessibility checks in Layer 1 and Layer 4
 - `~/.ai-shared/references/performance-checklist.md` — for performance checks in Layer 4
 - `~/.ai-shared/references/cognitive-debt.md` — when reviewing agent-generated code the author never walked through

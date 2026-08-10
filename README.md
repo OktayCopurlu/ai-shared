@@ -204,6 +204,8 @@ Workflow skills should usually also have:
 3. **Verification**
 4. **See Also**
 
+The gh-aw delivery pipeline keeps workflow-local, sometimes adapted copies under `.github/workflows/skills/` and `.github/workflows/references/`. When changing or removing canonical guidance used by a phase, update those copies and runtime imports together, then run `gh aw compile` so the checked-in `.lock.yml` workflows match their Markdown sources. `validate.sh` rejects orphaned workflow skill copies and broken runtime imports.
+
 Tool skills may use a leaner format when that is clearer. For those, `Tool Selection`, `Procedure`, `Rules`, and mutation guardrails are often more useful than forcing the full workflow template.
 
 See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the full format spec, including when guidance belongs in always-on instructions, prompt files, skills, or agents.

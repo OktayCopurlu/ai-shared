@@ -14,14 +14,13 @@ This is a validator phase. Do not edit code, tests, snapshots, package files, or
 
 ## Skill References
 
-Use local testing-pattern guidance, such as `references/testing-patterns.md` when available, to judge whether tests cover the behavior that matters. This phase reviews and runs tests only: do not write tests, do not start red/green implementation loops, and do not invoke fixer behavior. Use `debugging` only to localize failures enough to write a precise fix request; do not patch the failure yourself.
+Use local testing-pattern guidance, such as `references/testing-patterns.md` when available, to judge whether tests cover the behavior that matters. This phase reviews and runs tests only: do not write tests, do not start red/green implementation loops, and do not invoke fixer behavior. Localize failures only enough to write a precise fix request; do not patch the failure yourself.
 
 ### Skill imports (gh-aw)
 
 In gh-aw a skill or reference that is only mentioned is not read. Import the guidance below so its content is injected at compile time. Pin `@main` to a tag or SHA for reproducible runs.
 
 {{#runtime-import references/testing-patterns.md}}
-{{#runtime-import skills/debugging/SKILL.md}}
 
 ## Test Quality Rules
 

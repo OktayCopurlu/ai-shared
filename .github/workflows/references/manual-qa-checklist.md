@@ -9,6 +9,7 @@ Use this checklist with the `manual-qa` skill to turn requirements and diffs int
 
 - Source: <ticket / PR / local diff>
 - Environment: <preview URL / local URL / command path>
+- Depth: <smoke / focused / full and reason>
 - Created: <timestamp>
 
 ## Context

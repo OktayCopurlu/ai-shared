@@ -22,6 +22,7 @@ In gh-aw a skill that is only mentioned is not read. Import the skills above so 
 
 {{#runtime-import skills/applying-coding-style/SKILL.md}}
 {{#runtime-import skills/test-driven-development/SKILL.md}}
+{{#runtime-import references/testing-patterns.md}}
 {{#runtime-import skills/a11y-audit/SKILL.md}}
 {{#runtime-import skills/validating-ui/SKILL.md}}
 {{#runtime-import skills/security-hardening/SKILL.md}}

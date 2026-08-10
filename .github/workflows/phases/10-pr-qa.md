@@ -21,6 +21,7 @@ Use `manual-qa` for PR-environment QA structure, the `gh` CLI (see the `github` 
 In gh-aw a skill that is only mentioned is not read. Import the skills above so their content is injected at compile time. GitHub reads use the `gh` CLI (the `github` skill) via bash — no GitHub MCP server is configured. Pin `@main` to a tag or SHA for reproducible runs.
 
 {{#runtime-import skills/manual-qa/SKILL.md}}
+{{#runtime-import references/manual-qa-checklist.md}}
 {{#runtime-import skills/github/SKILL.md}}
 
 ## Inputs
