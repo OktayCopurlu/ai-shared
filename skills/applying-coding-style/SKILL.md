@@ -69,6 +69,15 @@ This ladder reduces unnecessary code. It never permits skipping validation, erro
 - **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
 
+### Vertical Spacing
+
+- **One blank line between logical blocks**: Separate consecutive blocks — `if`/`else` chains, loops, `try`/`catch`, function declarations, `describe`/`it` blocks — with exactly one blank line
+- **One blank line before a `return`** when the function body has more than one statement
+- **Blank line after the import block** and after variable declaration groups that precede logic
+- **Never stack blank lines**: two or more consecutive blank lines are noise; collapse them to one
+- **No blank line at the start or end of a block body**: don't open a function, `if`, or class with an empty line
+- **Don't use blank lines as section dividers**: if a function needs internal grouping to be readable, extract a function instead
+
 ## Change Discipline
 
 - **Scope**: Modify only the code explicitly required to complete the task. Avoid refactoring unrelated code, even within the same file, unless explicitly instructed. Note improvements for later — don't fix them mid-task.
@@ -113,6 +122,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - Inline comments restating what the next line does
 - Variables named `data`, `info`, `result`, `temp` in non-trivial scope
 - Commented-out code surviving review
+- Consecutive blocks crammed together with no blank line, or padded with multiple blank lines
 - Boolean variables without `is`/`has`/`should`/`can` prefix
 - Tests with no `describe` grouping or asserting on mock internals
 
