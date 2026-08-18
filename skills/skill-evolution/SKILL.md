@@ -1,6 +1,6 @@
 ---
 name: skill-evolution
-description: "Capture learnings and evolve skills from experience. USE FOR: end of complex tasks where something reusable was learned, when user says 'save this', 'remember this', or 'this should be a skill'. Use when a pattern repeats across sessions or a hard-won insight deserves persistence. NOT FOR: mid-task execution — finish the user's task first, then capture the learning."
+description: "Capture validated reusable learnings and evolve skills. Use when the user explicitly asks to save or codify something, a pattern recurs across tasks, or connected tools expose material reusable skill drift. Do not activate merely because a task was complex; finish the user task before codifying."
 ---
 
 # Skill Evolution — Learn, Stage, Codify
@@ -160,7 +160,7 @@ All skill changes go through a PR — never push directly to main.
 
 ## Proactive Behavior
 
-After completing a complex task, suggest to the user: _"I learned something reusable here — want me to capture it?"_ Only after genuinely non-trivial tasks, and only at the end of the task.
+Do not suggest skill evolution merely because a task was complex. Suggest it only when you can name a concrete recurring pattern, a failure-causing workflow gap, or verified tool drift worth preserving.
 
 If a tool-adapter skill drifted during the task and the fix looks reusable, suggest the stronger follow-up: _"I found a reusable skill drift here — want me to open an ai-shared PR via skill-evolution so you can review it later?"_
 

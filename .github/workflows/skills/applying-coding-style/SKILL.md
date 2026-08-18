@@ -1,6 +1,6 @@
 ---
 name: applying-coding-style
-description: 'Personal code writing standards for naming, comments, and cleanliness. USE FOR: writing new code, reviewing code style, refactoring for readability. ALWAYS apply when generating or editing TypeScript, Vue, or SCSS files. Use when user says "write clean code", "fix naming", "remove comments", or "code quality". NOT FOR: architecture decisions (reviewing-code layer 4), security patterns (security-hardening), or test strategy (test-driven-development).'
+description: "Apply the user's naming, comment, YAGNI, and change-discipline preferences. Use when writing, editing, or reviewing TypeScript, Vue, or SCSS, and for requests about naming, comments, readability, or code quality. Not for architecture, security, or test-strategy decisions."
 ---
 
 # Coding Style — Personal Standards
@@ -53,7 +53,20 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 ## Code Shape
 
-- **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
+### YAGNI Decision Ladder
+
+Before adding code, evaluate these options in order and stop at the first one that satisfies the requirement:
+
+1. **Does this need to exist?** If the request does not require a change, do not add one.
+2. **Is it already in the codebase?** Use the existing behavior, component, utility, or configuration.
+3. **Can the standard library do it?** Prefer it over new code or a dependency.
+4. **Can the native platform do it?** Prefer browser, framework, or runtime primitives.
+5. **Is an installed dependency suitable?** Use it before adding another dependency.
+6. **Can the smallest local implementation do it?** Keep it inline for one caller. Extract only when reuse or a clear domain boundary justifies the abstraction; three callers is the default threshold.
+
+This ladder reduces unnecessary code. It never permits skipping validation, error handling, security, or accessibility requirements.
+
+- **DRY**: Two similar fragments are a signal to compare, not an automatic extraction rule. Extract when they represent the same domain behavior and the shared abstraction is simpler than the duplication.
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
 
 ## Change Discipline
@@ -62,29 +75,13 @@ These rules apply to ALL code I write or modify. They override generic conventio
 - **Test between changes**: Don't write 100+ lines without running tests. Make a change, verify it works (tests pass, build succeeds), then move on. Bugs compound when changes pile up untested.
 - **Keep it compilable**: After every meaningful change, the project must build and existing tests must pass. Never leave the codebase in a broken state between edits.
 
-## Working With Code
-
-Coding agent or human prevent the "losing touch" failure mode where the codebase drifts past your understanding while looking fine on the surface.
-
-- **Read every diff before accepting it**: If you haven't read the code, you haven't reviewed it, and you haven't done the work. Opening a PR with unreviewed agent output delegates your job to the reviewer.
-- **Refactor continuously, not later**: Agents happily add near-duplicate code and layers of indirection. When the same shape appears twice, stop and consolidate — don't promise yourself a cleanup pass. If you can no longer hold the module in your head, throw the branch away and regenerate with a tighter prompt.
-- **Decide design before prompting**: Agents treat "we'll figure out the API later" as permission to invent one. Make naming, module boundaries, and data-shape decisions yourself before asking for an implementation. Deferring feels cheap; the resulting divergence is expensive.
-- **Don't delegate what you can't evaluate**: Agents are useful where you can check the result — failing test, compiler error, behavior you can exercise. They are dangerous where "correct" is subjective (API design, abstraction choice, product shape). In that zone, write it yourself or sketch it first.
-- **Stop when tired**: Fatigue produces vague prompts, which produce sprawling diffs, which produce more fatigue. Notice the loop and close the laptop.
-
-
 ## Testing Style
 
-- **Use `describe` blocks for each `when ...` case**: Group test cases by scenario with a clear `describe('when ...')` wrapper rather than mixing unrelated assertions at the top level
-- **Keep tests intention-revealing**: Each test should prove one behavior that matters, not restate implementation details
-- **Review the test file after writing it**: Remove redundant, useless, or duplicate tests once the main coverage is in place
-- **Prefer fewer high-signal tests over many overlapping ones**: If two tests prove the same behavior, keep the clearer one
-- **Delete tests that prove nothing**: Tests that only assert the mock was called with the mock's own return value, or that snapshot an entire component without checking behavior, add maintenance cost without catching bugs
-- **Kill flaky tests on sight**: If a test fails intermittently, fix the root cause (timing, shared state, network) or delete it. A flaky test that is skipped or retried is worse than no test — it erodes trust in the suite
-- **Simplify setup**: If `beforeEach` is longer than the test itself, the setup is too heavy. Extract a factory function with sensible defaults and let each test override only what it cares about
-- **Cover the critical path first**: Happy path + the most likely error path > exhaustive edge cases. Add edge case tests only when a bug proves the gap matters
-- **One assertion focus per test**: A test can have multiple `expect` calls, but they should all verify the same behavior from different angles — not test unrelated side effects in the same block
-- **No test-only production code**: Do not add methods, flags, or exports to production code solely to make it testable. Rethink the boundary instead
+- When writing, editing, or reviewing tests, follow the imported `references/testing-patterns.md` guidance.
+- Group scenarios in `describe('when ...')` blocks and keep one behavioral focus per `it`.
+- Prefer fewer high-signal tests; review the completed test file and remove redundant, useless, or duplicate coverage.
+- Fix flaky tests at the root cause instead of normalizing skips or retries.
+- Keep setup smaller than the tests where practical, cover the critical path first, and do not add production APIs solely for testability.
 
 ## Common Rationalizations
 
@@ -92,7 +89,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 |---|---|
 | "The comment explains what the code does" | Rename the variable or extract a function instead. |
 | "I'll clean up the naming later" | Later never comes. Name it right now. |
-| "This helper might be useful elsewhere" | Inline it. Extract only when the third caller appears. |
+| "This helper might be useful elsewhere" | Keep it local. Extract when actual reuse or a clear domain boundary makes the abstraction simpler; three callers is the default threshold. |
 
 ## Red Flags
 
@@ -101,9 +98,9 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - Variables named `data`, `info`, `result`, `temp` in non-trivial scope
 - Commented-out code surviving review
 - Boolean variables without `is`/`has`/`should`/`can` prefix
-- Tests with no `describe` grouping or asserting on mock internals
+- Tests that assert on mock internals instead of observable behavior
 
 ## See Also
 
-- `~/.ai-shared/references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section
+- imported `references/testing-patterns.md` — test structure, anti-patterns, and patterns referenced by the Testing Style section
 - `~/.ai-shared/references/refactoring-patterns.md` — structured simplification process and pattern tables for refactoring tasks

@@ -1,6 +1,6 @@
 # Testing Patterns
 
-Quick-reference for test structure, naming, and common patterns. Referenced by `reviewing-code` (Layer 2) and `applying-coding-style` (Testing Style).
+Quick-reference for test structure, naming, and quality rules. Referenced by `reviewing-code` (Layer 2), `applying-coding-style` (Testing Style), and `test-driven-development`.
 
 ## Test Pyramid
 
@@ -56,6 +56,19 @@ describe('ComponentName', () => {
 | 4 | Input boundaries | Empty string, null, max length |
 | 5 | State transitions | Loading → success, loading → error |
 | 6 | Edge cases | Only when a bug proves the gap matters |
+
+## Test Quality Rules
+
+- Group scenarios in `describe('when ...')` blocks instead of mixing unrelated cases at the top level.
+- Make each test prove one intention-revealing behavior, not an implementation detail.
+- Review the completed test file and remove redundant, useless, or duplicate tests.
+- Prefer fewer high-signal tests over many overlapping tests; keep the clearest test when two prove the same behavior.
+- Delete tests that prove nothing, such as asserting a mock's return value against itself or relying on a snapshot without behavioral assertions.
+- Fix flaky tests at the root cause: timing, shared state, or network dependence. If a flaky test cannot be made reliable and protects no unique behavior, delete it rather than skip or retry it indefinitely.
+- Simplify setup when `beforeEach` is longer than the test. Prefer a factory with sensible defaults and override only what each scenario needs.
+- Cover the critical path first: happy path, business invariants, and the most likely failure. Add speculative edge cases only when risk or a prior bug justifies them.
+- Keep one behavioral focus per `it`. Multiple assertions are fine when they prove the same behavior from different angles.
+- Do not add production methods, flags, or exports solely to make code testable; improve the boundary instead.
 
 ## LLM Output And Prompt Evals
 

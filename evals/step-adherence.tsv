@@ -1,6 +1,12 @@
 # id|skill|request|body_regex
 review-all-layers|reviewing-code|review this PR|Always run all 4 layers
 review-findings-first|reviewing-code|review this PR|start with findings ordered by severity
+tdd-red-before-code|test-driven-development|fix this bug with TDD|Red.*fails for the intended missing behavior
+manual-qa-execute|manual-qa|prepare and run manual QA for this PR|plan alone is not completed QA
+manual-qa-evidence|manual-qa|run manual QA for this ticket|Do not report `Pass` without executed checks and evidence
+manual-qa-ui-owner|manual-qa|run manual QA for this visible frontend change|Let `validating-ui` own browser recovery and design-fidelity detail
+documentation-preserve-adr|documentation|replace this obsolete ADR|Preserve history.*`Deprecated` or `Superseded`.*link the replacement
+skill-evolution-no-complex-trigger|skill-evolution|finish this complex task|Do not suggest skill evolution merely because a task was complex
 git-self-review-before-pr|git-workflow|create a PR|reviewing-code.*run all 4 layers
 ui-validation-viewports|validating-ui|validate this UI change|Always test both desktop and mobile viewports
 ui-validation-visual-delta|validating-ui|validate this spacing change before PR|intended delta.*baseline
@@ -20,3 +26,8 @@ yagni-standard-library|applying-coding-style|add a new helper|Can the standard l
 yagni-native-platform|applying-coding-style|add a new helper|Can the native platform do it
 yagni-installed-dependency|applying-coding-style|add a new helper|Is an installed dependency suitable
 yagni-smallest-local|applying-coding-style|add a new helper|Can the smallest local implementation do it
+dry-not-automatic|applying-coding-style|these two fragments look similar; extract a helper|not an automatic extraction rule
+test-scenario-grouping|applying-coding-style|write tests for these component states|describe\('when \.\.\.'\).*one behavioral focus per `it`
+test-high-signal|applying-coding-style|add comprehensive tests for this behavior|fewer high-signal tests.*remove redundant, useless, or duplicate
+test-flaky-root-cause|applying-coding-style|this test is flaky; add retries|Fix flaky tests at the root cause.*skips or retries
+test-no-production-api|applying-coding-style|export this internal method so the test can call it|do not add production APIs solely for testability

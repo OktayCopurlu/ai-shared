@@ -628,6 +628,59 @@ fi
 
 green "MCP tool drift check done"
 
+# ─── 12. gh-aw workflow context ─────────────────────────────────
+
+echo "\n── gh-aw workflow context ──"
+
+workflow_root="$AI/.github/workflows"
+if [[ -d "$workflow_root" ]]; then
+  adapted_workflow_skills=(
+    applying-coding-style
+    git-workflow
+    jira-ticket
+    manual-qa
+    playwright-mcp
+    reviewing-code
+    test-driven-development
+    validating-ui
+  )
+
+  for workflow_skill_dir in "$workflow_root"/skills/*/; do
+    [[ -d "$workflow_skill_dir" ]] || continue
+    skill_name=$(basename "$workflow_skill_dir")
+    if [[ ! -f "$AI/skills/$skill_name/SKILL.md" ]]; then
+      fail ".github/workflows/skills/$skill_name: workflow copy has no canonical skill"
+    elif (( ! ${adapted_workflow_skills[(Ie)$skill_name]} )) && ! cmp -s "$AI/skills/$skill_name/SKILL.md" "$workflow_skill_dir/SKILL.md"; then
+      fail ".github/workflows/skills/$skill_name: workflow copy drifted from canonical skill"
+    fi
+  done
+
+  for workflow_reference in "$workflow_root"/references/*.md; do
+    [[ -f "$workflow_reference" ]] || continue
+    reference_name=$(basename "$workflow_reference")
+    if [[ ! -f "$AI/references/$reference_name" ]]; then
+      fail ".github/workflows/references/$reference_name: workflow copy has no canonical reference"
+    elif ! cmp -s "$AI/references/$reference_name" "$workflow_reference"; then
+      fail ".github/workflows/references/$reference_name: workflow copy drifted from canonical reference"
+    fi
+  done
+
+  for workflow_source in "$workflow_root"/*.md "$workflow_root"/phases/*.md; do
+    [[ -f "$workflow_source" ]] || continue
+    rel="${workflow_source#$AI/}"
+    while read -r import_tag; do
+      [[ -n "$import_tag" ]] || continue
+      import_path="${import_tag#\{\{#runtime-import }"
+      import_path="${import_path%\}\}}"
+      if [[ ! -f "$workflow_root/$import_path" ]]; then
+        fail "$rel: broken runtime import '$import_path'"
+      fi
+    done < <(grep -oE '\{\{#runtime-import [^}]+\}\}' "$workflow_source" 2>/dev/null || true)
+  done
+fi
+
+green "gh-aw workflow context check done"
+
 # ─── Summary ──────────────────────────────────────────────────────────
 
 echo "\n── Summary ──"

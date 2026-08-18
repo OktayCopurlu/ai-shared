@@ -12,6 +12,7 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 - Evidence over assertion. Cite file, search result, or output when useful.
 - Never falsely claim APIs, functions, files, env vars, routes, configs, tests, or behavior exist.
 - Never claim tested/passing/fixed unless actually verified.
+- For bug fixes, reproduce and localize before editing; rerun the reproduction afterward and add a regression test when feasible.
 
 ## Decision Making
 
@@ -35,10 +36,10 @@ Repo/path-specific instructions override these. AI config lives in `~/.ai-shared
 
 Skills in `~/.ai-shared/skills/` activate by task context:
 
-- **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first), `debugging` (breakage)
+- **Build**: `applying-coding-style` (all code), `test-driven-development` (test-first)
 - **Quality**: `reviewing-code` (4-layer) before PRs, `manual-qa` (ticket/diff QA execution), `security-hardening` (input/auth/deps)
 - **Deliver**: `git-workflow` (PR pipeline), `structuring-prs` (one PR vs a stack: plan multi-PR work or split a big PR), `jira-ticket` (ticket writing/review), `documentation` (ADRs, READMEs)
-- **Learn**: `skill-evolution` after complex tasks — capture, validate, codify
+- **Learn**: `skill-evolution` only for explicit save requests, repeated patterns, or observed reusable skill/tool drift
 - **Tools**: `atlassian-mcp` (Jira/Confluence), `github` (PRs/issues via `gh` CLI), `amplitude-analytics` (tracking), `contentful` (CMS), `google-drive` (Sheets/Docs), `figma-mcp` (Figma design URLs and node context)
 - **Browser**: default to the built-in VS Code integrated browser (`open_browser_page`, `run_playwright_code`, etc.) for most automation; load `playwright-mcp` for browser routing/tool details, plus `validating-ui` + `a11y-audit` (UI quality)
 - **Authenticated Browser**: when the user says Chrome is already logged in or asks to reuse an existing logged-in Chrome/SSO session that cannot be re-injected, use extension-backed `playwright-mcp`; the integrated browser runs a separate context and will not carry that session. When auth can be re-injected (basic auth, known cookie/token, forced headers), the integrated browser is sufficient.

@@ -1,5 +1,10 @@
 # id|skill|request|description_regex
 pr-review|reviewing-code|review this PR for missing tests|reviewing PRs.*review this.*check this PR
+coding-style|applying-coding-style|clean up the naming and comments in this Vue component|naming.*comment.*TypeScript.*Vue.*SCSS.*code quality
+documentation-adr|documentation|write an ADR for this architecture decision|ADR.*README.*technical documentation.*architecture decisions
+tdd-feature|test-driven-development|implement this behavior using TDD|Red-Green-Refactor.*requests TDD.*test-first
+manual-qa-pr|manual-qa|run manual QA for this PR and its linked ticket|functional.*regression QA.*manual QA.*PR/ticket validation
+skill-evolution-explicit|skill-evolution|save this reusable workflow as a skill|explicitly asks to save or codify.*pattern recurs.*skill drift
 github-pr-api|github|fetch PR comments from GitHub|GitHub.*pull requests.*reviews.*GitHub API operations
 jira-link|atlassian-mcp|read DSC-1986 and summarize it|Jira tickets.*Confluence.*Jira ticket
 figma-design|figma-mcp|open this Figma design and extract specs|Figma designs.*Figma URL.*read a design
