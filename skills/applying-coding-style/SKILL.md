@@ -97,7 +97,7 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 
 ## Testing Style
 
-- **Use `describe` blocks for each `when ...` case**: Group test cases by scenario with a clear `describe('when ...')` wrapper rather than mixing unrelated assertions at the top level
+- **Name tests by unit, scenario, and outcome**: Use an outer `describe('<unit>')`, a nested `describe('when <scenario>')`, and `it('should <expected behavior>')`. Put scenario conditions in `describe`, not `it`
 - **Keep tests intention-revealing**: Each test should prove one behavior that matters, not restate implementation details
 - **Review the test file after writing it**: Remove redundant, useless, or duplicate tests once the main coverage is in place
 - **Prefer fewer high-signal tests over many overlapping ones**: If two tests prove the same behavior, keep the clearer one

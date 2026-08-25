@@ -15,7 +15,7 @@ Write the test first. Make it pass. Clean up. Repeat.
 
 ## Your Rules
 
-- `describe` block: the unit being tested. `it` block: behavior in plain English — no "should" prefix
+- Name tests by unit, scenario, and outcome: use an outer `describe('<unit>')`, a nested `describe('when <scenario>')`, and `it('should <expected behavior>')`. Put scenario conditions in `describe`, not `it`
 - Test priority: happy path → business rules / invariants → edge cases → error cases
 - Each test sets up its own data — no shared mutable state
 - One behavior per `it`. When two tests share the same arrange/act, move it into `beforeEach` so each `it` asserts a single outcome
