@@ -107,6 +107,7 @@ That's it. All three tools now read from this repo.
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
 │   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
+│   ├── opencode-monthly-cost-report.prompt.md # Report — monthly OpenCode costs by project
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
 │   ├── review-pr.prompt.md         # Review — full PR review against ticket
