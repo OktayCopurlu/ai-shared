@@ -15,16 +15,25 @@ Write the test first. Make it pass. Clean up. Repeat.
 
 ## Your Rules
 
-- Name tests by unit, scenario, and outcome: use an outer `describe('<unit>')`, a nested `describe('when <scenario>')`, and `it('should <expected behavior>')`. Put scenario conditions in `describe`, not `it`
-- Test priority: happy path → business rules / invariants → edge cases → error cases
-- Each test sets up its own data — no shared mutable state
-- One behavior per `it`. When two tests share the same arrange/act, move it into `beforeEach` so each `it` asserts a single outcome
-- Mock external dependencies (API calls, timers) — not internal modules
-- For Vue child components, prefer `stubs: { Child: true }` over hand-rolled stub components, and assert on `findComponent({ name }).props(...)` rather than text rendered by the stub
-- Derive expected values from the fixture; do not duplicate fixture values as hardcoded strings in assertions
-- If `beforeEach` is longer than the test body, use a factory with sensible defaults: `buildOrder({ status: 'pending' })`
-- Extract test helpers only when duplication causes maintenance pain — keep them in the same file, not a shared grab bag
-- Assert properties and invariants alongside specific values — ask "what must always be true about the output?"
+- **Name tests by unit, scenario, and outcome**: Outer `describe('<unit>')`, nested `describe('when <scenario>')`, and `it('<present-tense behavior>')`.
+- **All `when` in `describe`, NEVER in `it`**: Scenario conditions and prerequisites belong in `describe('when ...')`. Never put `when` or `if` in an `it` title.
+- **No `should` prefix in `it`**: Use active present tense (`it('renders...')`, `it('navigates to...')`, `it('returns...')`). Never write `it('should...')`.
+- **Do not join independent outcomes with `and`**: Split independently observable behaviors or steps into separate `it` blocks. A conjunction is fine when it names one contract.
+- **One assertion focus per `it`**: Ideally 1 `expect` per `it`. Multiple expects are only permitted if verifying complementary facets of the exact same contract on the same subject (e.g. `role` and `aria-live` on a single element). Never test multiple controls, items, or actions in one `it`.
+- **Shared arrange/act in `beforeEach` when clearer**: Move non-trivial identical setup or trigger actions shared by multiple `it` blocks into `beforeEach`. Keep small scenario-specific setup inline when repetition preserves intent.
+- **No multi-phase tests**: Never assert initial state, perform an action mid-test, and assert updated state in the same `it`. Split into `describe('when initialized')` and `describe('when <action>')` with the action in `beforeEach`.
+- **Scoping discipline**: Always place new tests within the `describe('when <scenario>')` block matching that scenario. Never append tests to whatever `describe` block happens to be at the bottom of the file.
+- **No redundant phrasing**: Do not repeat the scenario from `describe` inside `it` (e.g. `describe('when close button is clicked')` ➔ `it('closes the panel')`, NOT `it('closes the panel on close button click')`).
+- **Test priority**: happy path → business rules / invariants → edge cases → error cases
+- **Each test sets up its own data**: no shared mutable state across tests
+- **Mock external dependencies only**: APIs, timers, third-party libraries — never mock internal modules
+- **For Vue child components**: prefer `stubs: { Child: true }` over hand-rolled stub components, and assert on `findComponent({ name }).props(...)` rather than text rendered by the stub
+- **Derive expected values from the fixture**: do not duplicate fixture values as hardcoded strings in assertions
+- **No brittle giant `toEqual`**: assert only relevant fields via `toMatchObject({...})` or specific properties when testing transformations
+- **No optional chaining in expectations**: `expect(x?.y).toBe(...)` hides false-positive `undefined === undefined`; tighten fixture types or assert defined first
+- **If `beforeEach` is longer than the test body**: use a factory with sensible defaults (`buildOrder({ status: 'pending' })`)
+- **Extract test helpers only when duplication causes maintenance pain**: keep them in the same file, not a shared grab bag
+- **Assert properties and invariants alongside specific values**: ask "what must always be true about the output?"
 
 ## Bug Fix TDD
 
@@ -56,6 +65,12 @@ Each cycle should respond to what you learned from the previous one.
 
 ## Red Flags
 
+- `it` title contains "should", "when", or "if", or joins independent outcomes with "and"
+- One `it` with multiple unrelated assertions or testing distinct outcomes instead of one behavior per `it`
+- Non-trivial identical arrange/act repeated across multiple `it` blocks when `beforeEach` would be clearer
+- Multi-phase test asserting initial state, triggering action, and asserting updated state in a single `it`
+- Test appended to an unrelated parent `describe` block instead of a matching scenario block
+- Redundant phrasing repeating the scenario inside the `it` title
 - Test written after the implementation and only tests the happy path
 - Test name describes implementation instead of behavior
 - Shared mutable state between tests
@@ -63,7 +78,7 @@ Each cycle should respond to what you learned from the previous one.
 - `beforeEach` that sets up more state than any single test needs
 - Tests that only assert equality to hardcoded values without checking invariants
 - Hand-rolled stub component whose template re-implements production logic (`:href="disabled ? undefined : url"`) — the test now verifies the stub
-- One `it` with many unrelated assertions, instead of one behavior per `it`
+- Brittle giant `toEqual` object matching that breaks on unrelated schema additions
 - Hardcoded SKUs/URLs/IDs duplicated from the fixture in assertions
 - `expect(x).toBe(fixture.a?.b?.c)` — optional chaining hides false-positive `undefined === undefined`
 

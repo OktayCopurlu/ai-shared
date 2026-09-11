@@ -25,6 +25,7 @@ If the ticket is a code workflow:
 7. when behavior changes, read the existing test file first and decide test coverage intentionally:
    - identify the **domain invariants / business rules** the change must preserve (what must always be true — e.g. totals, pricing/rounding, auth boundaries, state transitions) and ensure at least one test would fail if a rule were violated, not just if the happy path breaks
    - if the change is permanent, shared, or expected to stay: add or update tests in the same pass
+   - follow `~/.ai-shared/references/testing-patterns.md` and the `test-driven-development` skill strictly: every `when` in `describe`, no `should` prefix (use present tense), no `and` joining independent outcomes in `it` titles, one assertion focus per `it` (split independent outcomes), non-trivial shared arrange/act in `beforeEach` when that is clearer, no multi-phase tests, and accurate `describe` block scoping
    - if the change is experiment-specific and likely temporary: test updates may be skipped to avoid wasting effort on short-lived code
    - do not remove or weaken existing meaningful coverage only because a change is experimental
 8. if the ticket involves UI changes, run a **pre-implementation discovery** before writing code (see also `~/.ai-shared/references/search-first.md`):

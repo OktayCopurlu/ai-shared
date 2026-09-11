@@ -20,3 +20,6 @@ yagni-standard-library|applying-coding-style|add a new helper|Can the standard l
 yagni-native-platform|applying-coding-style|add a new helper|Can the native platform do it
 yagni-installed-dependency|applying-coding-style|add a new helper|Is an installed dependency suitable
 yagni-smallest-local|applying-coding-style|add a new helper|Can the smallest local implementation do it
+tdd-scenario-hierarchy|test-driven-development|write tests for this behavior|All `when` in `describe`
+tdd-one-assertion-focus|test-driven-development|write tests for this behavior|One assertion focus per `it`
+tdd-shared-setup|test-driven-development|write tests for this behavior|Shared arrange/act in `beforeEach` when clearer

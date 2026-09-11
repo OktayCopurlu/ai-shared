@@ -186,9 +186,12 @@ Scan every changed file for mechanical issues. Load `applying-coding-style` firs
 
 For every changed function/component, check the test file.
 
-**Check for:** missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, snapshot tests without behavioral assertions, new code branches with no test, mocks that are never asserted on, hand-rolled stub components that re-implement production logic, single `it` blocks with many unrelated assertions, hardcoded fixture values duplicated in expectations, optional chaining inside `expect(...).toBe(...)` that can pass as `undefined === undefined`.
+**Check for:**
+- **Coverage**: missing tests for domain invariants / business rules (a test that fails if the rule is violated, not just if the happy path breaks), missing error state tests, uncovered loading/pending branches, missing edge cases, new code branches with no test, snapshot tests without behavioral assertions, mocks that are never asserted on.
+- **Structure & Style**: `when` or `if` in `it` titles instead of `describe('when ...')`, `and` joining independently observable outcomes in one `it`, `should` prefix instead of present tense verbs, too many `expect` calls in one `it` (must be 1 assertion focus per test), non-trivial identical arrange/act repeated across multiple `it` blocks when `beforeEach` would be clearer, multi-phase tests (asserting initial state, action, and updated state in one `it`), tests appended to unrelated parent `describe` blocks, redundant phrasing in `it` repeating `describe`.
+- **Quality & Brittleness**: hand-rolled stub components that re-implement production logic, brittle giant `toEqual` assertions on large objects, hardcoded fixture values duplicated in expectations, optional chaining inside `expect(...).toBe(...)` that can pass as `undefined === undefined`.
 
-**Output:** `[file] missing test for: <scenario>`. Describe the gap; in both modes, do not write tests unless the user explicitly requests it.
+**Output:** `[file] missing test for: <scenario>` or `[file:line] test style defect: <issue and fix>`. Describe the gap; in both modes, do not write tests unless the user explicitly requests it.
 
 **When Layer 2 is N/A:** docs-only changes, formatting-only changes, generated files, config/types changes with no behavior impact, or explicitly temporary experiment code that should not drive new permanent coverage. State `N/A — no persistent behavior change to cover.`
 

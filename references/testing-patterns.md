@@ -15,35 +15,75 @@ Quick-reference for test structure, naming, and common patterns. Referenced by `
 
 Prefer unit tests for logic. Use integration tests for component behavior. Reserve E2E for critical user flows.
 
+This reference is the canonical source for test-writing structure. Skills and prompts may summarize these rules, but must not contradict them.
+
 ## Test Structure
 
 ```typescript
 describe('ComponentName', () => {
   describe('when condition is met', () => {
-    it('does the expected thing', () => {
-      // Arrange
+    let result: ReturnType<typeof doThing>;
+
+    beforeEach(() => {
       const input = createInput({ overrides });
+      result = doThing(input);
+    });
 
-      // Act
-      const result = doThing(input);
+    it('returns the expected status', () => {
+      expect(result.status).toBe('success');
+    });
 
-      // Assert
-      expect(result).toBe(expected);
+    it('sets the completion timestamp', () => {
+      expect(result.completedAt).toBeDefined();
     });
   });
 
   describe('when error occurs', () => {
     it('handles the failure gracefully', () => {
-      // ...
+      const result = doThing(invalidInput);
+
+      expect(result.error).toBeDefined();
     });
   });
 });
 ```
 
-## Naming Conventions
+## Naming and Writing Conventions
 
-- `describe` blocks: noun (component/function name) or `when ...` (scenario)
-- `it` blocks: present tense behavior — `it('renders the error message')` not `it('should render error message')`
+### Grammar & Phrasing
+- `describe` blocks:
+  - Root: noun (`ComponentName`, `useProductSorting`, `formatPrice`)
+  - Scenario: `when <scenario or condition>` (`when options are unavailable`, `when close button is clicked`)
+  - Sub-scenario: nested `describe('when ...')`
+  - **All `when` conditions belong in `describe`, NEVER in `it`.**
+- `it` blocks:
+  - Present-tense active verb: `it('renders the error message')`, `it('navigates to the filter route')`.
+  - **NO `should`**: NEVER write `it('should render ...')` or `it('should return ...')`.
+  - **NO `when`**: NEVER write `it('returns empty array when input is undefined')`. Lift to `describe('when input is undefined', () => { it('returns an empty array') })`.
+  - **Do not join independent outcomes with `and`**: Split `it('updates query and resets page')` when query and pagination are separate observable outcomes. A conjunction is fine when it names one contract.
+  - **NO redundant phrasing**: Do not repeat the scenario from `describe` in `it`.
+    - ❌ `describe('when close button is clicked', () => { it('closes panel on close button click') })`
+    - ✅ `describe('when close button is clicked', () => { it('closes the panel') })`
+
+### Assertion Discipline (Expectations Rules)
+- **One assertion focus per `it`**:
+  - Prefer a separate `it` for each expected outcome/expect.
+  - Multiple `expect` calls in one `it` are ONLY permitted when verifying facets of the **exact same property or contract on the same subject** (e.g. asserting `role="region"` and `aria-live="polite"` on the same live region element).
+  - NEVER combine assertions checking different controls, multiple array items, or different steps in one `it`.
+- **No multi-phase tests (Initial state + action + updated state)**:
+  - ❌ Checking initial state, performing an action mid-test, and asserting updated state in one `it`.
+  - ✅ Split into two distinct scenarios:
+    1. `describe('when initialized')` ➔ `it('exposes initial state')`
+    2. `describe('when <action>')` ➔ action in `beforeEach`, `it('updates to new state')`
+
+### Setup & `beforeEach` Discipline
+- **Shared arrange/act in `beforeEach`**: Move non-trivial identical setup or trigger actions into `beforeEach` when that makes multiple `it` blocks clearer. Keep small scenario-specific setup inline when repetition preserves intent.
+- **Minimal `it` bodies**: When setup is in `beforeEach`, `it` blocks are 1–3 lines asserting only the expected outcome.
+- **Factory over giant beforeEach**: When setup requires variations, use a factory function (`buildProps({ isVisible: false })`) rather than a single monolithic `beforeEach` that configures state no individual test needs.
+
+### Scoping & Nesting Discipline
+- **Never append tests to unrelated `describe` blocks**: Every test must be located inside the `describe('when ...')` block matching its specific scenario. Never append new tests to whatever `describe` block is at the bottom of the file.
+
 - Test files: colocated — `Button.test.ts` next to `Button.vue`
 
 ## What to Test
@@ -102,8 +142,16 @@ When testing rendered UI, prefer queries that prove the user-facing accessibilit
 
 | Pattern | Problem | Fix |
 |---------|---------|-----|
+| `when` inside `it` title | Scenario condition belongs in test hierarchy. | Move condition into `describe('when <condition>', () => { ... })`. Keep `it` for outcome only. |
+| `and` joining independent outcomes in an `it` title | Tests multiple behaviors or steps in one test. | Split each independently observable outcome into its own `it`; keep conjunctions that name one contract. |
+| `should` prefix in `it` | Fluffy, passive phrasing. Inconsistent with suite. | Use active present-tense verbs: `it('renders...')`, `it('updates...')`, `it('navigates...')`. |
+| Too many `expect` calls in one `it` | Failure masks which behavior broke; couples distinct checks. | One assertion focus per `it`. Ideally 1 `expect` per test; split across multiple `it` blocks. |
+| Multi-phase test in one `it` | Asserts initial state, triggers action mid-test, asserts new state. | Separate into `describe('when initialized')` and `describe('when <action>')` with action in `beforeEach`. |
+| Non-trivial identical setup in multiple `it`s | Clutters tests, hides assertion focus, maintenance burden. | Move shared arrange and act into `beforeEach`; keep short setup inline when it is clearer. |
+| Appending tests to wrong `describe` | Tests placed under unrelated blocks (e.g. at file bottom). | Create or locate the exact `describe('when <scenario>')` matching the unit's context. |
+| Redundant phrasing repeating `describe` | `describe('when clicked')` + `it('does X on click')` is stutter. | Let test hierarchy read naturally: `describe('when clicked')` ➔ `it('does X')`. |
 | Snapshot-only tests | Don't verify behavior. Break on any change. | Add behavioral assertions alongside or instead. |
-| Testing implementation | Asserting on internal state, method calls, or DOM structure | Test observable output — what the user sees or what the function returns. |
+| Testing implementation / DOM tags | Verifies internal tag names (`element.tagName === 'INPUT'`) or internal state. | Test observable output, accessibility roles, labels, or component props. |
 | CSS/XPath selectors for UI behavior | Ties tests to invisible DOM structure and misses broken accessible names. | Query by role/name, label, text, or alt text first. |
 | Test ID as first choice | Test passes even when users or assistive tech cannot find the control. | Use a test ID only after semantic queries cannot express the contract. |
 | Mocking everything | Tests pass but prove nothing — they test the mocks. | Mock only external boundaries (APIs, timers). Keep internal logic real. |
@@ -112,8 +160,8 @@ When testing rendered UI, prefer queries that prove the user-facing accessibilit
 | Giant beforeEach | Setup longer than the test. Hard to read, hard to modify. | Extract a factory with sensible defaults. Override per test. |
 | No error path tests | Happy path only. Bugs hide in error handling. | Always test the most likely failure mode. |
 | Hand-rolled stub components | Stub template duplicates production logic; test verifies the stub, not the real component. | Use `stubs: { Child: true }` and assert on `findComponent({ name }).props(...)`. |
-| Many assertions in one `it` | Failure message hides which behavior broke. | One behavior per `it`. Move shared arrange/act into `beforeEach`. |
 | Hardcoded values that duplicate the fixture | Fixture changes silently desync from tests. | Derive expected values from the fixture. |
+| Brittle giant `toEqual` object matching | Verifying 50-field object breaks when unrelated fields change. | Use `toMatchObject({...})` for relevant fields or assert specific properties. |
 | Optional chaining inside `expect(...).toBe(...)` | `undefined === undefined` passes when the path disappears. | Tighten fixture types, or `expect(value).toBeDefined()` before the equality assertion. |
 
 ## Vue Component Testing

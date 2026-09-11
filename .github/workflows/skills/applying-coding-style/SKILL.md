@@ -53,8 +53,30 @@ These rules apply to ALL code I write or modify. They override generic conventio
 
 ## Code Shape
 
-- **DRY**: When the same logic appears in 2+ places, extract it. Duplicated conditions, ternaries, or formatting calls are a code smell
+### YAGNI Decision Ladder
+
+Before adding code, evaluate these options in order and stop at the first one that satisfies the requirement:
+
+1. **Does this need to exist?** If the request does not require a change, do not add one.
+2. **Is it already in the codebase?** Use the existing behavior, component, utility, or configuration.
+3. **Can the standard library do it?** Prefer it over new code or a dependency.
+4. **Can the native platform do it?** Prefer browser, framework, or runtime primitives.
+5. **Is an installed dependency suitable?** Use it before adding another dependency.
+6. **Can the smallest local implementation do it?** Keep it inline with one caller. At two occurrences, assess whether duplication can drift; extract by the third occurrence or earlier when the maintenance risk is already clear.
+
+This ladder reduces unnecessary code. It never permits skipping validation, error handling, security, or accessibility requirements.
+
+- **DRY**: Two occurrences are a signal to assess duplication, not an automatic extraction rule. Consolidate when copies can drift; extract by the third occurrence
 - **Prefer slots over prop creep**: If a new prop is only needed to customize rendering, check whether a slot is cleaner and more future-proof
+
+### Vertical Spacing
+
+- **One blank line between logical blocks**: Separate consecutive blocks — `if`/`else` chains, loops, `try`/`catch`, function declarations, `describe`/`it` blocks — with exactly one blank line
+- **One blank line before a `return`** when the function body has more than one statement
+- **Blank line after the import block** and after variable declaration groups that precede logic
+- **Never stack blank lines**: two or more consecutive blank lines are noise; collapse them to one
+- **No blank line at the start or end of a block body**: don't open a function, `if`, or class with an empty line
+- **Don't use blank lines as section dividers**: if a function needs internal grouping to be readable, extract a function instead
 
 ## Change Discipline
 
@@ -67,7 +89,7 @@ These rules apply to ALL code I write or modify. They override generic conventio
 Coding agent or human prevent the "losing touch" failure mode where the codebase drifts past your understanding while looking fine on the surface.
 
 - **Read every diff before accepting it**: If you haven't read the code, you haven't reviewed it, and you haven't done the work. Opening a PR with unreviewed agent output delegates your job to the reviewer.
-- **Refactor continuously, not later**: Agents happily add near-duplicate code and layers of indirection. When the same shape appears twice, stop and consolidate — don't promise yourself a cleanup pass. If you can no longer hold the module in your head, throw the branch away and regenerate with a tighter prompt.
+- **Refactor continuously, not later**: Agents happily add near-duplicate code and layers of indirection. When the same shape appears twice, stop and assess whether it can drift; consolidate by the third occurrence or sooner when the risk is clear. If you can no longer hold the module in your head, throw the branch away and regenerate with a tighter prompt.
 - **Decide design before prompting**: Agents treat "we'll figure out the API later" as permission to invent one. Make naming, module boundaries, and data-shape decisions yourself before asking for an implementation. Deferring feels cheap; the resulting divergence is expensive.
 - **Don't delegate what you can't evaluate**: Agents are useful where you can check the result — failing test, compiler error, behavior you can exercise. They are dangerous where "correct" is subjective (API design, abstraction choice, product shape). In that zone, write it yourself or sketch it first.
 - **Stop when tired**: Fatigue produces vague prompts, which produce sprawling diffs, which produce more fatigue. Notice the loop and close the laptop.
@@ -75,7 +97,14 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 
 ## Testing Style
 
-- **Use `describe` blocks for each `when ...` case**: Group test cases by scenario with a clear `describe('when ...')` wrapper rather than mixing unrelated assertions at the top level
+- **Name tests by unit, scenario, and outcome**: Outer `describe('<unit>')`, nested `describe('when <scenario>')`, and `it('<present-tense behavior>')`. Never use "should" prefix, never put scenario conditions in `it`, and never join independent outcomes with "and".
+- **All `when` in `describe`, NEVER in `it`**: Context and preconditions belong in `describe('when ...')`. `it` states only the observable outcome.
+- **Do not join independent outcomes with `and`**: Split independently observable behaviors into separate `it` blocks. A conjunction is fine when it names one contract.
+- **One assertion focus per test**: Ideally 1 `expect` per `it`. Multiple expects are only allowed when verifying complementary facets of the exact same property/contract on the same subject. Different outcomes require different `it` blocks.
+- **Move shared arrange/act to `beforeEach` when clearer**: Extract non-trivial identical setup or trigger actions shared by multiple `it` blocks. Keep small scenario-specific setup inline when repetition preserves intent.
+- **No multi-phase tests**: Never assert initial state, perform an action mid-test, and assert updated state in one `it`. Split into separate `describe` blocks (`when initialized` vs `when <action>`).
+- **Strict `describe` scoping**: Place every test in the specific `describe('when ...')` block for its scenario. Never append new tests to whatever `describe` block happens to be at the bottom of the file.
+- **No redundant phrasing**: Do not repeat the scenario from `describe` in `it`. Let the hierarchy read naturally.
 - **Keep tests intention-revealing**: Each test should prove one behavior that matters, not restate implementation details
 - **Review the test file after writing it**: Remove redundant, useless, or duplicate tests once the main coverage is in place
 - **Prefer fewer high-signal tests over many overlapping ones**: If two tests prove the same behavior, keep the clearer one
@@ -83,7 +112,6 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - **Kill flaky tests on sight**: If a test fails intermittently, fix the root cause (timing, shared state, network) or delete it. A flaky test that is skipped or retried is worse than no test — it erodes trust in the suite
 - **Simplify setup**: If `beforeEach` is longer than the test itself, the setup is too heavy. Extract a factory function with sensible defaults and let each test override only what it cares about
 - **Cover the critical path first**: Happy path + the most likely error path > exhaustive edge cases. Add edge case tests only when a bug proves the gap matters
-- **One assertion focus per test**: A test can have multiple `expect` calls, but they should all verify the same behavior from different angles — not test unrelated side effects in the same block
 - **No test-only production code**: Do not add methods, flags, or exports to production code solely to make it testable. Rethink the boundary instead
 
 ## Common Rationalizations
@@ -100,8 +128,13 @@ Coding agent or human prevent the "losing touch" failure mode where the codebase
 - Inline comments restating what the next line does
 - Variables named `data`, `info`, `result`, `temp` in non-trivial scope
 - Commented-out code surviving review
+- Consecutive blocks crammed together with no blank line, or padded with multiple blank lines
 - Boolean variables without `is`/`has`/`should`/`can` prefix
 - Tests with no `describe` grouping or asserting on mock internals
+- Test titles containing "should", "when", or "if", or joining independent outcomes with "and"
+- Multiple unrelated `expect` calls in one `it` instead of splitting by outcome
+- Non-trivial identical setup repeated across multiple `it` blocks when `beforeEach` would be clearer
+- Tests dumped into the wrong or unrelated parent `describe` block
 
 ## See Also
 
