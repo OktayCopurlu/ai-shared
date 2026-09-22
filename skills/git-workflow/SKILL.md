@@ -154,20 +154,19 @@ Before marking the PR workflow complete:
 
 ### Description
 
-One or two sentences: what changed and why.
+One or two sentences: what this PR does. Like "This PR adds a new feature" or "This PR fixes a bug".
 
 ### Verification (exceptional; omit by default)
 
-Include only when requested or when a concise, concrete result materially helps reviewers understand an unusual validation result. Do not use it for routine browser checks, CI status, or generic test completion.
+Include only when requested or when a concise, concrete result materially helps reviewers understand an unusual validation result. Do not use it for routine browser checks, CI status, or generic test completion.  (if really needed; include only when necessary. skip otherwise entirely).
 
 ### Test Instructions
 
-- Storybook preview: [Story name](<storybook-preview-url>)
-- Regression compare: [baseline page](<baseline-url>) vs [preview page](<preview-page-url>)
+- Navigate to [the affected pages](real-clickable-affected-pages-link)
 - Verify the change matches [mobile design](real-mobile-figma-link) and [desktop design](real-desktop-figma-link)
 - Confirm unaffected behavior stays the same
 
 ### Note
 
-Temporary caveats, mock data, or follow-up ticket links (if any).
+Temporary caveats, mock data, or follow-up ticket links (if really needed; include only when necessary. skip otherwise entirely).
 ```
