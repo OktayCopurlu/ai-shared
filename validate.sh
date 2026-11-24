@@ -58,6 +58,7 @@ symlink_targets=(
   "$HOME/.github/copilot-instructions.md"
   "$HOME/.codex/instructions.md"
   "$HOME/.config/opencode/AGENTS.md"
+  "$HOME/.gemini/config/AGENTS.md"
   "$HOME/.copilot/skills"
   "$HOME/.copilot/agents"
   "$HOME/Library/Application Support/Code/User/prompts"
@@ -66,6 +67,9 @@ symlink_targets=(
   "$HOME/.codex/references"
   "$HOME/.config/opencode/skills"
   "$HOME/.config/opencode/references"
+  "$HOME/.gemini/config/skills"
+  "$HOME/.gemini/config/agents"
+  "$HOME/.gemini/config/references"
 )
 
 for target in "${symlink_targets[@]}"; do
@@ -96,6 +100,38 @@ for prompt in "$AI"/prompts/*.prompt.md; do
     fail "Missing OpenCode command symlink: $oc_link"
   elif [[ ! -e "$oc_link" ]]; then
     fail "Broken OpenCode command symlink: $oc_link -> $(readlink "$oc_link")"
+  fi
+done
+
+# Antigravity CLI per-prompt skill symlinks
+agy_skip_prompts=(grill-me opencode-monthly-cost-report)
+
+for prompt in "$AI"/prompts/*.prompt.md; do
+  [[ -f "$prompt" ]] || continue
+  name=$(basename "$prompt" .prompt.md)
+  if (( ${agy_skip_prompts[(Ie)$name]} )); then
+    continue
+  fi
+  agy_link="$HOME/.gemini/antigravity-cli/skills/${name}/SKILL.md"
+  if [[ ! -L "$agy_link" ]]; then
+    fail "Missing Antigravity CLI prompt skill symlink: $agy_link"
+  elif [[ ! -e "$agy_link" ]]; then
+    fail "Broken Antigravity CLI prompt skill symlink: $agy_link -> $(readlink "$agy_link")"
+  fi
+done
+
+legacy_agy_targets=(
+  "$HOME/.gemini/antigravity-cli/instructions.md"
+  "$HOME/.gemini/antigravity-cli/prompts"
+  "$HOME/.gemini/antigravity-cli/agents"
+  "$HOME/.gemini/antigravity-cli/references"
+  "$HOME/.gemini/antigravity-cli/skills"
+)
+
+for target in "${legacy_agy_targets[@]}"; do
+  [[ -L "$target" ]] || continue
+  if [[ "$(readlink "$target")" == "$AI"* ]]; then
+    fail "Legacy Antigravity CLI symlink still points to ai-shared: $target -> $(readlink "$target")"
   fi
 done
 
@@ -357,8 +393,19 @@ echo "\n── Prompt files ──"
 for f in "$AI"/prompts/*.prompt.md; do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
+  name=$(basename "$f" .prompt.md)
   if [[ ! -s "$f" ]]; then
     fail "$rel: empty prompt file"
+    continue
+  fi
+  if (( ! ${agy_skip_prompts[(Ie)$name]} )); then
+    desc=$(frontmatter_field "$f" description)
+    if [[ -z "$desc" ]]; then
+      fail "$rel: frontmatter missing 'description' (required for Antigravity CLI slash command)"
+    fi
+    if [[ -d "$AI/skills/$name" ]]; then
+      fail "$rel: prompt name '$name' collides with skill 'skills/$name'"
+    fi
   fi
 done
 

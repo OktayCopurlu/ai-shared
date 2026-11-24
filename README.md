@@ -1,10 +1,10 @@
 # ai-shared — Central AI Configuration
 
-Single source of truth for skills, prompts, agents, and global instructions consumed by VS Code Copilot, Codex, and OpenCode via symlinks.
+Single source of truth for skills, prompts, agents, and global instructions consumed by VS Code Copilot, Codex, OpenCode, and Antigravity (`agy` CLI & App) via symlinks.
 
 ## What this is
 
-One folder, three tools. Edit here, every agent picks it up:
+One folder, four tools. Edit here, every agent picks it up:
 
 - **Global instructions** — rules every conversation loads (`instructions.md`)
 - **Skills** — reusable, on-demand domain behavior (`skills/`)
@@ -19,11 +19,11 @@ One folder, three tools. Edit here, every agent picks it up:
 git clone <repo> ~/.ai-shared
 cd ~/.ai-shared
 cp .secrets.example .secrets   # fill in local credentials (gitignored)
-./setup.sh                     # create all symlinks for Copilot/Codex/OpenCode
+./setup.sh                     # create all symlinks for Copilot/Codex/OpenCode/Antigravity
 ./validate.sh                  # catch broken symlinks, frontmatter issues, empty files
 ```
 
-That's it. All three tools now read from this repo.
+That's it. All four tools now read from this repo.
 
 ## Daily workflow
 
@@ -106,7 +106,6 @@ That's it. All three tools now read from this repo.
 │   ├── pip.prompt.md               # Automation — start experimental delivery pipeline in background
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
-│   ├── manual-qa.prompt.md         # QA — plan and execute manual QA
 │   ├── opencode-monthly-cost-report.prompt.md # Report — monthly OpenCode costs by project
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
@@ -159,29 +158,34 @@ When content feels heavy, first decide whether the problem is scope, duplication
 
 All tools point back here. **Never edit the symlinked copies — always edit the source in `~/.ai-shared/`.**
 
-| Source (ai-shared)    | Symlink target                                     | Tool            | Notes                                                                                                                         |
-| --------------------- | -------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `instructions.md`     | `~/.github/copilot-instructions.md`                | VS Code Copilot | Auto-loaded every conversation                                                                                                |
-| `instructions.md`     | `~/.codex/instructions.md`                         | Codex           | Auto-loaded every conversation                                                                                                |
-| `instructions.md`     | `~/.config/opencode/AGENTS.md`                     | OpenCode        | Global rules file; OpenCode reads `AGENTS.md` not `instructions.md`                                                           |
-| `skills/`             | `~/.copilot/skills/`                               | VS Code Copilot | Directory symlink; skills loaded on demand via `<skills>` block                                                               |
-| `skills/*`            | `~/.codex/skills/*` (per-skill symlinks)           | Codex           | Requires per-skill symlinks; no directory symlink support                                                                     |
-| `skills/`             | `~/.config/opencode/skills/`                       | OpenCode        | Directory symlink; on-demand loading                                                                                          |
-| `agents/`             | `~/.copilot/agents/`                               | VS Code Copilot | Directory symlink; Codex does not support custom agents                                                                       |
-| `agents/`             | _(not symlinked)_                                  | OpenCode        | **Not compatible** — OpenCode agents require different frontmatter (`mode`, `model`, `permission` object) and `.md` extension |
-| `prompts/`            | `~/Library/Application Support/Code/User/prompts/` | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder                                                            |
-| `prompts/`            | `~/.codex/prompts/`                                | Codex           | Slash-command prompts                                                                                                         |
-| `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file)      | OpenCode        | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
-| `references/`         | `~/.copilot/references/`                           | VS Code Copilot | Directory symlink; shared checklists                                                                                          |
-| `references/`         | `~/.codex/references/`                             | Codex           | Directory symlink; shared checklists                                                                                          |
-| `references/`         | `~/.config/opencode/references/`                   | OpenCode        | Directory symlink; shared checklists                                                                                          |
+| Source (ai-shared)    | Symlink target                                         | Tool            | Notes                                                                                                                         |
+| --------------------- | ------------------------------------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `instructions.md`     | `~/.github/copilot-instructions.md`                    | VS Code Copilot | Auto-loaded every conversation                                                                                                |
+| `instructions.md`     | `~/.codex/instructions.md`                             | Codex           | Auto-loaded every conversation                                                                                                |
+| `instructions.md`     | `~/.config/opencode/AGENTS.md`                         | OpenCode        | Global rules file; OpenCode reads `AGENTS.md` not `instructions.md`                                                           |
+| `instructions.md`     | `~/.gemini/config/AGENTS.md`                           | Antigravity     | Global always-on rules for `agy` CLI and Antigravity App (coexists with `~/.gemini/GEMINI.md`)                                |
+| `skills/`             | `~/.copilot/skills/`                                   | VS Code Copilot | Directory symlink; skills loaded on demand via `<skills>` block                                                               |
+| `skills/*`            | `~/.codex/skills/*` (per-skill symlinks)               | Codex           | Requires per-skill symlinks; no directory symlink support                                                                     |
+| `skills/`             | `~/.config/opencode/skills/`                           | OpenCode        | Directory symlink; on-demand loading                                                                                          |
+| `skills/`             | `~/.gemini/config/skills/`                             | Antigravity     | Directory symlink; loaded on demand and exposed as `/<skill>` slash commands in `agy` CLI and App                             |
+| `agents/`             | `~/.copilot/agents/`                                   | VS Code Copilot | Directory symlink; Codex does not support custom agents                                                                       |
+| `agents/`             | _(not symlinked)_                                      | OpenCode        | **Not compatible** — OpenCode agents require different frontmatter (`mode`, `model`, `permission` object) and `.md` extension |
+| `agents/`             | `~/.gemini/config/agents/`                             | Antigravity     | Directory symlink; available in `/agents` and `agy --agent <name>`                                                            |
+| `prompts/`            | `~/Library/Application Support/Code/User/prompts/`     | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder                                                            |
+| `prompts/`            | `~/.codex/prompts/`                                    | Codex           | Slash-command prompts                                                                                                         |
+| `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file)          | OpenCode        | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
+| `prompts/*.prompt.md` | `~/.gemini/antigravity-cli/skills/<name>/SKILL.md`     | Antigravity CLI | Per-prompt skill symlinks exposed as `/<name>` slash commands (skips `grill-me` built-in and `opencode-monthly-cost-report`)  |
+| `references/`         | `~/.copilot/references/`                               | VS Code Copilot | Directory symlink; shared checklists                                                                                          |
+| `references/`         | `~/.codex/references/`                                 | Codex           | Directory symlink; shared checklists                                                                                          |
+| `references/`         | `~/.config/opencode/references/`                       | OpenCode        | Directory symlink; shared checklists                                                                                          |
+| `references/`         | `~/.gemini/config/references/`                         | Antigravity     | Directory symlink; shared checklists                                                                                          |
 
 ## Rules for agents
 
 - **Creating/updating skills, prompts, or agents**: always write to `~/.ai-shared/...` — symlinks propagate automatically.
-- **Adding a new prompt**: create `~/.ai-shared/prompts/<name>.prompt.md`, then run `./setup.sh` so OpenCode per-command symlinks are refreshed.
+- **Adding a new prompt**: create `~/.ai-shared/prompts/<name>.prompt.md` (with `description:` frontmatter), then run `./setup.sh` so OpenCode and Antigravity CLI per-command symlinks are refreshed.
 - **Adding a new skill**: create `~/.ai-shared/skills/<name>/SKILL.md`, then run `./setup.sh` so Codex per-skill symlinks are refreshed.
-- **Adding a new agent**: create `~/.ai-shared/agents/<name>.agent.md`; Copilot picks it up through the `~/.copilot/agents` directory symlink.
+- **Adding a new agent**: create `~/.ai-shared/agents/<name>.agent.md`; Copilot and Antigravity pick it up through their `agents` directory symlinks.
 - **Global instructions**: edit `~/.ai-shared/instructions.md` — all tools pick up changes.
 - This folder is git-tracked. Commit changes to preserve them.
 
@@ -269,7 +273,6 @@ graph LR
   P_PROJDESIGN[/project-design/]:::prompt
   P_IMPL[/implementation/]:::prompt
   P_INV[/investigation/]:::prompt
-  P_QA[/manual-qa/]:::prompt
   P_TEST[/test/]:::prompt
   P_PR[/pr/]:::prompt
   P_REVIEW[/address-review/]:::prompt
@@ -332,7 +335,6 @@ graph LR
   P_IMPL --> S_MQA
   P_IMPL --> R_SEARCH
   P_IMPL --> R_WORK
-  P_QA --> S_MQA
   P_TEST --> S_TDD
   P_TEST --> S_STYLE
   P_TEST --> R_TEST

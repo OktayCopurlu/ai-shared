@@ -9,7 +9,21 @@ AI="$HOME/.ai-shared"
 echo "Setting up ai-shared symlinks..."
 
 # Create target directories
-mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references ~/.gemini/antigravity-cli
+mkdir -p ~/.github ~/.copilot ~/.codex/skills ~/.config/opencode/commands ~/.config/opencode/references ~/.gemini/config ~/.gemini/antigravity-cli
+
+# Remove legacy Antigravity CLI symlinks replaced by ~/.gemini/config and per-prompt skills
+for legacy_agy in \
+  "$HOME/.gemini/antigravity-cli/instructions.md" \
+  "$HOME/.gemini/antigravity-cli/prompts" \
+  "$HOME/.gemini/antigravity-cli/agents" \
+  "$HOME/.gemini/antigravity-cli/references" \
+  "$HOME/.gemini/antigravity-cli/skills"; do
+  if [[ -L "$legacy_agy" && "$(readlink "$legacy_agy")" == "$AI"* ]]; then
+    echo "  🧹 Removing legacy Antigravity CLI symlink: $legacy_agy"
+    rm "$legacy_agy"
+  fi
+done
+mkdir -p ~/.gemini/antigravity-cli/skills
 
 # Helper: create symlink (safe — only removes existing symlinks, backs up real files)
 link() {
@@ -29,7 +43,7 @@ link() {
 link "$AI/instructions.md" ~/.github/copilot-instructions.md
 link "$AI/instructions.md" ~/.codex/instructions.md
 link "$AI/instructions.md" ~/.config/opencode/AGENTS.md
-link "$AI/instructions.md" ~/.gemini/antigravity-cli/instructions.md
+link "$AI/instructions.md" ~/.gemini/config/AGENTS.md
 
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
@@ -39,10 +53,9 @@ link "$AI/prompts"          ~/.codex/prompts
 link "$AI/references"       ~/.copilot/references
 link "$AI/skills"           ~/.config/opencode/skills
 link "$AI/references"       ~/.config/opencode/references
-link "$AI/skills"           ~/.gemini/antigravity-cli/skills
-link "$AI/prompts"          ~/.gemini/antigravity-cli/prompts
-link "$AI/agents"           ~/.gemini/antigravity-cli/agents
-link "$AI/references"       ~/.gemini/antigravity-cli/references
+link "$AI/skills"           ~/.gemini/config/skills
+link "$AI/agents"           ~/.gemini/config/agents
+link "$AI/references"       ~/.gemini/config/references
 # agents/ not symlinked for OpenCode — incompatible frontmatter format
 
 # Codex per-skill symlinks (codex needs individual skill links)
@@ -78,6 +91,29 @@ done
 for prompt in "$AI"/prompts/*.prompt.md; do
   name=$(basename "$prompt" .prompt.md)
   link "$prompt" "$HOME/.config/opencode/commands/${name}.md"
+done
+
+# Antigravity CLI per-prompt skill symlinks (prompts become /<name> slash commands via <name>/SKILL.md)
+agy_skip_prompts=(grill-me opencode-monthly-cost-report)
+
+for existing_dir in "$HOME"/.gemini/antigravity-cli/skills/*(N/); do
+  name=$(basename "$existing_dir")
+  existing_skill="$existing_dir/SKILL.md"
+  [[ -L "$existing_skill" && "$(readlink "$existing_skill")" == "$AI/prompts/"* ]] || continue
+  if [[ ! -f "$AI/prompts/${name}.prompt.md" ]] || (( ${agy_skip_prompts[(Ie)$name]} )); then
+    echo "  🧹 Removing stale Antigravity CLI prompt skill: $existing_dir"
+    rm "$existing_skill"
+    rmdir "$existing_dir" 2>/dev/null || true
+  fi
+done
+
+for prompt in "$AI"/prompts/*.prompt.md; do
+  name=$(basename "$prompt" .prompt.md)
+  if (( ${agy_skip_prompts[(Ie)$name]} )); then
+    continue
+  fi
+  mkdir -p "$HOME/.gemini/antigravity-cli/skills/$name"
+  link "$prompt" "$HOME/.gemini/antigravity-cli/skills/$name/SKILL.md"
 done
 
 # ─── Self-evolution jobs (launchd plists) ─────────────────────────────
