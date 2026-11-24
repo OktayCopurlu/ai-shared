@@ -94,18 +94,16 @@ That's it. All four tools now read from this repo.
 │           ├── command.md      # Conservative open research PR cleanup
 │           ├── job.json        # Daily 15:00 scheduler + model config
 │           └── run-log.jsonl   # PR triage decisions
-├── agents/               # Custom agent modes
-│   ├── devils-advocate.agent.md
-│   ├── goal-setter.agent.md
-│   └── project-doc-expert.agent.md
-├── prompts/              # Slash-command prompts (development lifecycle)
+├── prompts/              # Slash-command prompts (development lifecycle & coaching)
 │   ├── grill-me.prompt.md          # Define — alignment interview before spec
+│   ├── devils-advocate.prompt.md   # Define — adversarial stress-test for proposals and architecture
 │   ├── spec.prompt.md              # Define — clarify what to build
 │   ├── project-design.prompt.md    # Design — project/epic-level technical design (not per-ticket)
 │   ├── pipeline.prompt.md          # Contract — canonical phase order for ticket delivery
 │   ├── pip.prompt.md               # Automation — start experimental delivery pipeline in background
 │   ├── implementation.prompt.md    # Build — implement a ticket
 │   ├── investigation.prompt.md     # Analyze — time-boxed spike/research workflow
+│   ├── goal-setter.prompt.md       # Coaching — On Digital Product OKRs and grade-aligned goals
 │   ├── opencode-monthly-cost-report.prompt.md # Report — monthly OpenCode costs by project
 │   ├── pr.prompt.md                # Ship — commit, push, create PR
 │   ├── address-review.prompt.md    # Ship — triage review comments
@@ -136,7 +134,7 @@ The physical folders are organized by primitive (`skills`, `prompts`, `agents`, 
 | Layer | What belongs here | Current examples | Maintenance rule |
 | --- | --- | --- | --- |
 | Core | Cross-repo rules, reusable workflows, reusable tool adapters, and checklists that should work beyond one team or project. | `instructions.md`, most `skills/*`, `docs/skill-anatomy.md`, shared references such as `testing-patterns.md` and `security-checklist.md` | Keep small and evergreen. Prefer skills/references over expanding global instructions. |
-| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
+| Team-specific | Workflows tied to On, DSC, on-frontend, internal hosts, board IDs, preview auth, or team reporting habits. | `prompts/goal-setter.prompt.md`, `references/on-frontend-urls.md`, `self-evolution/jobs/self-evolution-from-pr-feedback/` | Make the scope obvious in the description/body. Keep hardcoded IDs visible, dated, and easy to audit. |
 | Automation | Scheduled or autonomous jobs that maintain this repo or mine feedback. | `self-evolution/runner.sh`, `self-evolution/jobs/research/`, `self-evolution/jobs/self-evolution-from-pr-feedback/`, `self-evolution/jobs/self-evolution-from-copilot-sessions/` | Log outcomes, isolate worktrees, and keep generated evidence out of always-loaded context. |
 
 ## Content Hygiene
@@ -168,9 +166,9 @@ All tools point back here. **Never edit the symlinked copies — always edit the
 | `skills/*`            | `~/.codex/skills/*` (per-skill symlinks)               | Codex           | Requires per-skill symlinks; no directory symlink support                                                                     |
 | `skills/`             | `~/.config/opencode/skills/`                           | OpenCode        | Directory symlink; on-demand loading                                                                                          |
 | `skills/`             | `~/.gemini/config/skills/`                             | Antigravity     | Directory symlink; loaded on demand and exposed as `/<skill>` slash commands in `agy` CLI and App                             |
-| `agents/`             | `~/.copilot/agents/`                                   | VS Code Copilot | Directory symlink; Codex does not support custom agents                                                                       |
+| `agents/`             | `~/.copilot/agents/`                                   | VS Code Copilot | Directory symlink (when `agents/` exists); Codex does not support custom agents                                               |
 | `agents/`             | _(not symlinked)_                                      | OpenCode        | **Not compatible** — OpenCode agents require different frontmatter (`mode`, `model`, `permission` object) and `.md` extension |
-| `agents/`             | `~/.gemini/config/agents/`                             | Antigravity     | Directory symlink; available in `/agents` and `agy --agent <name>`                                                            |
+| `agents/`             | `~/.gemini/config/agents/`                             | Antigravity     | Directory symlink (when `agents/` exists); available in `/agents` and `agy --agent <name>`                                    |
 | `prompts/`            | `~/Library/Application Support/Code/User/prompts/`     | VS Code Copilot | Slash-command prompts; VS Code reads from its own user data folder                                                            |
 | `prompts/`            | `~/.codex/prompts/`                                    | Codex           | Slash-command prompts                                                                                                         |
 | `prompts/*.prompt.md` | `~/.config/opencode/commands/*.md` (per-file)          | OpenCode        | Renamed symlinks; `implementation.prompt.md` → `/implementation`                                                              |
@@ -299,8 +297,6 @@ graph LR
   S_GH([github]):::skill
   S_CTF([contentful]):::skill
   S_GDRIVE([google-drive]):::skill
-  %% ── Agents referenced by prompts ────────────────────
-  A_PROJDOC{{project-doc-expert}}:::agent
 
   %% ── References ──────────────────────────────────────
   R_TEST[\testing-patterns\]:::ref
@@ -314,7 +310,7 @@ graph LR
   R_WORK[\work-shaping\]:::ref
   R_MQA[\manual-qa-checklist\]:::ref
 
-  %% ── Prompt → Skill / Agent / Reference ─────────────
+  %% ── Prompt → Skill / Reference ─────────────────────
   P_GRILL --> R_WORK
   P_SPEC -. optional .-> P_GRILL
   P_SPEC -. See Also .-> P_PROJDESIGN
@@ -323,7 +319,6 @@ graph LR
   P_SPEC --> R_WORK
   P_REFINE --> S_JIRA
   P_REFINE --> S_ATLAS
-  P_PROJDESIGN --> A_PROJDOC
   P_PROJDESIGN --> S_ATLAS
   P_PROJDESIGN --> R_WORK
   P_INV --> R_SEARCH

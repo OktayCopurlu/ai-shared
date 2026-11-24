@@ -47,16 +47,26 @@ link "$AI/instructions.md" ~/.gemini/config/AGENTS.md
 
 # Directory symlinks
 link "$AI/skills"           ~/.copilot/skills
-link "$AI/agents"           ~/.copilot/agents
 link "$AI/prompts"          "$HOME/Library/Application Support/Code/User/prompts"
 link "$AI/prompts"          ~/.codex/prompts
 link "$AI/references"       ~/.copilot/references
 link "$AI/skills"           ~/.config/opencode/skills
 link "$AI/references"       ~/.config/opencode/references
 link "$AI/skills"           ~/.gemini/config/skills
-link "$AI/agents"           ~/.gemini/config/agents
 link "$AI/references"       ~/.gemini/config/references
-# agents/ not symlinked for OpenCode — incompatible frontmatter format
+
+if [[ -d "$AI/agents" ]]; then
+  link "$AI/agents"         ~/.copilot/agents
+  link "$AI/agents"         ~/.gemini/config/agents
+  # agents/ not symlinked for OpenCode — incompatible frontmatter format
+else
+  for stale_agents in "$HOME/.copilot/agents" "$HOME/.gemini/config/agents"; do
+    if [[ -L "$stale_agents" && "$(readlink "$stale_agents")" == "$AI/agents" ]]; then
+      echo "  🧹 Removing stale agents symlink: $stale_agents"
+      rm "$stale_agents"
+    fi
+  done
+fi
 
 # Codex per-skill symlinks (codex needs individual skill links)
 # Clean up stale Codex skill symlinks first

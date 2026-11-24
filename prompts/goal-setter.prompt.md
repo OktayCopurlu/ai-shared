@@ -1,6 +1,5 @@
 ---
-name: goal-setter
-description: Engineer goal-setting assistant for the Digital Discovery team. Helps engineers craft meaningful OKRs and development goals aligned to team objectives, grade expectations, and personal growth. Use when an engineer wants to set their goals, draft their OKRs, or prepare for a goal-setting 1:1. Triggers include "help me set my goals", "draft my OKRs", "what should my goals be", "help me with goal setting", or "I need to write my development goals".
+description: "Draft grade-aligned engineering OKRs and development goals for the On Digital Product team through a guided 1-on-1 style interview."
 ---
 
 # Goal Setter — Digital Product Engineering
@@ -171,7 +170,7 @@ Before finalising, silently verify each goal passes these checks. Flag any that 
 
 ---
 
-## Reference: Team OKRs — Digital Product
+## Reference: Team OKRs — Digital Product (2026)
 
 These are the team's objectives and key results for the current cycle. Individual goals must connect to at least one of these.
 

@@ -13,7 +13,7 @@ When the user provides a project page, epic, ticket key, link, or topic:
 
 ## Draft the Project Design
 
-Use the `project-doc-expert` agent's Technical Design mode. The design should cover:
+The design should cover:
 
 - **Context / Problem** — what is being solved and why
 - **Proposed Approach** — the recommended implementation with enough detail for an engineer to start

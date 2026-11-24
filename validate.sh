@@ -60,7 +60,6 @@ symlink_targets=(
   "$HOME/.config/opencode/AGENTS.md"
   "$HOME/.gemini/config/AGENTS.md"
   "$HOME/.copilot/skills"
-  "$HOME/.copilot/agents"
   "$HOME/Library/Application Support/Code/User/prompts"
   "$HOME/.copilot/references"
   "$HOME/.codex/prompts"
@@ -68,9 +67,21 @@ symlink_targets=(
   "$HOME/.config/opencode/skills"
   "$HOME/.config/opencode/references"
   "$HOME/.gemini/config/skills"
-  "$HOME/.gemini/config/agents"
   "$HOME/.gemini/config/references"
 )
+
+if [[ -d "$AI/agents" ]]; then
+  symlink_targets+=(
+    "$HOME/.copilot/agents"
+    "$HOME/.gemini/config/agents"
+  )
+else
+  for stale_agents in "$HOME/.copilot/agents" "$HOME/.gemini/config/agents"; do
+    if [[ -L "$stale_agents" && "$(readlink "$stale_agents")" == "$AI/agents" ]]; then
+      fail "Broken agents symlink still points to missing $AI/agents: $stale_agents"
+    fi
+  done
+fi
 
 for target in "${symlink_targets[@]}"; do
   if [[ ! -L "$target" ]]; then
@@ -203,7 +214,7 @@ for f in "$AI"/skills/*/SKILL.md; do
   check_frontmatter "$f" "$rel"
 done
 
-for f in "$AI"/agents/*.agent.md; do
+for f in "$AI"/agents/*.agent.md(N); do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   check_frontmatter "$f" "$rel"
@@ -228,7 +239,7 @@ for f in "$AI"/skills/*/SKILL.md; do
   fi
 done
 
-for f in "$AI"/agents/*.agent.md; do
+for f in "$AI"/agents/*.agent.md(N); do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   file_name=$(basename "$f" .agent.md)
@@ -247,7 +258,7 @@ green "Name == directory check done"
 
 echo "\n── Deprecation lifecycle ──"
 
-for f in "$AI"/skills/*/SKILL.md "$AI"/agents/*.agent.md "$AI"/prompts/*.prompt.md; do
+for f in "$AI"/skills/*/SKILL.md(N) "$AI"/agents/*.agent.md(N) "$AI"/prompts/*.prompt.md(N); do
   [[ -f "$f" ]] || continue
   rel="${f#$AI/}"
   deprecated=$(frontmatter_field "$f" deprecated)
@@ -332,7 +343,7 @@ echo "\n── Duplicate names ──"
 
 typeset -A seen_names
 
-for f in "$AI"/agents/*.agent.md; do
+for f in "$AI"/agents/*.agent.md(N); do
   [[ -f "$f" ]] || continue
   name=$(sed -n '/^---$/,/^---$/{ /^name:/{ s/^name: *//; s/^["'"'"']//; s/["'"'"']$//; p; }; }' "$f")
   if [[ -z "$name" ]]; then
