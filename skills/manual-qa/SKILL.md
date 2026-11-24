@@ -24,7 +24,7 @@ When the QA includes Figma-vs-implementation fidelity, load `~/.ai-shared/refere
 1. Gather the smallest complete context:
    - ticket summary, acceptance criteria, and linked design/spec references
    - local diff or PR diff, including files unrelated to the ticket
-   - for single PR mode, PR description, comments, CI status, linked ticket, changed files, and preview URL
+   - for single PR mode, use the `github` skill to read PR description, comments, CI status, linked ticket, changed files, and preview URL (do not require a local checkout unless PR data is unavailable or local execution is the only runnable path)
    - preview URL, local URL, feature flags, variants, exact experiment keys/groups, supported override mechanism, and required test data
    - previous validation results and known blockers
 2. Pick QA depth from risk and available runtime:
